@@ -1,5 +1,4 @@
 import { create } from 'zustand';
-import { DayPilotMonth } from '@daypilot/daypilot-lite-react';
 import './App.css'
 
 function App() {
@@ -16,7 +15,13 @@ function App() {
         text: "Event 2",
         start: "2025-12-23",
         end: "2025-12-31",
-      }
+      },
+      {
+        id: 3,
+        text: "Event 3",
+        start: "2025-12-18",
+        end: "2025-12-25",
+      },
     ]
   }));
 
@@ -26,10 +31,12 @@ function App() {
     <>
       <h1>Monthly Calendar</h1>
       <div className="calendar-container">
-        <DayPilotMonth
-          startDate={"2025-12-01"}
-          events={currEvents}
-        />
+        {currEvents.map((entry) => (
+          <div className="event">
+            <h3>{entry.text}</h3>
+            <p>{entry.start} - {entry.end}</p>
+          </div>
+        ))}
       </div>
     </>
   )
