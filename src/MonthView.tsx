@@ -1,3 +1,5 @@
+import "./MonthView.css";
+
 function MonthView({ subs, today }:
   { subs: any[], today: Date }) {
 
@@ -10,20 +12,34 @@ function MonthView({ subs, today }:
   const currMonthDayCount = new Date(currYear, currMonth + 1, 0).getDate();
 
   const calendarMonth = [];
-  for (let i = 1; i <= currMonthDayCount; i++) {
+  
+  let firstDateOfMonthView = new Date(currYear, currMonth, 1);
+  firstDateOfMonthView.setDate(firstDateOfMonthView.getDate() - firstDateOfMonthView.getDay());
+  let lastDateOfMonthView = new Date(currYear, currMonth, currMonthDayCount);
+  lastDateOfMonthView.setDate(lastDateOfMonthView.getDate() + 6 - lastDateOfMonthView.getDay());
+
+  let dateOfMonth = new Date(firstDateOfMonthView);
+  while (dateOfMonth <= lastDateOfMonthView) {
     calendarMonth.push({
-      date: i,
-      dayOfWeek: calendarDateTimeFormat.format(new Date(currYear, currMonth, i)),
+      date: dateOfMonth,
       subs: new Array<string>()
     });
+    dateOfMonth = new Date(dateOfMonth);
+    dateOfMonth.setDate(dateOfMonth.getDate() + 1);
   }
+
   for (let sub of subs) {
-    const date = new Date(currYear, currMonth, 1);
-    for (let i = 1; i <= currMonthDayCount; i++) {
-      date.setDate(i);
-      const currIndex = i - 1;
-      if (date >= sub.start && date <= sub.end) {
-        calendarMonth[currIndex].subs.push(sub.name);
+    if (sub.start > lastDateOfMonthView || sub.end < firstDateOfMonthView) {
+      continue;
+    }
+
+    for (let calendarDay of calendarMonth) {
+      let curr = calendarDay.date;
+      if (curr >= sub.start && curr <= sub.end) {
+        calendarDay.subs.push(sub.name);
+      }
+      if (curr > sub.end) {
+        break;
       }
     }
   }
@@ -31,19 +47,32 @@ function MonthView({ subs, today }:
   return (
     <>
       <h1>Monthly Calendar</h1>
-      <div className="calendar-container">
-        <span>Current Month: {calendarHeaderDateTimeFormat.format(today)} -  {currMonthDayCount} Days</span>
+      <p>Current Month: {calendarHeaderDateTimeFormat.format(today)} -  {currMonthDayCount} Days</p>
 
-        {calendarMonth.map((entry) => (
-          <div className="calendar-entry">
-            <div className="calendar-entry-header">
-              <h3>{entry.date} ({entry.dayOfWeek}) {entry.date === currDate ? "TODAY" : ""}</h3>
+      <div className="calendar-container">
+        <div className="calendar-grid-header">
+          <div className="calendar-grid-header-entry">SUN</div>
+          <div className="calendar-grid-header-entry">MON</div>
+          <div className="calendar-grid-header-entry">TUE</div>
+          <div className="calendar-grid-header-entry">WED</div>
+          <div className="calendar-grid-header-entry">THU</div>
+          <div className="calendar-grid-header-entry">FRI</div>
+          <div className="calendar-grid-header-entry">SAT</div>
+        </div>
+        <div className="calendar-grid">
+          {calendarMonth.map((entry) => (
+            <div className={"calendar-entry"}>
+              <div className="calendar-entry-header">
+                <h3>{entry.date.getDate()}</h3>
+              </div>
+              {entry.subs.map((sub) => (
+                <div className={"calendar-entry-sub-entry" + (entry.date.getMonth() !== currMonth ? " off-month" : "")}>
+                  {sub}
+                </div>
+              ))}
             </div>
-            {entry.subs.map((sub) => (
-              <p>{sub}</p>
-            ))}
-          </div>
-        ))}
+          ))}
+        </div>
       </div>
     </>
   );
