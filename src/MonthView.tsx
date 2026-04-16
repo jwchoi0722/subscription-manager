@@ -1,14 +1,28 @@
+import type { Subscription } from "./App";
+
 import "./MonthView.css";
 
-function MonthView({ subs, today }:
-  { subs: any[], today: Date }) {
+function MonthView({ subs, today, onAdd }:
+  { subs: any[], today: Date, onAdd: (subscription: Subscription) => void }) {
+  const testSub = {
+    id: 4002,
+    service: "HIDIVE",
+    servicePlan: "Standard",
+    name: "HIDIVE (Standard)",
+    start: new Date("2026-01-09"),
+    end: new Date("2026-02-09"),
+    priceAmount: 8.99,
+    priceCurrency: "CAD",
+    totalAmount: 10.07,
+    isAutoRenew: true,
+    isChanged: false,
+  };
 
   const calendarHeaderDateTimeFormat = new Intl.DateTimeFormat("en-US", { month: "long", year: "numeric", timeZone: "UTC" });
-  const calendarDateTimeFormat = new Intl.DateTimeFormat("en-US", { weekday: "short", timeZone: "UTC" });
 
   const currYear = today.getFullYear();
   const currMonth = today.getMonth();
-  const currDate = today.getDate();
+  // const currDate = today.getDate();
   const currMonthDayCount = new Date(currYear, currMonth + 1, 0).getDate();
 
   const calendarMonth = [];
@@ -72,6 +86,13 @@ function MonthView({ subs, today }:
               ))}
             </div>
           ))}
+        </div>
+        <div className="calendar-button">
+          <button onClick={() => {
+            onAdd(testSub);
+          }}>
+            Add
+          </button>
         </div>
       </div>
     </>
