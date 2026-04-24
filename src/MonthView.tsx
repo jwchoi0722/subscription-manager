@@ -87,14 +87,49 @@ function MonthView({ subs, today, onAdd }:
             </div>
           ))}
         </div>
-        <div className="calendar-button">
+        <button className="add-subscription-modal-button">
+            Add New
+        </button>
+      </div>
+      <dialog id="add-subscription-modal" className="add-subscription-modal" open={true}>
+        <div className="modal-close-button">X</div>
+        <h3>Add New Subscription</h3>
+        <form className="add-subscription-form">
+          <div>
+            <label htmlFor="service-name">Service:</label>
+            <input type="text" name="service-name" />
+            <label htmlFor="service-plan-name">Plan:</label>
+            <input type="text" name="service-plan-name" />
+          </div>
+          <div>
+            <label htmlFor="name">Name:</label>
+            <input type="text" name="name" />
+          </div>
+          <div>
+            <label htmlFor="start-date">Start Date:</label>
+            <input type="date" name="start-date" />
+            <label htmlFor="end-date">End Date:</label>
+            <input type="date" name="end-date" />
+          </div>
+          <div>
+            <label htmlFor="amount">Amount:</label>
+            <input type="number" name="amount" />
+            <label htmlFor="total-amount">Total:</label>
+            <input type="number" name="total-amount" />
+          </div>
+          <div>
+            <label htmlFor="is-renew">Auto-Renew:</label>
+            <input type="checkbox" name="is-renew" />
+          </div>
+        </form>
+        <div className="add-subscription-save-button">
           <button onClick={() => {
             onAdd(testSub);
           }}>
-            Add
+            Save
           </button>
         </div>
-      </div>
+      </dialog>
     </>
   );
 }
