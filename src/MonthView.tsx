@@ -1,6 +1,18 @@
+import { create } from 'zustand';
+
 import type { Subscription } from "./App";
 
 import "./MonthView.css";
+
+interface SubscriptionModalState {
+  isOpen: boolean
+  setIsOpen: (open: boolean) => void
+}
+
+const useAddSubscriptionModalStore = create<SubscriptionModalState>()((set) => ({
+  isOpen: false,
+  setIsOpen: (open: boolean) => set(() => ({ isOpen: open}))
+}));
 
 function MonthView({ subs, today, onAdd }:
   { subs: any[], today: Date, onAdd: (subscription: Subscription) => void }) {
@@ -58,6 +70,9 @@ function MonthView({ subs, today, onAdd }:
     }
   }
 
+  const isModalOpen: boolean = useAddSubscriptionModalStore((state) => state.isOpen);
+  const modalOpenFunc: (open: boolean) => void = useAddSubscriptionModalStore((state) => state.setIsOpen);
+
   return (
     <>
       <h1>Monthly Calendar</h1>
@@ -87,12 +102,12 @@ function MonthView({ subs, today, onAdd }:
             </div>
           ))}
         </div>
-        <button className="add-subscription-modal-button">
+        <button className="add-subscription-modal-button" onClick={() => modalOpenFunc(true)}>
             Add New
         </button>
       </div>
-      <dialog id="add-subscription-modal" className="add-subscription-modal" open={true}>
-        <div className="modal-close-button">X</div>
+      <dialog id="add-subscription-modal" className="add-subscription-modal" open={isModalOpen}>
+        <div className="modal-close-button" onClick={() => modalOpenFunc(false)}>X</div>
         <h3>Add New Subscription</h3>
         <form className="add-subscription-form">
           <div>
@@ -125,6 +140,7 @@ function MonthView({ subs, today, onAdd }:
         <div className="add-subscription-save-button">
           <button onClick={() => {
             onAdd(testSub);
+            modalOpenFunc(false);
           }}>
             Save
           </button>
