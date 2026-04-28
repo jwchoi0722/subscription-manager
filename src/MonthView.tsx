@@ -76,7 +76,7 @@ function MonthView({ subs, today, onAdd }:
           ))}
         </div>
       </div>
-      <SubscriptionModal onSubmit={onAdd} />
+      <SubscriptionModal initValues={null} onSubmit={onAdd} />
     </>
   );
 }
