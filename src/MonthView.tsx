@@ -1,12 +1,33 @@
+import { create } from 'zustand';
+
 import type { Subscription } from "./App";
 
 import SubscriptionModal from './SubscriptionModal';
 
 import "./MonthView.css";
 
+interface AddSubscriptionModalState {
+  addModalInitialValues: Subscription | null
+  setAddModalInitialValues: (sub: Subscription | null) => void
+  isAddModalOpen: boolean
+  setIsAddModalOpen: (isOpen: boolean) => void
+}
+
+const useAddSubscriptionModalStore = create<AddSubscriptionModalState>()((set) => ({
+  addModalInitialValues: null,
+  setAddModalInitialValues: (sub: Subscription | null) => set(() => ({ addModalInitialValues: sub })),
+  isAddModalOpen: false,
+  setIsAddModalOpen: (isOpen: boolean) => set(() => ({ isAddModalOpen: isOpen }))
+}));
+
 function MonthView({ subs, today, onAdd }:
-  { subs: any[], today: Date, onAdd: (subscription: Subscription) => void }) {
+  { subs: Subscription[], today: Date, onAdd: (subscription: Subscription) => void }) {
   const calendarHeaderDateTimeFormat = new Intl.DateTimeFormat("en-US", { month: "long", year: "numeric", timeZone: "UTC" });
+
+  const addModalInitialValues: Subscription | null = useAddSubscriptionModalStore((state) => state.addModalInitialValues);
+  const setAddModalInitialValues: (sub: Subscription | null) => void = useAddSubscriptionModalStore((state) => state.setAddModalInitialValues);
+  const isAddModalOpen: boolean = useAddSubscriptionModalStore((state) => state.isAddModalOpen);
+  const setIsAddModalOpen: (isOpen: boolean) => void = useAddSubscriptionModalStore((state) => state.setIsAddModalOpen);
 
   const currYear = today.getFullYear();
   const currMonth = today.getMonth();
@@ -63,20 +84,32 @@ function MonthView({ subs, today, onAdd }:
         </div>
         <div className="calendar-grid">
           {calendarMonth.map((entry) => (
-            <div className={"calendar-entry"}>
+            <div className="calendar-entry">
               <div className="calendar-entry-header">
                 <h3>{entry.date.getDate()}</h3>
               </div>
               {entry.subs.map((sub) => (
                 <div className={"calendar-entry-sub-entry" + (entry.date.getMonth() !== currMonth ? " off-month" : "")}>
-                  {sub}
+                  <p>{sub}</p>
+                  <span onClick={() => {
+                    setAddModalInitialValues({ name: sub, start: new Date("2026-01-09"), end: new Date("2026-02-09") } as Subscription);
+                    setIsAddModalOpen(true);
+                  }}>+</span>
                 </div>
               ))}
             </div>
           ))}
         </div>
       </div>
-      <SubscriptionModal initValues={null} onSubmit={onAdd} />
+      <button className="add-subscription-modal-button" onClick={() => {
+        setAddModalInitialValues(null);
+        setIsAddModalOpen(true);
+      }}>
+          Add New
+      </button>
+      {
+        isAddModalOpen && <SubscriptionModal initValues={addModalInitialValues} closeModal={() => setIsAddModalOpen(false)} onSubmit={onAdd} />
+      }
     </>
   );
 }

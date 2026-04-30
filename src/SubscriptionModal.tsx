@@ -2,10 +2,10 @@ import { create } from 'zustand';
 
 import type { Subscription } from "./App";
 
-interface SubscriptionModalState {
-  isOpen: boolean
-  setIsOpen: (open: boolean) => void
-}
+// interface SubscriptionModalState {
+//   isOpen: boolean
+//   setIsOpen: (open: boolean) => void
+// }
 
 // interface SubscriptionFormState {
 //   serviceName: string,
@@ -15,10 +15,10 @@ interface SubscriptionModalState {
 
 // }
 
-const useAddSubscriptionModalStore = create<SubscriptionModalState>()((set) => ({
-  isOpen: false,
-  setIsOpen: (open: boolean) => set(() => ({ isOpen: open}))
-}));
+// const useAddSubscriptionModalStore = create<SubscriptionModalState>()((set) => ({
+//   isOpen: false,
+//   setIsOpen: (open: boolean) => set(() => ({ isOpen: open}))
+// }));
 
 const testSub: Subscription = {
   id: 4002,
@@ -34,9 +34,9 @@ const testSub: Subscription = {
   isChanged: false,
 };
 
-function SubscriptionModal({ initValues, onSubmit }: { initValues: Subscription | null, onSubmit: (subscription: Subscription) => void } ) {
-  const isModalOpen: boolean = useAddSubscriptionModalStore((state) => state.isOpen);
-  const modalOpenFunc: (open: boolean) => void = useAddSubscriptionModalStore((state) => state.setIsOpen);
+function SubscriptionModal({ initValues, closeModal, onSubmit }: { initValues: Subscription | null, closeModal: () => void, onSubmit: (subscription: Subscription) => void } ) {
+  // const isModalOpen: boolean = useAddSubscriptionModalStore((state) => state.isOpen);
+  // const modalOpenFunc: (open: boolean) => void = useAddSubscriptionModalStore((state) => state.setIsOpen);
 
   let sub: Subscription = initValues ?? testSub;
 
@@ -57,18 +57,13 @@ function SubscriptionModal({ initValues, onSubmit }: { initValues: Subscription 
     // console.log(addedSub);
     onSubmit(addedSub);
 
-    modalOpenFunc(false);
-
-    sub = initValues ?? testSub
+    closeModal();
   }
 
   return (
     <>
-      <button className="add-subscription-modal-button" onClick={() => modalOpenFunc(true)}>
-          Add New
-      </button>
-      <dialog id="add-subscription-modal" className="add-subscription-modal" open={isModalOpen}>
-          <div className="modal-close-button" onClick={() => modalOpenFunc(false)}>X</div>
+      <dialog id="add-subscription-modal" className="add-subscription-modal" open={true}>
+          <div className="modal-close-button" onClick={() => closeModal()}>X</div>
           <h3>Add New Subscription</h3>
           <form action={handleSubmit} className="add-subscription-form">
             <div>

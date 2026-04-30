@@ -3,6 +3,10 @@
   grid-template-columns: repeat(7, 1fr);
 }
 
+.calendar-entry-sub-entry {
+  display: flex;
+}
+
 .calendar-entry-sub-entry.off-month {
   font-style: italic;
 }
