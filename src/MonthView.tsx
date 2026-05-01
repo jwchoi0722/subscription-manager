@@ -45,7 +45,7 @@ function MonthView({ subs, today, onAdd }:
   while (dateOfMonth <= lastDateOfMonthView) {
     calendarMonth.push({
       date: dateOfMonth,
-      subs: new Array<string>()
+      subs: new Array<Subscription>()
     });
     dateOfMonth = new Date(dateOfMonth);
     dateOfMonth.setDate(dateOfMonth.getDate() + 1);
@@ -59,7 +59,7 @@ function MonthView({ subs, today, onAdd }:
     for (let calendarDay of calendarMonth) {
       let curr = calendarDay.date;
       if (curr >= sub.start && curr <= sub.end) {
-        calendarDay.subs.push(sub.name);
+        calendarDay.subs.push(sub);
       }
       if (curr > sub.end) {
         break;
@@ -88,11 +88,16 @@ function MonthView({ subs, today, onAdd }:
               <div className="calendar-entry-header">
                 <h3>{entry.date.getDate()}</h3>
               </div>
-              {entry.subs.map((sub) => (
+              {entry.subs.map((sub: Subscription) => (
                 <div className={"calendar-entry-sub-entry" + (entry.date.getMonth() !== currMonth ? " off-month" : "")}>
-                  <p>{sub}</p>
+                  <p>{sub.name}</p>
                   <span onClick={() => {
-                    setAddModalInitialValues({ name: sub, start: new Date("2026-01-09"), end: new Date("2026-02-09") } as Subscription);
+                    setAddModalInitialValues({
+                      ...sub,
+                      start: sub.end,
+                      end: new Date(sub.end.getTime() + (sub.end.getTime() - sub.start.getTime())),
+                      isChanged: false
+                    } as Subscription);
                     setIsAddModalOpen(true);
                   }}>+</span>
                 </div>
