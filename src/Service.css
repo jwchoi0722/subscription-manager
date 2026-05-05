@@ -1,0 +1,23 @@
+.service-container {
+  width: 768px;
+}
+
+.service-subscription-entry {
+  display: flex;
+}
+
+.service-subscription-entry.active {
+  font-weight: bold;
+}
+
+.service-subscription-entry .service-subscription-time {
+  flex: 2;
+}
+
+.service-subscription-entry .service-subscription-plan {
+  flex: 3;
+}
+
+.service-subscription-entry .service-subscription-price {
+  flex: 1;
+}

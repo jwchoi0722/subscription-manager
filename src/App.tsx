@@ -110,23 +110,9 @@ function App() {
   const currSubs = useSubscriptionStore((state) => state.subscriptions);
   const addFunc = useSubscriptionStore((state) => state.add);
   
-  const listDateTimeFormat = new Intl.DateTimeFormat("en-US", { month: "short", day: "2-digit", timeZone: "UTC" });
-  
   return (
     <>
       <MonthView subs={currSubs} onAdd={addFunc} />
-
-      <h1>List</h1>
-      <div className="list-container">
-        {currSubs.map((entry) => (
-          <div className="subscription-entry">
-            <div className="subscription-entry-header">
-              <h3>{entry.name}</h3>
-            </div>
-            <p>{listDateTimeFormat.format(entry.start)} - {listDateTimeFormat.format(entry.end)}</p>
-          </div>
-        ))}
-      </div>
     </>
   )
 }

@@ -2,7 +2,7 @@ import { useState } from 'react'
 import reactLogo from './assets/react.svg'
 import viteLogo from '/vite.svg'
 import './App.css'
-import { NavLink } from 'react-router'
+import { Link } from 'react-router'
 
 function Welcome() {
   const [count, setCount] = useState(0)
@@ -23,7 +23,9 @@ function Welcome() {
           count is {count}
         </button>
       </div>
-      <NavLink to="/App">Open App</NavLink>
+      <Link to="/App">Open App</Link>
+      <br />
+      <Link to="/Service">Open History</Link>
       <p className="read-the-docs">
         Click on the Vite and React logos to learn more
       </p>
