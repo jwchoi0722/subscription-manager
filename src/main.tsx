@@ -6,7 +6,7 @@ import './index.css'
 
 import Welcome from './Welcome.tsx'
 import App from './App.tsx'
-import Service from './Service.tsx'
+import List from './List.tsx'
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
@@ -14,7 +14,7 @@ createRoot(document.getElementById('root')!).render(
       <Routes>
         <Route index element={<Welcome />} />
         <Route path="App" element={<App />} />
-        <Route path="Service/:service" element={<Service />} />
+        <Route path="List" element={<List />} />
       </Routes>
     </BrowserRouter>
   </StrictMode>,
