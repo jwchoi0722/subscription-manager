@@ -1,3 +1,5 @@
+import { create } from "zustand";
+
 import "./List.css";
 
 import type { Subscription } from "./App";
@@ -87,14 +89,40 @@ const testSubscriptions: Subscription[] = [
 const today: Date = new Date(2026, 0, 2);
 const listDateTimeFormat = new Intl.DateTimeFormat("en-US", { month: "short", day: "2-digit", year: "numeric", timeZone: "UTC" });
 
+interface SubscriptionListState {
+  serviceSelectStates: { [service: string]: boolean }
+  setServiceSelectState: (service: string, isSelected: boolean) => void
+  setAllSelectStates: () => void
+}
+
+const useSubscriptionListStore = create<SubscriptionListState>()((set) => ({
+  serviceSelectStates: {},
+  setServiceSelectState: (service: string, isSelected: boolean) => set((state) => ({ serviceSelectStates: { ...state.serviceSelectStates, [service]: isSelected }})),
+  setAllSelectStates: () => set(() => ({ serviceSelectStates: {} }))
+}));
+
 function List() {
   const subs: Subscription[] = testSubscriptions;
 
   subs.sort((a: Subscription, b: Subscription) => b.start.getTime() - a.start.getTime());
 
+  const services: string[] = Array.from(new Set(subs.map((sub: Subscription) => sub.service)));
+
+  const serviceSelectStates = useSubscriptionListStore((state) => state.serviceSelectStates);
+  const setServiceSelectState: (service: string, isSelected: boolean) => void = useSubscriptionListStore((state) => state.setServiceSelectState);
+  const setAllSelectStates: () => void = useSubscriptionListStore((state) => state.setAllSelectStates);
+
   return (
     <>
       <h2>List</h2>
+      <div className="button-container">
+        {services.map((service: string) => (
+          <button key={service} className={((serviceSelectStates[service] === true) ? "selected" : "")} onClick={() => setServiceSelectState(service, !serviceSelectStates[service])}>
+            {service}
+          </button>
+        ))}
+        <button onClick={() => setAllSelectStates()}>SHOW ALL</button>
+      </div>
       <div className="list-container">
         {subs.map((sub: Subscription) => (
           <div key={sub.id} className={"list-subscription-entry" + (today <= sub.end && today >= sub.start ? " active-sub" : "")}>
