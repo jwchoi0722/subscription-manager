@@ -90,41 +90,56 @@ const today: Date = new Date(2026, 0, 2);
 const listDateTimeFormat = new Intl.DateTimeFormat("en-US", { month: "short", day: "2-digit", year: "numeric", timeZone: "UTC" });
 
 interface SubscriptionListState {
-  serviceSelectStates: { [service: string]: boolean }
+  selectedServices: Set<string>
   setServiceSelectState: (service: string, isSelected: boolean) => void
-  setAllSelectStates: () => void
+  setAllServicesUnselected: () => void
 }
 
 const useSubscriptionListStore = create<SubscriptionListState>()((set) => ({
-  serviceSelectStates: {},
-  setServiceSelectState: (service: string, isSelected: boolean) => set((state) => ({ serviceSelectStates: { ...state.serviceSelectStates, [service]: isSelected }})),
-  setAllSelectStates: () => set(() => ({ serviceSelectStates: {} }))
+  selectedServices: new Set(),
+  setServiceSelectState: (service: string, isSelected: boolean) => set((state) => {
+    const newSet: Set<string> = new Set(state.selectedServices);
+    if (isSelected) {
+      newSet.add(service);
+    }
+    else {
+      newSet.delete(service);
+    }
+    return { selectedServices: newSet };
+  }),
+  setAllServicesUnselected: () => set(() => ({ selectedServices: new Set() }))
 }));
 
 function List() {
   const subs: Subscription[] = testSubscriptions;
 
-  subs.sort((a: Subscription, b: Subscription) => b.start.getTime() - a.start.getTime());
+  let filteredSubs: Subscription[] = subs;
 
   const services: string[] = Array.from(new Set(subs.map((sub: Subscription) => sub.service)));
 
-  const serviceSelectStates = useSubscriptionListStore((state) => state.serviceSelectStates);
+  const selectedServices: Set<string> = useSubscriptionListStore((state) => state.selectedServices);
   const setServiceSelectState: (service: string, isSelected: boolean) => void = useSubscriptionListStore((state) => state.setServiceSelectState);
-  const setAllSelectStates: () => void = useSubscriptionListStore((state) => state.setAllSelectStates);
+  const setAllServicesUnselected: () => void = useSubscriptionListStore((state) => state.setAllServicesUnselected);
+
+  if (selectedServices.size > 0) {
+    filteredSubs = subs.filter((sub: Subscription) => selectedServices.has(sub.service));
+  }
+
+  filteredSubs.sort((a: Subscription, b: Subscription) => b.start.getTime() - a.start.getTime());
 
   return (
     <>
       <h2>List</h2>
       <div className="button-container">
         {services.map((service: string) => (
-          <button key={service} className={((serviceSelectStates[service] === true) ? "selected" : "")} onClick={() => setServiceSelectState(service, !serviceSelectStates[service])}>
+          <button key={service} className={(selectedServices.has(service) ? "selected" : "")} onClick={() => setServiceSelectState(service, !selectedServices.has(service))}>
             {service}
           </button>
         ))}
-        <button onClick={() => setAllSelectStates()}>SHOW ALL</button>
+        <button onClick={() => setAllServicesUnselected()}>SHOW ALL</button>
       </div>
       <div className="list-container">
-        {subs.map((sub: Subscription) => (
+        {filteredSubs.map((sub: Subscription) => (
           <div key={sub.id} className={"list-subscription-entry" + (today <= sub.end && today >= sub.start ? " active-sub" : "")}>
             <div className="list-subscription-service">{sub.service}</div> 
             <div className="list-subscription-time">{listDateTimeFormat.format(sub.start)} - {listDateTimeFormat.format(sub.end)}</div>
