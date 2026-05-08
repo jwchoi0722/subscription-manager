@@ -1,6 +1,6 @@
 import { create } from 'zustand';
 
-import type { Subscription } from "./App";
+import type { Subscription } from "./data";
 
 import SubscriptionModal from './SubscriptionModal';
 
