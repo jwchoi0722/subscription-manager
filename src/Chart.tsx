@@ -22,7 +22,7 @@ const calendarHeaderDateTimeFormat = new Intl.DateTimeFormat("en-US", { month: "
 function Chart() {
   const monthCountInRange: number = 12;
 
-  const [{ startDate, endDate }, setDateRange] = useState<{ startDate: Date, endDate: Date }>({
+  const [{ startDate, endDate }, setStartAndEndDates] = useState<{ startDate: Date, endDate: Date }>({
     startDate: new Date(today.getFullYear(), today.getMonth() - monthCountInRange + 1, 1),
     endDate: new Date(today.getFullYear(), today.getMonth() + 1, 0)
   });
@@ -71,23 +71,29 @@ function Chart() {
       entry.percentage = Math.round(entry.amount * 100 / monthTotal); // TODO rounding errors
     }
   }
-  console.log(months);
+  
+  function setDateRange(yearChange: number, monthChange: number): void {
+    setStartAndEndDates({
+      startDate: new Date(startDate.getFullYear() + yearChange, startDate.getMonth() + monthChange),
+      endDate: new Date(endDate.getFullYear() + yearChange, endDate.getMonth() + monthChange) 
+    });
+  }
 
   return (
     <>
       <h2>Chart</h2>
       <div className="control-container">
-        <button onClick={() => setDateRange({
-          startDate: new Date(startDate.getFullYear(), startDate.getMonth() - 1),
-          endDate: new Date(endDate.getFullYear(), endDate.getMonth() - 1) 
-        })}>
+        <button onClick={() => setDateRange(-1, 0)}>
+          &lt;&lt;
+        </button>
+        <button onClick={() => setDateRange(0, -1)}>
           &lt;
         </button>
-        <button onClick={() => setDateRange({
-          startDate: new Date(startDate.getFullYear(), startDate.getMonth() + 1),
-          endDate: new Date(endDate.getFullYear(), endDate.getMonth() + 1) 
-        })}>
+        <button onClick={() => setDateRange(0, 1)}>
           &gt;
+        </button>
+        <button onClick={() => setDateRange(1, 0)}>
+          &gt;&gt;
         </button>
       </div>
       {months.map((month: ChartMonth) => (
