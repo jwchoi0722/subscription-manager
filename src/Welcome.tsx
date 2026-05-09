@@ -23,9 +23,12 @@ function Welcome() {
           count is {count}
         </button>
       </div>
-      <Link to="/App">Open App</Link>
+      <Link to="/App">Open Calendar App</Link>
       <br />
-      <Link to="/Service">Open History</Link>
+      <Link to="/List">Open List View</Link>
+      <br />
+      <Link to="/Chart">Open Chart View</Link>
+      <br />
       <p className="read-the-docs">
         Click on the Vite and React logos to learn more
       </p>
