@@ -1,3 +1,5 @@
+import { useState } from "react";
+
 import { getSubscriptions, type Subscription } from "./data";
 
 type MonthSubscription = {
@@ -18,23 +20,26 @@ const today: Date = new Date(2026, 0, 2);
 const calendarHeaderDateTimeFormat = new Intl.DateTimeFormat("en-US", { month: "short", year: "numeric" });
 
 function Chart() {
-  const year: number = today.getFullYear();
-  
-  const subs: Subscription[] = getSubscriptions();
+  const monthCountInRange: number = 12;
+
+  const [{ startDate, endDate }, setDateRange] = useState<{ startDate: Date, endDate: Date }>({
+    startDate: new Date(today.getFullYear(), today.getMonth() - monthCountInRange + 1, 1),
+    endDate: new Date(today.getFullYear(), today.getMonth() + 1, 0)
+  });
+
+  console.log(startDate.toISOString() + " " + endDate.toISOString());
 
   const months: ChartMonth[] = [];
-  for (let jump = 11; jump >= 0; jump--) {
-    const month: number = today.getMonth() - jump;
+  for (let monthIndex = 0; monthIndex < monthCountInRange; monthIndex++) {
+    const month: number = startDate.getMonth() + monthIndex;
     months.push({
-      firstDate: new Date(year, month, 1),
-      lastDate: new Date(year, month + 1, 0),
+      firstDate: new Date(startDate.getFullYear(), month, 1),
+      lastDate: new Date(startDate.getFullYear(), month + 1, 0),
       subscriptions: []
     });
   }
-  const startDate: Date = new Date(months[0].firstDate);
-  const endDate: Date = new Date(months[months.length - 1].lastDate);
 
-  console.log(startDate.toISOString() + " " + endDate.toISOString());
+  const subs: Subscription[] = getSubscriptions();
 
   for (const sub of subs) {
     if (sub.start > endDate || sub.end < startDate) {
@@ -71,6 +76,20 @@ function Chart() {
   return (
     <>
       <h2>Chart</h2>
+      <div className="control-container">
+        <button onClick={() => setDateRange({
+          startDate: new Date(startDate.getFullYear(), startDate.getMonth() - 1),
+          endDate: new Date(endDate.getFullYear(), endDate.getMonth() - 1) 
+        })}>
+          &lt;
+        </button>
+        <button onClick={() => setDateRange({
+          startDate: new Date(startDate.getFullYear(), startDate.getMonth() + 1),
+          endDate: new Date(endDate.getFullYear(), endDate.getMonth() + 1) 
+        })}>
+          &gt;
+        </button>
+      </div>
       {months.map((month: ChartMonth) => (
         <>
           <h4 key={month.firstDate.getFullYear() + "-" + month.firstDate.getMonth()}>
