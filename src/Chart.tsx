@@ -1,10 +1,15 @@
 import { getSubscriptions, type Subscription } from "./data";
 
 type MonthSubscription = {
-  month: number
   service: string
   amount: number
   percentage: number
+}
+
+type ChartMonth = {
+  firstDate: Date
+  lastDate: Date
+  subscriptions: MonthSubscription[]
 }
 
 // const today: Date = new Date();
@@ -17,45 +22,47 @@ function Chart() {
   
   const subs: Subscription[] = getSubscriptions();
 
-  const months: MonthSubscription[][] = [];
-  const daysInMonths: number[] = [];
-  for (let month = 0; month < 12; month++) {
-    months.push([]);
-    daysInMonths.push(new Date(year, month + 1, 0).getDate());
+  const months: ChartMonth[] = [];
+  for (let jump = 11; jump >= 0; jump--) {
+    const month: number = today.getMonth() - jump;
+    months.push({
+      firstDate: new Date(year, month, 1),
+      lastDate: new Date(year, month + 1, 0),
+      subscriptions: []
+    });
   }
+  const startDate: Date = new Date(months[0].firstDate);
+  const endDate: Date = new Date(months[months.length - 1].lastDate);
+
+  console.log(startDate.toISOString() + " " + endDate.toISOString());
 
   for (const sub of subs) {
-    if (sub.start.getFullYear() !== year && sub.end.getFullYear() !== year && (sub.start.getFullYear() > year || sub.end.getFullYear() < year)) {
+    if (sub.start > endDate || sub.end < startDate) {
       continue;
     }
 
     let subDayCount: number = Math.ceil((sub.end.getTime() - sub.start.getTime()) / (1000 * 3600 * 24) + 1);
-    let startMonth: number = 0;
-    let endMonth: number = 11;
-    if (sub.start.getFullYear() == year) {
-      startMonth = sub.start.getMonth();
-    }
-    if (sub.end.getFullYear() == year) {
-      endMonth = sub.end.getMonth();
-    }
 
-    for (let month: number = startMonth; month <= endMonth; month++) {
-      const daysInMonth: number = daysInMonths[month];
-      let dayCount: number = daysInMonth;
-      if (sub.start.getFullYear() === year && sub.start.getMonth() === month) {
-        dayCount = dayCount - sub.start.getDate() + 1;
+    for (const month of months) {
+      if (sub.start > month.lastDate || sub.end < month.firstDate) {
+        continue;
       }
-      if (sub.end.getFullYear() === year && sub.end.getMonth() === month) {
-        dayCount = dayCount - (daysInMonth - sub.end.getDate());
+      let monthDayCount: number = month.lastDate.getDate();
+      if (sub.start > month.firstDate) {
+        monthDayCount = monthDayCount - sub.start.getDate() + 1;
       }
-      const monthAmount = Math.round(sub.totalAmount * (dayCount / subDayCount) * 100) / 100 // TODO rounding errors
-      months[month].push({ month: month, service: sub.service, amount: monthAmount, percentage: 0 });
+      if (sub.end < month.lastDate) {
+        monthDayCount = monthDayCount - (month.lastDate.getDate() - sub.end.getDate());
+      }
+      
+      const monthAmount = Math.round(sub.totalAmount * (monthDayCount / subDayCount) * 100) / 100 // TODO rounding errors
+      month.subscriptions.push({ service: sub.service, amount: monthAmount, percentage: 0 });
     }
   }
 
-  for (let month: number = 0; month < months.length; month++) {
-    const monthTotal: number = months[month].reduce((total: number, entry: MonthSubscription) => total + entry.amount, 0);
-    for (let entry of months[month]) {
+  for (const month of months) {
+    const monthTotal: number = month.subscriptions.reduce((total: number, entry: MonthSubscription) => total + entry.amount, 0);
+    for (let entry of month.subscriptions) {
       entry.percentage = Math.round(entry.amount * 100 / monthTotal); // TODO rounding errors
     }
   }
@@ -64,13 +71,13 @@ function Chart() {
   return (
     <>
       <h2>Chart</h2>
-      {months.map((entries: MonthSubscription[], index: number) => (
+      {months.map((month: ChartMonth) => (
         <>
-          <h4 key={year + "-" + index}>
-            {calendarHeaderDateTimeFormat.format(new Date(year, index, 1))}
+          <h4 key={month.firstDate.getFullYear() + "-" + month.firstDate.getMonth()}>
+            {calendarHeaderDateTimeFormat.format(month.firstDate)}
           </h4>
-          {entries.map((entry: MonthSubscription) => (
-            <div key={year + "-" + entry.month + "-" + entry.service}>
+          {month.subscriptions.map((entry: MonthSubscription) => (
+            <div key={entry.service}>
               {entry.service} - {entry.amount} ({entry.percentage}%)
             </div>
           ))}
