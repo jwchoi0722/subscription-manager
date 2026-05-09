@@ -11,7 +11,8 @@ type MonthSubscription = {
 type ChartMonth = {
   firstDate: Date
   lastDate: Date
-  subscriptions: MonthSubscription[]
+  subscriptions: Map<string, MonthSubscription>
+  totalAmount: number
 }
 
 // const today: Date = new Date();
@@ -35,7 +36,8 @@ function Chart() {
     months.push({
       firstDate: new Date(startDate.getFullYear(), month, 1),
       lastDate: new Date(startDate.getFullYear(), month + 1, 0),
-      subscriptions: []
+      subscriptions: new Map<string, MonthSubscription>(),
+      totalAmount: 0
     });
   }
 
@@ -61,14 +63,15 @@ function Chart() {
       }
       
       const monthAmount = Math.round(sub.totalAmount * (monthDayCount / subDayCount) * 100) / 100 // TODO rounding errors
-      month.subscriptions.push({ service: sub.service, amount: monthAmount, percentage: 0 });
+        + (month.subscriptions.get(sub.service)?.amount ?? 0);
+      month.subscriptions.set(sub.service, { service: sub.service, amount: monthAmount, percentage: 0 });
+      month.totalAmount += monthAmount;
     }
   }
 
   for (const month of months) {
-    const monthTotal: number = month.subscriptions.reduce((total: number, entry: MonthSubscription) => total + entry.amount, 0);
-    for (let entry of month.subscriptions) {
-      entry.percentage = Math.round(entry.amount * 100 / monthTotal); // TODO rounding errors
+    for (const entry of month.subscriptions.values()) {
+      entry.percentage = Math.round(entry.amount * 100 / month.totalAmount); // TODO rounding errors
     }
   }
   
@@ -101,8 +104,8 @@ function Chart() {
           <h4 key={month.firstDate.getFullYear() + "-" + month.firstDate.getMonth()}>
             {calendarHeaderDateTimeFormat.format(month.firstDate)}
           </h4>
-          {month.subscriptions.map((entry: MonthSubscription) => (
-            <div key={entry.service}>
+          {Array.from(month.subscriptions.entries()).map(([ service, entry ]) => (
+            <div key={month.firstDate.getFullYear() + "-" + month.firstDate.getMonth() + "-" + service}>
               {entry.service} - {entry.amount} ({entry.percentage}%)
             </div>
           ))}
