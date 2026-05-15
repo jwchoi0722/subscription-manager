@@ -72,12 +72,12 @@ function MonthView({ subs, onAdd }:
     }
 
     for (let calendarDay of calendarMonth) {
-      let curr = calendarDay.date;
-      if (curr >= sub.start && curr <= sub.end) {
-        calendarDay.subs.push(sub);
-      }
+      let curr: Date = calendarDay.date;
       if (curr > sub.end) {
         break;
+      }
+      if (curr >= sub.start && curr <= sub.end) {
+        calendarDay.subs.push(sub);
       }
     }
   }

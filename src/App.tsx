@@ -2,7 +2,7 @@ import { create } from 'zustand';
 import MonthView from './MonthView';
 import './App.css'
 
-import { getSubscriptions, type Subscription } from "./data";
+import { addSubscription, getSubscriptions, type Subscription } from "./data";
 
 interface SubscriptionsState {
   subscriptions: Subscription[]
@@ -11,17 +11,21 @@ interface SubscriptionsState {
 
 const useSubscriptionStore = create<SubscriptionsState>()((set) => ({
   subscriptions: getSubscriptions(),
-  add: (subscription: Subscription) => set((state: SubscriptionsState) => ({ subscriptions: [...state.subscriptions, subscription]}))
+  add: (subscription: Subscription) => set((state: SubscriptionsState) => ({ subscriptions: [...state.subscriptions, subscription] }))
 }));
 
 function App() {
-  // const [ currSubs, addFunc ] = useSubscriptionStore((state) => [ state.subscriptions, state.add ]);
   const currSubs = useSubscriptionStore((state) => state.subscriptions);
   const addFunc = useSubscriptionStore((state) => state.add);
   
+  const onAdd = (subscription: Subscription) => {
+    addFunc(subscription);
+    addSubscription(subscription);
+  };
+  
   return (
     <>
-      <MonthView subs={currSubs} onAdd={addFunc} />
+      <MonthView subs={currSubs} onAdd={onAdd} />
     </>
   )
 }

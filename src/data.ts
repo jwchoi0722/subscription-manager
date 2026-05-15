@@ -94,5 +94,21 @@ const testSubscriptions: Subscription[] = [
 ];
 
 export function getSubscriptions(): Subscription[] {
-  return testSubscriptions;
+  if (localStorage.getItem("subscriptions") === null) {
+    localStorage.setItem("subscriptions", JSON.stringify(testSubscriptions));
+  }
+
+  const subscriptionObjs: any[] = JSON.parse(localStorage.getItem("subscriptions") as string);
+  const subscriptions: Subscription[] = subscriptionObjs.map((obj) => {
+    let sub: Subscription = obj as Subscription;
+    sub.start = new Date(obj.start);
+    sub.end = new Date(obj.end);
+    return sub;
+  });
+
+  return subscriptions;
+}
+
+export function addSubscription(subscription: Subscription): void {
+  localStorage.setItem("subscriptions", JSON.stringify([...getSubscriptions(), subscription]));
 }
