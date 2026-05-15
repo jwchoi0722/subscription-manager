@@ -34,7 +34,7 @@ const testSub: Subscription = {
   isChanged: false,
 };
 
-function SubscriptionModal({ initValues, closeModal, onSubmit }: { initValues: Subscription | null, closeModal: () => void, onSubmit: (subscription: Subscription) => void } ) {
+function SubscriptionModal({ title, initValues, closeModal, onSubmit }: { title: string, initValues: Subscription | null, closeModal: () => void, onSubmit: (subscription: Subscription) => void } ) {
   // const isModalOpen: boolean = useAddSubscriptionModalStore((state) => state.isOpen);
   // const modalOpenFunc: (open: boolean) => void = useAddSubscriptionModalStore((state) => state.setIsOpen);
 
@@ -42,7 +42,7 @@ function SubscriptionModal({ initValues, closeModal, onSubmit }: { initValues: S
 
   function handleSubmit(formData: FormData): void {
     const addedSub: Subscription = {
-      id: 0,
+      id: sub.id,
       service: formData.get("serviceName") as string,
       servicePlan: formData.get("servicePlanName") as string,
       name: formData.get("name") as string,
@@ -64,7 +64,7 @@ function SubscriptionModal({ initValues, closeModal, onSubmit }: { initValues: S
     <>
       <dialog id="add-subscription-modal" className="add-subscription-modal" open={true}>
           <div className="modal-close-button" onClick={() => closeModal()}>X</div>
-          <h3>Add New Subscription</h3>
+          <h3>{title}</h3>
           <form action={handleSubmit} className="add-subscription-form">
             <div>
               <label htmlFor="serviceName">Service:</label>

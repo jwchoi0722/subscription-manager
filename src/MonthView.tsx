@@ -11,6 +11,10 @@ interface AddSubscriptionModalState {
   setAddModalInitialValues: (sub: Subscription | null) => void
   isAddModalOpen: boolean
   setIsAddModalOpen: (isOpen: boolean) => void
+  editModalInitialValues: Subscription | null
+  setEditModalInitialValues: (sub: Subscription | null) => void
+  isEditModalOpen: boolean
+  setIsEditModalOpen: (isOpen: boolean) => void
 }
 
 interface CalendarMonthState {
@@ -25,7 +29,11 @@ const useAddSubscriptionModalStore = create<AddSubscriptionModalState>()((set) =
   addModalInitialValues: null,
   setAddModalInitialValues: (sub: Subscription | null) => set(() => ({ addModalInitialValues: sub })),
   isAddModalOpen: false,
-  setIsAddModalOpen: (isOpen: boolean) => set(() => ({ isAddModalOpen: isOpen }))
+  setIsAddModalOpen: (isOpen: boolean) => set(() => ({ isAddModalOpen: isOpen })),
+  editModalInitialValues: null, 
+  setEditModalInitialValues: (sub: Subscription | null) => set(() => ({ editModalInitialValues: sub })),
+  isEditModalOpen: false,
+  setIsEditModalOpen: (isOpen: boolean) => set(() => ({ isEditModalOpen: isOpen}))
 }));
 
 const useCalendarMonthStore = create<CalendarMonthState>()((set) => ({
@@ -33,14 +41,18 @@ const useCalendarMonthStore = create<CalendarMonthState>()((set) => ({
   setYearMonth: (year: number, month: number) => set(() => ({ date: new Date(year, month) }))
 }));
 
-function MonthView({ subs, onAdd }:
-  { subs: Subscription[], onAdd: (subscription: Subscription) => void }) {
+function MonthView({ subs, onAdd, onEdit }:
+  { subs: Subscription[], onAdd: (subscription: Subscription) => void, onEdit: (id: number, subscription: Subscription) => void }) {
   const calendarHeaderDateTimeFormat = new Intl.DateTimeFormat("en-US", { month: "long", year: "numeric", timeZone: "UTC" });
 
   const addModalInitialValues: Subscription | null = useAddSubscriptionModalStore((state) => state.addModalInitialValues);
   const setAddModalInitialValues: (sub: Subscription | null) => void = useAddSubscriptionModalStore((state) => state.setAddModalInitialValues);
   const isAddModalOpen: boolean = useAddSubscriptionModalStore((state) => state.isAddModalOpen);
   const setIsAddModalOpen: (isOpen: boolean) => void = useAddSubscriptionModalStore((state) => state.setIsAddModalOpen);
+  const editModalInitialValues: Subscription | null = useAddSubscriptionModalStore((state) => state.editModalInitialValues);
+  const setEditModalInitialValues: (sub: Subscription | null) => void = useAddSubscriptionModalStore((state) => state.setEditModalInitialValues);
+  const isEditModalOpen: boolean = useAddSubscriptionModalStore((state) => state.isEditModalOpen);
+  const setIsEditModalOpen: (isOpen: boolean) => void = useAddSubscriptionModalStore((state) => state.setIsEditModalOpen);
 
   const currDate: Date = useCalendarMonthStore((state) => state.date);
   const currYear: number = currDate.getFullYear();
@@ -85,6 +97,18 @@ function MonthView({ subs, onAdd }:
   return (
     <>
       <h1>Monthly Calendar</h1>
+      
+      <button className="add-subscription-modal-button" onClick={() => {
+        setAddModalInitialValues(null);
+        setIsAddModalOpen(true);
+      }}>
+          Add New
+      </button>
+      {
+        isAddModalOpen && 
+        <SubscriptionModal title="Add New Subscription" initValues={addModalInitialValues} closeModal={() => setIsAddModalOpen(false)} onSubmit={onAdd} />
+      }
+
       <div className="calendar-control">
         <button onClick={() => setYearMonth(currYear, currMonth - 1)}>&lt;</button>
         <button onClick={() => setYearMonth(currYear, currMonth + 1)}>&gt;</button>
@@ -111,7 +135,7 @@ function MonthView({ subs, onAdd }:
                 {entry.subs.map((sub: Subscription) => (
                   <div className={"calendar-entry-sub-entry" + (entry.date.getMonth() !== currMonth ? " off-month" : "")}>
                     <p>{sub.name}</p>
-                    <span onClick={() => {
+                    <span className="calendar-entry-sub-action" onClick={() => {
                       setAddModalInitialValues({
                         ...sub,
                         start: sub.end,
@@ -119,23 +143,32 @@ function MonthView({ subs, onAdd }:
                         isChanged: false
                       } as Subscription);
                       setIsAddModalOpen(true);
-                    }}>+</span>
+                    }}>
+                      +
+                    </span>
+                    <span className="calendar-entry-sub-action" onClick={() => {
+                      setEditModalInitialValues(sub);
+                      setIsEditModalOpen(true);
+                    }}>
+                      *
+                    </span>
                   </div>
+                  
                 ))}
               </div>
             ))}
           </div>
         </div>
       </div>
-
-      <button className="add-subscription-modal-button" onClick={() => {
-        setAddModalInitialValues(null);
-        setIsAddModalOpen(true);
-      }}>
-          Add New
-      </button>
       {
-        isAddModalOpen && <SubscriptionModal initValues={addModalInitialValues} closeModal={() => setIsAddModalOpen(false)} onSubmit={onAdd} />
+        isEditModalOpen && 
+        <SubscriptionModal title={"Edit Subscription"}
+          initValues={editModalInitialValues} 
+          closeModal={() => setIsEditModalOpen(false)} 
+          onSubmit={(sub: Subscription) => {
+            onEdit(sub.id, sub);
+          }}
+        />
       }
     </>
   );

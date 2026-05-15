@@ -112,3 +112,7 @@ export function getSubscriptions(): Subscription[] {
 export function addSubscription(subscription: Subscription): void {
   localStorage.setItem("subscriptions", JSON.stringify([...getSubscriptions(), subscription]));
 }
+
+export function updateSubscription(id: number, subscription: Subscription): void {
+  localStorage.setItem("subscriptions", JSON.stringify(getSubscriptions().map((entry) => entry.id === id ? subscription : entry)));
+}
