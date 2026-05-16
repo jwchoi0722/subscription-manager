@@ -20,36 +20,41 @@ import type { Subscription } from "./data";
 //   setIsOpen: (open: boolean) => set(() => ({ isOpen: open}))
 // }));
 
-const testSub: Subscription = {
-  id: 4002,
-  service: "HIDIVE",
-  servicePlan: "Standard",
-  name: "HIDIVE (Standard)",
-  start: new Date("2026-01-09"),
-  end: new Date("2026-02-09"),
-  priceAmount: 8.99,
+// const today: Date = new Date();
+const today: Date = new Date(2026, 0, 2);
+
+const blankSub: Subscription = {
+  id: 0,
+  service: "",
+  servicePlan: "",
+  name: "",
+  start: today,
+  end: new Date(today.getFullYear(), today.getMonth() + 1, today.getDate()),
+  priceAmount: 0,
   priceCurrency: "CAD",
-  totalAmount: 10.07,
+  totalAmount: 0,
   isAutoRenew: true,
   isChanged: false,
 };
 
-function SubscriptionModal({ title, initValues, closeModal, onSubmit }: 
+function SubscriptionModal({ isAdd, initValues, closeModal, onSubmit }: 
   { 
-    title: string, 
+    isAdd: boolean, 
     initValues: Subscription | null, 
     closeModal: () => void, 
     onSubmit: (subscription: Subscription) => void 
   }) 
 {
-  // const isModalOpen: boolean = useAddSubscriptionModalStore((state) => state.isOpen);
-  // const modalOpenFunc: (open: boolean) => void = useAddSubscriptionModalStore((state) => state.setIsOpen);
-
-  let sub: Subscription = initValues ?? testSub;
+  let sub: Subscription = initValues ?? blankSub;
 
   function handleSubmit(formData: FormData): void {
+    let id: number = sub.id;
+    if (isAdd) {
+      id = Math.floor(new Date().getTime() / 10);
+    }
+
     const addedSub: Subscription = {
-      id: sub.id,
+      id: id,
       service: formData.get("serviceName") as string,
       servicePlan: formData.get("servicePlanName") as string,
       name: formData.get("name") as string,
@@ -61,7 +66,7 @@ function SubscriptionModal({ title, initValues, closeModal, onSubmit }:
       isAutoRenew: formData.get("isAutoRenew") === "on",
       isChanged: false
     }
-    // console.log(addedSub);
+
     onSubmit(addedSub);
 
     closeModal();
@@ -71,17 +76,17 @@ function SubscriptionModal({ title, initValues, closeModal, onSubmit }:
     <>
       <dialog id="add-subscription-modal" className="add-subscription-modal" open={true}>
         <div className="modal-close-button" onClick={() => closeModal()}>X</div>
-        <h3>{title}</h3>
+        <h3>{isAdd ? "Add New Subscription" : "Edit Subscription"}</h3>
         <form action={handleSubmit} className="add-subscription-form">
           <div>
             <label htmlFor="serviceName">Service:</label>
-            <input type="text" name="serviceName" defaultValue={sub.service} />
+            <input type="text" name="serviceName" defaultValue={sub.service} placeholder="Streamer" />
             <label htmlFor="servicePlanName">Plan:</label>
-            <input type="text" name="servicePlanName" defaultValue={sub.servicePlan} />
+            <input type="text" name="servicePlanName" defaultValue={sub.servicePlan} placeholder="Premium" />
           </div>
           <div>
             <label htmlFor="name">Name:</label>
-            <input type="text" name="name" defaultValue={sub.name} />
+            <input type="text" name="name" defaultValue={sub.name} placeholder="Streamer (Premium)" />
           </div>
           <div>
             <label htmlFor="startDate">Start Date:</label>

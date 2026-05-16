@@ -119,7 +119,11 @@ function MonthView({ subs, onAdd, onEdit, onDelete }:
       
       {
         isDeleteDialogOpen &&
-        <SubscriptionDialog subscription={deleteModalInitialValues} onSubmit={onDelete} close={() => setIsDeleteDialogOpen(false)} />
+        <SubscriptionDialog
+          subscription={deleteModalInitialValues} 
+          onSubmit={onDelete} 
+          close={() => setIsDeleteDialogOpen(false)} 
+        />
       }
 
       <button className="add-subscription-modal-button" onClick={() => {
@@ -130,7 +134,12 @@ function MonthView({ subs, onAdd, onEdit, onDelete }:
       </button>
       {
         isAddModalOpen && 
-        <SubscriptionModal title="Add New Subscription" initValues={addModalInitialValues} closeModal={() => setIsAddModalOpen(false)} onSubmit={onAdd} />
+        <SubscriptionModal 
+          isAdd={true} 
+          initValues={addModalInitialValues} 
+          closeModal={() => setIsAddModalOpen(false)} 
+          onSubmit={onAdd} 
+        />
       }
 
       <div className="calendar-control">
@@ -191,7 +200,8 @@ function MonthView({ subs, onAdd, onEdit, onDelete }:
       </div>
       {
         isEditModalOpen && 
-        <SubscriptionModal title={"Edit Subscription"}
+        <SubscriptionModal 
+          isAdd={false}
           initValues={editModalInitialValues} 
           closeModal={() => setIsEditModalOpen(false)} 
           onSubmit={(sub: Subscription) => {
