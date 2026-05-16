@@ -3,12 +3,24 @@
   grid-template-columns: repeat(7, 1fr);
 }
 
+.calendar-entry {
+  border: 1px solid white;
+}
+
+.calendar-entry.today {
+  border: 6px double white;
+}
+
+.calendar-entry.off-month {
+  border: none;
+}
+
 .calendar-entry-sub-entry {
   display: flex;
 }
 
-.calendar-entry-sub-entry.off-month {
-  font-style: italic;
+.off-month .calendar-entry-sub-entry {
+  color: lightgray;
 }
 
 .calendar-entry-sub-entry span.calendar-entry-sub-action  {

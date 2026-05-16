@@ -161,12 +161,15 @@ function MonthView({ subs, onAdd, onEdit, onDelete }:
           </div>
           <div className="calendar-grid">
             {calendarMonth.map((entry) => (
-              <div className="calendar-entry">
+              <div className={"calendar-entry" 
+                + (entry.date.getMonth() !== currMonth ? " off-month" : "") 
+                + (today.getDate() == entry.date.getDate() && today.getMonth() == entry.date.getMonth() && today.getFullYear() == entry.date.getFullYear() ? " today" : "")}
+              >
                 <div className="calendar-entry-header">
                   <h3>{entry.date.getDate()}</h3>
                 </div>
                 {entry.subs.map((sub: Subscription) => (
-                  <div className={"calendar-entry-sub-entry" + (entry.date.getMonth() !== currMonth ? " off-month" : "")}>
+                  <div className={"calendar-entry-sub-entry"}>
                     <p>{sub.name}</p>
                     <span className="calendar-entry-sub-action" onClick={() => {
                       setAddModalInitialValues({
