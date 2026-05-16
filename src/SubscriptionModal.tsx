@@ -34,7 +34,14 @@ const testSub: Subscription = {
   isChanged: false,
 };
 
-function SubscriptionModal({ title, initValues, closeModal, onSubmit }: { title: string, initValues: Subscription | null, closeModal: () => void, onSubmit: (subscription: Subscription) => void } ) {
+function SubscriptionModal({ title, initValues, closeModal, onSubmit }: 
+  { 
+    title: string, 
+    initValues: Subscription | null, 
+    closeModal: () => void, 
+    onSubmit: (subscription: Subscription) => void 
+  }) 
+{
   // const isModalOpen: boolean = useAddSubscriptionModalStore((state) => state.isOpen);
   // const modalOpenFunc: (open: boolean) => void = useAddSubscriptionModalStore((state) => state.setIsOpen);
 
@@ -63,43 +70,43 @@ function SubscriptionModal({ title, initValues, closeModal, onSubmit }: { title:
   return (
     <>
       <dialog id="add-subscription-modal" className="add-subscription-modal" open={true}>
-          <div className="modal-close-button" onClick={() => closeModal()}>X</div>
-          <h3>{title}</h3>
-          <form action={handleSubmit} className="add-subscription-form">
-            <div>
-              <label htmlFor="serviceName">Service:</label>
-              <input type="text" name="serviceName" defaultValue={sub.service} />
-              <label htmlFor="servicePlanName">Plan:</label>
-              <input type="text" name="servicePlanName" defaultValue={sub.servicePlan} />
-            </div>
-            <div>
-              <label htmlFor="name">Name:</label>
-              <input type="text" name="name" defaultValue={sub.name} />
-            </div>
-            <div>
-              <label htmlFor="startDate">Start Date:</label>
-              <input type="date" name="startDate" defaultValue={sub.start.toISOString().slice(0, 10)} />
-              <label htmlFor="endDate">End Date:</label>
-              <input type="date" name="endDate" defaultValue={sub.end.toISOString().slice(0, 10)} />
-            </div>
-            <div>
-              <label htmlFor="amount">Amount:</label>
-              <input type="number" name="amount" step="0.01" defaultValue={sub.priceAmount} />
-              <label htmlFor="totalAmount">Total:</label>
-              <input type="number" name="totalAmount" step="0.01" defaultValue={sub.totalAmount} />
-            </div>
-            <div>
-              <label htmlFor="isAutoRenew">Auto-Renew:</label>
-              <input type="checkbox" name="isAutoRenew" defaultChecked={sub.isAutoRenew} />
-            </div>
-            <div className="add-subscription-save-button">
-              <button>
-                Save
-              </button>
-            </div>
-          </form>
-        </dialog>
-      </>
+        <div className="modal-close-button" onClick={() => closeModal()}>X</div>
+        <h3>{title}</h3>
+        <form action={handleSubmit} className="add-subscription-form">
+          <div>
+            <label htmlFor="serviceName">Service:</label>
+            <input type="text" name="serviceName" defaultValue={sub.service} />
+            <label htmlFor="servicePlanName">Plan:</label>
+            <input type="text" name="servicePlanName" defaultValue={sub.servicePlan} />
+          </div>
+          <div>
+            <label htmlFor="name">Name:</label>
+            <input type="text" name="name" defaultValue={sub.name} />
+          </div>
+          <div>
+            <label htmlFor="startDate">Start Date:</label>
+            <input type="date" name="startDate" defaultValue={sub.start.toISOString().slice(0, 10)} />
+            <label htmlFor="endDate">End Date:</label>
+            <input type="date" name="endDate" defaultValue={sub.end.toISOString().slice(0, 10)} />
+          </div>
+          <div>
+            <label htmlFor="amount">Amount:</label>
+            <input type="number" name="amount" step="0.01" defaultValue={sub.priceAmount} />
+            <label htmlFor="totalAmount">Total:</label>
+            <input type="number" name="totalAmount" step="0.01" defaultValue={sub.totalAmount} />
+          </div>
+          <div>
+            <label htmlFor="isAutoRenew">Auto-Renew:</label>
+            <input type="checkbox" name="isAutoRenew" defaultChecked={sub.isAutoRenew} />
+          </div>
+          <div className="add-subscription-save-button">
+            <button>
+              Save
+            </button>
+          </div>
+        </form>
+      </dialog>
+    </>
   );
 }
 

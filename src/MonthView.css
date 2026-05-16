@@ -23,7 +23,7 @@
   text-align: left;
 }
 
-.add-subscription-modal .modal-close-button {
+.add-subscription-modal .modal-close-button, .subscription-dialog .modal-close-button {
   position: absolute;
   right: 5%;
   cursor: pointer;

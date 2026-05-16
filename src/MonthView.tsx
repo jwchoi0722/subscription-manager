@@ -3,6 +3,7 @@ import { create } from 'zustand';
 import type { Subscription } from "./data";
 
 import SubscriptionModal from './SubscriptionModal';
+import SubscriptionDialog from './SubscriptionDialog';
 
 import "./MonthView.css";
 
@@ -15,6 +16,10 @@ interface AddSubscriptionModalState {
   setEditModalInitialValues: (sub: Subscription | null) => void
   isEditModalOpen: boolean
   setIsEditModalOpen: (isOpen: boolean) => void
+  deleteModalInitialValues: Subscription | null
+  setDeleteModalInitialValues: (sub: Subscription | null) => void
+  isDeleteDialogOpen: boolean
+  setIsDeleteDialogOpen: (isOpen: boolean) => void
 }
 
 interface CalendarMonthState {
@@ -33,7 +38,11 @@ const useAddSubscriptionModalStore = create<AddSubscriptionModalState>()((set) =
   editModalInitialValues: null, 
   setEditModalInitialValues: (sub: Subscription | null) => set(() => ({ editModalInitialValues: sub })),
   isEditModalOpen: false,
-  setIsEditModalOpen: (isOpen: boolean) => set(() => ({ isEditModalOpen: isOpen}))
+  setIsEditModalOpen: (isOpen: boolean) => set(() => ({ isEditModalOpen: isOpen})),
+  deleteModalInitialValues: null,
+  setDeleteModalInitialValues: (sub: Subscription | null) => set(() => ({ deleteModalInitialValues: sub })),
+  isDeleteDialogOpen: false,
+  setIsDeleteDialogOpen: (isOpen: boolean) => set(() => ({ isDeleteDialogOpen: isOpen})),
 }));
 
 const useCalendarMonthStore = create<CalendarMonthState>()((set) => ({
@@ -41,8 +50,14 @@ const useCalendarMonthStore = create<CalendarMonthState>()((set) => ({
   setYearMonth: (year: number, month: number) => set(() => ({ date: new Date(year, month) }))
 }));
 
-function MonthView({ subs, onAdd, onEdit }:
-  { subs: Subscription[], onAdd: (subscription: Subscription) => void, onEdit: (id: number, subscription: Subscription) => void }) {
+function MonthView({ subs, onAdd, onEdit, onDelete }:
+  {
+    subs: Subscription[], 
+    onAdd: (subscription: Subscription) => void, 
+    onEdit: (id: number, subscription: Subscription) => void, 
+    onDelete: (id: number) => void
+  }) 
+{
   const calendarHeaderDateTimeFormat = new Intl.DateTimeFormat("en-US", { month: "long", year: "numeric", timeZone: "UTC" });
 
   const addModalInitialValues: Subscription | null = useAddSubscriptionModalStore((state) => state.addModalInitialValues);
@@ -53,6 +68,10 @@ function MonthView({ subs, onAdd, onEdit }:
   const setEditModalInitialValues: (sub: Subscription | null) => void = useAddSubscriptionModalStore((state) => state.setEditModalInitialValues);
   const isEditModalOpen: boolean = useAddSubscriptionModalStore((state) => state.isEditModalOpen);
   const setIsEditModalOpen: (isOpen: boolean) => void = useAddSubscriptionModalStore((state) => state.setIsEditModalOpen);
+  const deleteModalInitialValues: Subscription | null = useAddSubscriptionModalStore((state) => state.deleteModalInitialValues);
+  const setDeleteModalInitialValues: (sub: Subscription | null) => void = useAddSubscriptionModalStore((state) => state.setDeleteModalInitialValues);
+  const isDeleteDialogOpen: boolean = useAddSubscriptionModalStore((state) => state.isDeleteDialogOpen);
+  const setIsDeleteDialogOpen: (isOpen: boolean) => void = useAddSubscriptionModalStore((state) => state.setIsDeleteDialogOpen);
 
   const currDate: Date = useCalendarMonthStore((state) => state.date);
   const currYear: number = currDate.getFullYear();
@@ -98,6 +117,11 @@ function MonthView({ subs, onAdd, onEdit }:
     <>
       <h1>Monthly Calendar</h1>
       
+      {
+        isDeleteDialogOpen &&
+        <SubscriptionDialog subscription={deleteModalInitialValues} onSubmit={onDelete} close={() => setIsDeleteDialogOpen(false)} />
+      }
+
       <button className="add-subscription-modal-button" onClick={() => {
         setAddModalInitialValues(null);
         setIsAddModalOpen(true);
@@ -152,8 +176,13 @@ function MonthView({ subs, onAdd, onEdit }:
                     }}>
                       *
                     </span>
+                    <span className="calendar-entry-sub-action" onClick={() => {
+                      setDeleteModalInitialValues(sub);
+                      setIsDeleteDialogOpen(true);
+                    }}>
+                      -
+                    </span>
                   </div>
-                  
                 ))}
               </div>
             ))}

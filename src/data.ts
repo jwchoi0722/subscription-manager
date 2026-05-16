@@ -93,12 +93,14 @@ const testSubscriptions: Subscription[] = [
   },
 ];
 
+const STORAGE_KEY = "subscriptions";
+
 export function getSubscriptions(): Subscription[] {
-  if (localStorage.getItem("subscriptions") === null) {
-    localStorage.setItem("subscriptions", JSON.stringify(testSubscriptions));
+  if (localStorage.getItem(STORAGE_KEY) === null) {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(testSubscriptions));
   }
 
-  const subscriptionObjs: any[] = JSON.parse(localStorage.getItem("subscriptions") as string);
+  const subscriptionObjs: any[] = JSON.parse(localStorage.getItem(STORAGE_KEY) as string);
   const subscriptions: Subscription[] = subscriptionObjs.map((obj) => {
     let sub: Subscription = obj as Subscription;
     sub.start = new Date(obj.start);
@@ -110,9 +112,13 @@ export function getSubscriptions(): Subscription[] {
 }
 
 export function addSubscription(subscription: Subscription): void {
-  localStorage.setItem("subscriptions", JSON.stringify([...getSubscriptions(), subscription]));
+  localStorage.setItem(STORAGE_KEY, JSON.stringify([...getSubscriptions(), subscription]));
 }
 
 export function updateSubscription(id: number, subscription: Subscription): void {
-  localStorage.setItem("subscriptions", JSON.stringify(getSubscriptions().map((entry) => entry.id === id ? subscription : entry)));
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(getSubscriptions().map((entry) => entry.id === id ? subscription : entry)));
+}
+
+export function deleteSubscription(id: number): void {
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(getSubscriptions().filter((entry) => entry.id !== id)));
 }
