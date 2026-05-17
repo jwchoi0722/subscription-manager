@@ -2,25 +2,12 @@ import { create } from 'zustand';
 
 import type { Subscription } from "./data";
 
+import { useSubscriptionModalStore } from './store';
+import MonthEntryView from './MonthEntryView';
 import SubscriptionModal from './SubscriptionModal';
 import SubscriptionDialog from './SubscriptionDialog';
 
 import "./MonthView.css";
-
-interface AddSubscriptionModalState {
-  addModalInitialValues: Subscription | null
-  setAddModalInitialValues: (sub: Subscription | null) => void
-  isAddModalOpen: boolean
-  setIsAddModalOpen: (isOpen: boolean) => void
-  editModalInitialValues: Subscription | null
-  setEditModalInitialValues: (sub: Subscription | null) => void
-  isEditModalOpen: boolean
-  setIsEditModalOpen: (isOpen: boolean) => void
-  deleteModalInitialValues: Subscription | null
-  setDeleteModalInitialValues: (sub: Subscription | null) => void
-  isDeleteDialogOpen: boolean
-  setIsDeleteDialogOpen: (isOpen: boolean) => void
-}
 
 interface CalendarMonthState {
   date: Date
@@ -29,21 +16,6 @@ interface CalendarMonthState {
 
 // const today: Date = new Date();
 const today: Date = new Date(2026, 0, 2);
-
-const useAddSubscriptionModalStore = create<AddSubscriptionModalState>()((set) => ({
-  addModalInitialValues: null,
-  setAddModalInitialValues: (sub: Subscription | null) => set(() => ({ addModalInitialValues: sub })),
-  isAddModalOpen: false,
-  setIsAddModalOpen: (isOpen: boolean) => set(() => ({ isAddModalOpen: isOpen })),
-  editModalInitialValues: null, 
-  setEditModalInitialValues: (sub: Subscription | null) => set(() => ({ editModalInitialValues: sub })),
-  isEditModalOpen: false,
-  setIsEditModalOpen: (isOpen: boolean) => set(() => ({ isEditModalOpen: isOpen})),
-  deleteModalInitialValues: null,
-  setDeleteModalInitialValues: (sub: Subscription | null) => set(() => ({ deleteModalInitialValues: sub })),
-  isDeleteDialogOpen: false,
-  setIsDeleteDialogOpen: (isOpen: boolean) => set(() => ({ isDeleteDialogOpen: isOpen})),
-}));
 
 const useCalendarMonthStore = create<CalendarMonthState>()((set) => ({
   date: today,
@@ -60,18 +32,16 @@ function MonthView({ subs, onAdd, onEdit, onDelete }:
 {
   const calendarHeaderDateTimeFormat = new Intl.DateTimeFormat("en-US", { month: "long", year: "numeric", timeZone: "UTC" });
 
-  const addModalInitialValues: Subscription | null = useAddSubscriptionModalStore((state) => state.addModalInitialValues);
-  const setAddModalInitialValues: (sub: Subscription | null) => void = useAddSubscriptionModalStore((state) => state.setAddModalInitialValues);
-  const isAddModalOpen: boolean = useAddSubscriptionModalStore((state) => state.isAddModalOpen);
-  const setIsAddModalOpen: (isOpen: boolean) => void = useAddSubscriptionModalStore((state) => state.setIsAddModalOpen);
-  const editModalInitialValues: Subscription | null = useAddSubscriptionModalStore((state) => state.editModalInitialValues);
-  const setEditModalInitialValues: (sub: Subscription | null) => void = useAddSubscriptionModalStore((state) => state.setEditModalInitialValues);
-  const isEditModalOpen: boolean = useAddSubscriptionModalStore((state) => state.isEditModalOpen);
-  const setIsEditModalOpen: (isOpen: boolean) => void = useAddSubscriptionModalStore((state) => state.setIsEditModalOpen);
-  const deleteModalInitialValues: Subscription | null = useAddSubscriptionModalStore((state) => state.deleteModalInitialValues);
-  const setDeleteModalInitialValues: (sub: Subscription | null) => void = useAddSubscriptionModalStore((state) => state.setDeleteModalInitialValues);
-  const isDeleteDialogOpen: boolean = useAddSubscriptionModalStore((state) => state.isDeleteDialogOpen);
-  const setIsDeleteDialogOpen: (isOpen: boolean) => void = useAddSubscriptionModalStore((state) => state.setIsDeleteDialogOpen);
+  const addModalInitialValues: Subscription | null = useSubscriptionModalStore((state) => state.addModalInitialValues);
+  const setAddModalInitialValues: (sub: Subscription | null) => void = useSubscriptionModalStore((state) => state.setAddModalInitialValues);
+  const isAddModalOpen: boolean = useSubscriptionModalStore((state) => state.isAddModalOpen);
+  const setIsAddModalOpen: (isOpen: boolean) => void = useSubscriptionModalStore((state) => state.setIsAddModalOpen);
+  const editModalInitialValues: Subscription | null = useSubscriptionModalStore((state) => state.editModalInitialValues);
+  const isEditModalOpen: boolean = useSubscriptionModalStore((state) => state.isEditModalOpen);
+  const setIsEditModalOpen: (isOpen: boolean) => void = useSubscriptionModalStore((state) => state.setIsEditModalOpen);
+  const deleteModalInitialValues: Subscription | null = useSubscriptionModalStore((state) => state.deleteModalInitialValues);
+  const isDeleteDialogOpen: boolean = useSubscriptionModalStore((state) => state.isDeleteDialogOpen);
+  const setIsDeleteDialogOpen: (isOpen: boolean) => void = useSubscriptionModalStore((state) => state.setIsDeleteDialogOpen);
 
   const currDate: Date = useCalendarMonthStore((state) => state.date);
   const currYear: number = currDate.getFullYear();
@@ -161,42 +131,7 @@ function MonthView({ subs, onAdd, onEdit, onDelete }:
           </div>
           <div className="calendar-grid">
             {calendarMonth.map((entry) => (
-              <div className={"calendar-entry" 
-                + (entry.date.getMonth() !== currMonth ? " off-month" : "") 
-                + (today.getDate() == entry.date.getDate() && today.getMonth() == entry.date.getMonth() && today.getFullYear() == entry.date.getFullYear() ? " today" : "")}
-              >
-                <div className="calendar-entry-header">
-                  <h3>{entry.date.getDate()}</h3>
-                </div>
-                {entry.subs.map((sub: Subscription) => (
-                  <div className={"calendar-entry-sub-entry"}>
-                    <p>{sub.name}</p>
-                    <span className="calendar-entry-sub-action" onClick={() => {
-                      setAddModalInitialValues({
-                        ...sub,
-                        start: sub.end,
-                        end: new Date(sub.end.getTime() + (sub.end.getTime() - sub.start.getTime())),
-                        isChanged: false
-                      } as Subscription);
-                      setIsAddModalOpen(true);
-                    }}>
-                      +
-                    </span>
-                    <span className="calendar-entry-sub-action" onClick={() => {
-                      setEditModalInitialValues(sub);
-                      setIsEditModalOpen(true);
-                    }}>
-                      *
-                    </span>
-                    <span className="calendar-entry-sub-action" onClick={() => {
-                      setDeleteModalInitialValues(sub);
-                      setIsDeleteDialogOpen(true);
-                    }}>
-                      -
-                    </span>
-                  </div>
-                ))}
-              </div>
+              <MonthEntryView key={entry.date.toISOString().slice(0, 10)} date={entry.date} subs={entry.subs} today={today} />
             ))}
           </div>
         </div>
