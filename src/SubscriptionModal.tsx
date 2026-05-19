@@ -74,7 +74,7 @@ function SubscriptionModal({ isAdd, initValues, closeModal, onSubmit }:
 
   return (
     <>
-      <dialog id="add-subscription-modal" className="add-subscription-modal" open={true}>
+      <dialog id={(isAdd ? "add" : "edit") + "-subscription-modal"} className="add-subscription-modal" open={true}>
         <div className="modal-close-button" onClick={() => closeModal()}>X</div>
         <h3>{isAdd ? "Add New Subscription" : "Edit Subscription"}</h3>
         <form action={handleSubmit} className="add-subscription-form">
