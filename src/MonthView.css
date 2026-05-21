@@ -23,6 +23,10 @@
   color: lightgray;
 }
 
+.calendar-entry-sub-entry .sub-name {
+  cursor: pointer;
+}
+
 .calendar-entry-sub-entry span.calendar-entry-sub-action  {
   cursor: pointer;
   padding-left: 2px;
@@ -35,7 +39,7 @@
   text-align: left;
 }
 
-.add-subscription-modal .modal-close-button, .subscription-dialog .modal-close-button {
+.add-subscription-modal .modal-close-button, .subscription-dialog .modal-close-button, .subscription-details-modal .modal-close-button {
   position: absolute;
   right: 5%;
   cursor: pointer;

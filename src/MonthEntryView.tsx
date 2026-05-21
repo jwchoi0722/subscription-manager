@@ -9,6 +9,8 @@ function MonthEntryView({ date, subs, today }: { date: Date, subs: Subscription[
   const setIsEditModalOpen: (isOpen: boolean) => void = useSubscriptionModalStore((state) => state.setIsEditModalOpen);
   const setDeleteModalInitialValues: (sub: Subscription | null) => void = useSubscriptionModalStore((state) => state.setDeleteModalInitialValues);
   const setIsDeleteDialogOpen: (isOpen: boolean) => void = useSubscriptionModalStore((state) => state.setIsDeleteDialogOpen);
+  const setDetailsModalValues: (sub: Subscription | null) => void = useSubscriptionModalStore((state) => state.setDetailsModalValues);
+  const setIsDetailsModalOpen: (isOpen: boolean) => void = useSubscriptionModalStore((state) => state.setIsDetailsModalOpen);
 
   return (
     <div className={"calendar-entry" 
@@ -20,7 +22,12 @@ function MonthEntryView({ date, subs, today }: { date: Date, subs: Subscription[
       </div>
       {subs.map((sub: Subscription) => (
         <div className={"calendar-entry-sub-entry"}>
-          <p>{sub.name}</p>
+          <p className="sub-name" onClick={() => {
+            setDetailsModalValues(sub);
+            setIsDetailsModalOpen(true);
+          }}>
+            {sub.name}
+          </p>
           <span className="calendar-entry-sub-action" onClick={() => {
             setAddModalInitialValues({
               ...sub,

@@ -6,6 +6,7 @@ import { useSubscriptionModalStore } from './store';
 import MonthEntryView from './MonthEntryView';
 import SubscriptionModal from './SubscriptionModal';
 import SubscriptionDialog from './SubscriptionDialog';
+import SubscriptionDetails from './SubscriptionDetails';
 
 import "./MonthView.css";
 
@@ -42,6 +43,9 @@ function MonthView({ subs, onAdd, onEdit, onDelete }:
   const deleteModalInitialValues: Subscription | null = useSubscriptionModalStore((state) => state.deleteModalInitialValues);
   const isDeleteDialogOpen: boolean = useSubscriptionModalStore((state) => state.isDeleteDialogOpen);
   const setIsDeleteDialogOpen: (isOpen: boolean) => void = useSubscriptionModalStore((state) => state.setIsDeleteDialogOpen);
+  const detailsModalValues: Subscription | null = useSubscriptionModalStore((state) => state.detailsModalValues);
+  const isDetailsModalOpen: boolean = useSubscriptionModalStore((state) => state.isDetailsModalOpen);
+  const setIsDetailsModalOpen: (isOpen: boolean) => void = useSubscriptionModalStore((state) => state.setIsDetailsModalOpen);
 
   const currDate: Date = useCalendarMonthStore((state) => state.date);
   const currYear: number = currDate.getFullYear();
@@ -146,6 +150,10 @@ function MonthView({ subs, onAdd, onEdit, onDelete }:
             onEdit(sub.id, sub);
           }}
         />
+      }
+      {
+        isDetailsModalOpen &&
+        <SubscriptionDetails sub={detailsModalValues} closeModal={() => setIsDetailsModalOpen(false)} />
       }
     </>
   );

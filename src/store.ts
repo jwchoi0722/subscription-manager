@@ -15,6 +15,10 @@ interface SubscriptionModalState {
   setDeleteModalInitialValues: (sub: Subscription | null) => void
   isDeleteDialogOpen: boolean
   setIsDeleteDialogOpen: (isOpen: boolean) => void
+  detailsModalValues: Subscription | null
+  setDetailsModalValues: (sub: Subscription | null) => void
+  isDetailsModalOpen: boolean
+  setIsDetailsModalOpen: (isOpen: boolean) => void
 }
 
 export const useSubscriptionModalStore = create<SubscriptionModalState>()((set) => ({
@@ -30,4 +34,8 @@ export const useSubscriptionModalStore = create<SubscriptionModalState>()((set) 
   setDeleteModalInitialValues: (sub: Subscription | null) => set(() => ({ deleteModalInitialValues: sub })),
   isDeleteDialogOpen: false,
   setIsDeleteDialogOpen: (isOpen: boolean) => set(() => ({ isDeleteDialogOpen: isOpen})),
+  detailsModalValues: null,
+  setDetailsModalValues: (sub: Subscription | null) => set(() => ({ detailsModalValues: sub })),
+  isDetailsModalOpen: false,
+  setIsDetailsModalOpen: (isOpen: boolean) => set(() => ({ isDetailsModalOpen: isOpen }))
 }));
