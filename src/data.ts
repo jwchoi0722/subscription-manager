@@ -12,6 +12,14 @@ export type Subscription = {
   isChanged: boolean
 }
 
+export type Service = {
+  id: number,
+  name: string,
+  homeUrl: string,
+  logoUrl: string,
+  accountUrl: string
+}
+
 const testSubscriptions: Subscription[] = [
   {
     id: 1003,
@@ -93,6 +101,37 @@ const testSubscriptions: Subscription[] = [
   },
 ];
 
+const testServices: Service[] = [
+  {
+    id: 1,
+    name: "Netflix",
+    homeUrl: "https://www.netflix.com",
+    logoUrl: "",
+    accountUrl: "https://www.netflix.com/account"
+  },
+  {
+    id: 2,
+    name: "Disney Plus",
+    homeUrl: "https://www.disneyplus.com",
+    logoUrl: "",
+    accountUrl: "https://www.disneyplus.com/commerce/account"
+  },
+  {
+    id: 3,
+    name: "Crunchyroll",
+    homeUrl: "https://www.crunchyroll.com",
+    logoUrl: "",
+    accountUrl: "https://www.crunchyroll.com/account/membership"
+  },
+  {
+    id: 4,
+    name: "HIDIVE",
+    homeUrl: "https://www.hidive.com",
+    logoUrl: "",
+    accountUrl: "https://www.hidive.com/account?section=subscriptions"
+  }
+]
+
 const STORAGE_KEY = "subscriptions";
 
 export function getSubscriptions(): Subscription[] {
@@ -121,4 +160,8 @@ export function updateSubscription(id: number, subscription: Subscription): void
 
 export function deleteSubscription(id: number): void {
   localStorage.setItem(STORAGE_KEY, JSON.stringify(getSubscriptions().filter((entry) => entry.id !== id)));
+}
+
+export function getServices(): Service[] {
+  return testServices;
 }
