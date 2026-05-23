@@ -1,6 +1,6 @@
 import { create } from 'zustand';
 
-import type { Subscription } from "./data";
+import type { Subscription, Service } from "./data";
 
 import { useSubscriptionModalStore } from './store';
 import MonthEntryView from './MonthEntryView';
@@ -23,9 +23,10 @@ const useCalendarMonthStore = create<CalendarMonthState>()((set) => ({
   setYearMonth: (year: number, month: number) => set(() => ({ date: new Date(year, month) }))
 }));
 
-function MonthView({ subs, onAdd, onEdit, onDelete }:
+function MonthView({ subs, services, onAdd, onEdit, onDelete }:
   {
     subs: Subscription[], 
+    services: Service[],
     onAdd: (subscription: Subscription) => void, 
     onEdit: (id: number, subscription: Subscription) => void, 
     onDelete: (id: number) => void
@@ -110,7 +111,8 @@ function MonthView({ subs, onAdd, onEdit, onDelete }:
         isAddModalOpen && 
         <SubscriptionModal 
           isAdd={true} 
-          initValues={addModalInitialValues} 
+          initValues={addModalInitialValues}
+          serviceOptions={services.map((service: Service) => service.name)}
           closeModal={() => setIsAddModalOpen(false)} 
           onSubmit={onAdd} 
         />
@@ -144,7 +146,8 @@ function MonthView({ subs, onAdd, onEdit, onDelete }:
         isEditModalOpen && 
         <SubscriptionModal 
           isAdd={false}
-          initValues={editModalInitialValues} 
+          initValues={editModalInitialValues}
+          serviceOptions={services.map((service: Service) => service.name)}
           closeModal={() => setIsEditModalOpen(false)} 
           onSubmit={(sub: Subscription) => {
             onEdit(sub.id, sub);

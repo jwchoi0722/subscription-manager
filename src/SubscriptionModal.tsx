@@ -37,10 +37,11 @@ const blankSub: Subscription = {
   isChanged: false,
 };
 
-function SubscriptionModal({ isAdd, initValues, closeModal, onSubmit }: 
+function SubscriptionModal({ isAdd, initValues, serviceOptions, closeModal, onSubmit }: 
   { 
     isAdd: boolean, 
     initValues: Subscription | null, 
+    serviceOptions: string[],
     closeModal: () => void, 
     onSubmit: (subscription: Subscription) => void 
   }) 
@@ -80,7 +81,12 @@ function SubscriptionModal({ isAdd, initValues, closeModal, onSubmit }:
         <form action={handleSubmit} className="add-subscription-form">
           <div>
             <label htmlFor="serviceName">Service:</label>
-            <input type="text" name="serviceName" defaultValue={sub.service} placeholder="Streamer" />
+            <select name="serviceName" defaultValue={sub.service}>
+              <option value="">Select a Service</option>
+              {serviceOptions.map((service: string) => 
+                <option value={service} selected={service === sub.service}>{service}</option>
+              )}
+            </select>
             <label htmlFor="servicePlanName">Plan:</label>
             <input type="text" name="servicePlanName" defaultValue={sub.servicePlan} placeholder="Premium" />
           </div>
