@@ -62,10 +62,10 @@ function Chart() {
         monthDayCount = monthDayCount - (month.lastDate.getDate() - sub.end.getDate());
       }
       
-      const monthAmount = Math.round(sub.totalAmount * (monthDayCount / subDayCount) * 100) / 100 // TODO rounding errors
-        + (month.subscriptions.get(sub.service)?.amount ?? 0);
-      month.subscriptions.set(sub.service, { service: sub.service, amount: monthAmount, percentage: 0 });
-      month.totalAmount += monthAmount;
+      const existingAmount = month.subscriptions.get(sub.service)?.amount ?? 0;
+      const addedAmount = Math.round(sub.totalAmount * (monthDayCount / subDayCount) * 100) / 100; // TODO rounding errors
+      month.subscriptions.set(sub.service, { service: sub.service, amount: existingAmount + addedAmount, percentage: 0 });
+      month.totalAmount += addedAmount;
     }
   }
 
