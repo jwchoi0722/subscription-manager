@@ -109,6 +109,7 @@ function Chart() {
               {entry.service} - {entry.amount} ({entry.percentage}%)
             </div>
           ))}
+          <div>TOTAL: ${month.totalAmount}</div>
         </>
       ))}
     </>
