@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import reactLogo from './assets/react.svg'
 import viteLogo from '/vite.svg'
-import './App.css'
+import './Calendar.css'
 import { Link } from 'react-router'
 
 function Welcome() {
@@ -23,7 +23,7 @@ function Welcome() {
           count is {count}
         </button>
       </div>
-      <Link to="/App">Open Calendar App</Link>
+      <Link to="/Calendar">Open Calendar App</Link>
       <br />
       <Link to="/List">Open List View</Link>
       <br />

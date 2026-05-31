@@ -1,6 +1,6 @@
 import { create } from 'zustand';
 import MonthView from './MonthView';
-import './App.css'
+import './Calendar.css'
 
 import { addSubscription, updateSubscription, deleteSubscription, getSubscriptions, getServices } from "./data";
 import type { Subscription, Service } from "./data";
@@ -21,7 +21,7 @@ const useSubscriptionStore = create<SubscriptionsState>()((set) => ({
   delete: (id: number) => set((state: SubscriptionsState) => ({ subscriptions: [...state.subscriptions.filter((entry) => entry.id !== id )] }))
 }));
 
-function App() {
+function Calendar() {
   const currSubs = useSubscriptionStore((state) => state.subscriptions);
   const services = useSubscriptionStore((state) => state.services);
   const addFunc = useSubscriptionStore((state) => state.add);
@@ -48,4 +48,4 @@ function App() {
   )
 }
 
-export default App
+export default Calendar
