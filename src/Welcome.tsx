@@ -23,6 +23,8 @@ function Welcome() {
           count is {count}
         </button>
       </div>
+      <Link to="/Dashboard">Go to Dashboard</Link>
+      <br />
       <Link to="/Calendar">Open Calendar App</Link>
       <br />
       <Link to="/List">Open List View</Link>
