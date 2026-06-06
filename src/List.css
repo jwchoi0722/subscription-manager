@@ -3,7 +3,7 @@
 }
 
 .list-container {
-  width: 768px;
+  width: 1024px;
 }
 
 .list-subscription-entry {
@@ -27,5 +27,9 @@
 }
 
 .list-subscription-entry .list-subscription-price {
+  flex: 1;
+}
+
+.list-subscription-entry .list-subscription-category {
   flex: 1;
 }

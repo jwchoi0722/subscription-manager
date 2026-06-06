@@ -10,6 +10,7 @@ export type Subscription = {
   totalAmount: number
   isAutoRenew: boolean
   isChanged: boolean
+  category?: string
 }
 
 export type Service = {
@@ -33,6 +34,7 @@ const testSubscriptions: Subscription[] = [
     totalAmount: 16.72,
     isAutoRenew: true,
     isChanged: false,
+    category: "Movies/TV",
   },
   {
     id: 1002,
@@ -46,6 +48,7 @@ const testSubscriptions: Subscription[] = [
     totalAmount: 8.95,
     isAutoRenew: true,
     isChanged: true,
+    category: "Movies/TV",
   },
   {
     id: 1001,
@@ -59,6 +62,7 @@ const testSubscriptions: Subscription[] = [
     totalAmount: 8.95,
     isAutoRenew: true,
     isChanged: false,
+    category: "Movies/TV",
   },
   {
     id: 2001,
@@ -98,6 +102,21 @@ const testSubscriptions: Subscription[] = [
     totalAmount: 0.00,
     isAutoRenew: true,
     isChanged: false,
+    category: "Anime",
+  },
+  {
+    id: 5001,
+    service: "Spotify",
+    servicePlan: "Duo",
+    name: "Spotify (Duo)",
+    start: new Date("2025-12-31 00:00:00"),
+    end: new Date("2026-01-31 00:00:00"),
+    priceAmount: 15.89,
+    priceCurrency: "CAD",
+    totalAmount: 17.89,
+    isAutoRenew: true,
+    isChanged: false,
+    category: "Music",
   },
 ];
 
@@ -129,6 +148,13 @@ const testServices: Service[] = [
     homeUrl: "https://www.hidive.com",
     logoUrl: "",
     accountUrl: "https://www.hidive.com/account?section=subscriptions"
+  },
+  {
+    id: 5,
+    name: "Spotify",
+    homeUrl: "https://open.spotify.com",
+    logoUrl: "",
+    accountUrl: "https://accounts.spotify.com"
   }
 ]
 
