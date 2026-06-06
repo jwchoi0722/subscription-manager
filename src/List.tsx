@@ -4,6 +4,8 @@ import "./List.css";
 
 import { getSubscriptions, getServices, type Subscription, type Service } from "./data";
 
+const UNCATEGORIZED_TEXT: string = "(Uncategorized)";
+
 // const today: Date = new Date();
 const today: Date = new Date(2026, 0, 2);
 const listDateTimeFormat = new Intl.DateTimeFormat("en-US", { month: "short", day: "2-digit", year: "numeric", timeZone: "UTC" });
@@ -15,6 +17,8 @@ interface SubscriptionListState {
   selectedCategories: Set<string>
   setCategorySelectState: (category: string, isSelected: boolean) => void
   setAllCategoriesUnselected: () => void
+  isUncategorizedSelected: boolean
+  setUncategorizedSelected: (isSelected: boolean) => void
 }
 
 const useSubscriptionListStore = create<SubscriptionListState>()((set) => ({
@@ -39,9 +43,12 @@ const useSubscriptionListStore = create<SubscriptionListState>()((set) => ({
     else {
       newSet.delete(category);
     }
+
     return { selectedCategories: newSet };
   }),
-  setAllCategoriesUnselected: () => set(() => ({ selectedCategories: new Set() }))
+  setAllCategoriesUnselected: () => set(() => ({ selectedCategories: new Set(), isUncategorizedSelected: false })),
+  isUncategorizedSelected: false,
+  setUncategorizedSelected: (isSelected: boolean) => set(() => ({ isUncategorizedSelected: isSelected }))
 }));
 
 function List() {
@@ -57,6 +64,8 @@ function List() {
   const selectedCategories: Set<string> = useSubscriptionListStore((state) => state.selectedCategories);
   const setCategorySelectState: (category: string, isSelected: boolean) => void = useSubscriptionListStore((state) => state.setCategorySelectState);
   const setAllCategoriesUnselected: () => void = useSubscriptionListStore((state) => state.setAllCategoriesUnselected);
+  const isUncategorizedSelected: boolean = useSubscriptionListStore((state) => state.isUncategorizedSelected);
+  const setUncategorizedSelected: (isSelected: boolean) => void = useSubscriptionListStore((state) => state.setUncategorizedSelected);
 
   let filteredSubs: Subscription[] = subs;
   let selectedServiceDetails: Service[] = [];
@@ -64,8 +73,8 @@ function List() {
     filteredSubs = subs.filter((sub: Subscription) => selectedServices.has(sub.service));
     selectedServiceDetails = services.filter((service: Service) => selectedServices.has(service.name)); // TODO use ID
   }
-  if (selectedCategories.size > 0) {
-    filteredSubs = filteredSubs.filter((sub: Subscription) => sub.category !== undefined && selectedCategories.has(sub.category as string));
+  if (selectedCategories.size > 0 || isUncategorizedSelected) {
+    filteredSubs = filteredSubs.filter((sub: Subscription) => isUncategorizedSelected && sub.category === undefined || sub.category !== undefined && selectedCategories.has(sub.category as string));
   }
   filteredSubs.sort((a: Subscription, b: Subscription) => b.start.getTime() - a.start.getTime());
 
@@ -86,6 +95,7 @@ function List() {
             {category}
           </button>
         ))}
+        <button className={(isUncategorizedSelected ? "selected" : "")} onClick={() => setUncategorizedSelected(!isUncategorizedSelected)}>{UNCATEGORIZED_TEXT}</button>
         <button onClick={() => setAllCategoriesUnselected()}>SHOW ALL</button>
       </div>
 
