@@ -2,6 +2,8 @@ import { useState } from "react";
 
 import { getSubscriptions, type Subscription } from "./data";
 
+import { useSubscriptionListStore } from "./store";
+
 type MonthSubscription = {
   service: string
   amount: number
@@ -15,23 +17,30 @@ type ChartMonth = {
   totalAmount: number
 }
 
+const MONTH_COUNT_IN_RANGE: number = 12;
+const UNCATEGORIZED_TEXT: string = "(Uncategorized)";
+
 // const today: Date = new Date();
 const today: Date = new Date(2026, 0, 2);
 
 const calendarHeaderDateTimeFormat = new Intl.DateTimeFormat("en-US", { month: "short", year: "numeric" });
 
 function Chart() {
-  const monthCountInRange: number = 12;
+  const selectedCategories: Set<string> = useSubscriptionListStore((state) => state.selectedCategories);
+  const setCategorySelectState: (category: string, isSelected: boolean) => void = useSubscriptionListStore((state) => state.setCategorySelectState);
+  const setAllCategoriesUnselected: () => void = useSubscriptionListStore((state) => state.setAllCategoriesUnselected);
+  const isUncategorizedSelected: boolean = useSubscriptionListStore((state) => state.isUncategorizedSelected);
+  const setUncategorizedSelected: (isSelected: boolean) => void = useSubscriptionListStore((state) => state.setUncategorizedSelected);
 
   const [{ startDate, endDate }, setStartAndEndDates] = useState<{ startDate: Date, endDate: Date }>({
-    startDate: new Date(today.getFullYear(), today.getMonth() - monthCountInRange + 1, 1),
+    startDate: new Date(today.getFullYear(), today.getMonth() - MONTH_COUNT_IN_RANGE + 1, 1),
     endDate: new Date(today.getFullYear(), today.getMonth() + 1, 0)
   });
 
   console.log(startDate.toISOString() + " " + endDate.toISOString());
 
   const months: ChartMonth[] = [];
-  for (let monthIndex = 0; monthIndex < monthCountInRange; monthIndex++) {
+  for (let monthIndex = 0; monthIndex < MONTH_COUNT_IN_RANGE; monthIndex++) {
     const month: number = startDate.getMonth() + monthIndex;
     months.push({
       firstDate: new Date(startDate.getFullYear(), month, 1),
@@ -42,8 +51,14 @@ function Chart() {
   }
 
   const subs: Subscription[] = getSubscriptions();
+  const categoryNames: string[] = Array.from(new Set(subs.filter((sub: Subscription) => sub.category !== undefined).map((sub: Subscription) => sub.category as string)));
+  
+  let filteredSubs: Subscription[] = subs;
+  if (selectedCategories.size > 0 || isUncategorizedSelected) {
+    filteredSubs = filteredSubs.filter((sub: Subscription) => isUncategorizedSelected && sub.category === undefined || sub.category !== undefined && selectedCategories.has(sub.category as string));
+  }
 
-  for (const sub of subs) {
+  for (const sub of filteredSubs) {
     if (sub.start > endDate || sub.end < startDate) {
       continue;
     }
@@ -98,6 +113,15 @@ function Chart() {
         <button onClick={() => setDateRange(1, 0)}>
           &gt;&gt;
         </button>
+      </div>
+      <div id="category_button_list" className="button-container">
+        {categoryNames.map((category: string) => (
+          <button key={category} className={(selectedCategories.has(category) ? "selected" : "")} onClick={() => setCategorySelectState(category, !selectedCategories.has(category))}>
+            {category}
+          </button>
+        ))}
+        <button className={(isUncategorizedSelected ? "selected" : "")} onClick={() => setUncategorizedSelected(!isUncategorizedSelected)}>{UNCATEGORIZED_TEXT}</button>
+        <button onClick={() => setAllCategoriesUnselected()}>SHOW ALL</button>
       </div>
       {months.map((month: ChartMonth) => (
         <>

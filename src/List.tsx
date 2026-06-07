@@ -1,8 +1,8 @@
-import { create } from "zustand";
-
 import "./List.css";
 
 import { getSubscriptions, getServices, type Subscription, type Service } from "./data";
+
+import { useSubscriptionListStore } from "./store";
 
 const UNCATEGORIZED_TEXT: string = "(Uncategorized)";
 
@@ -10,46 +10,7 @@ const UNCATEGORIZED_TEXT: string = "(Uncategorized)";
 const today: Date = new Date(2026, 0, 2);
 const listDateTimeFormat = new Intl.DateTimeFormat("en-US", { month: "short", day: "2-digit", year: "numeric", timeZone: "UTC" });
 
-interface SubscriptionListState {
-  selectedServices: Set<string>
-  setServiceSelectState: (service: string, isSelected: boolean) => void
-  setAllServicesUnselected: () => void
-  selectedCategories: Set<string>
-  setCategorySelectState: (category: string, isSelected: boolean) => void
-  setAllCategoriesUnselected: () => void
-  isUncategorizedSelected: boolean
-  setUncategorizedSelected: (isSelected: boolean) => void
-}
 
-const useSubscriptionListStore = create<SubscriptionListState>()((set) => ({
-  selectedServices: new Set(),
-  setServiceSelectState: (service: string, isSelected: boolean) => set((state) => {
-    const newSet: Set<string> = new Set(state.selectedServices);
-    if (isSelected) {
-      newSet.add(service);
-    }
-    else {
-      newSet.delete(service);
-    }
-    return { selectedServices: newSet };
-  }),
-  setAllServicesUnselected: () => set(() => ({ selectedServices: new Set() })),
-  selectedCategories: new Set(),
-  setCategorySelectState: (category: string, isSelected: boolean) => set((state) => {
-    const newSet: Set<string> = new Set(state.selectedCategories);
-    if (isSelected) {
-      newSet.add(category);
-    }
-    else {
-      newSet.delete(category);
-    }
-
-    return { selectedCategories: newSet };
-  }),
-  setAllCategoriesUnselected: () => set(() => ({ selectedCategories: new Set(), isUncategorizedSelected: false })),
-  isUncategorizedSelected: false,
-  setUncategorizedSelected: (isSelected: boolean) => set(() => ({ isUncategorizedSelected: isSelected }))
-}));
 
 function List() {
   const subs: Subscription[] = getSubscriptions();
