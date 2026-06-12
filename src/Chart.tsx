@@ -4,6 +4,8 @@ import { getSubscriptions, type Subscription } from "./data";
 
 import { useSubscriptionListStore } from "./store";
 
+import { BarChart, Bar, XAxis, YAxis, Tooltip, Legend } from "recharts";
+
 type MonthSubscription = {
   service: string
   amount: number
@@ -16,6 +18,11 @@ type ChartMonth = {
   subscriptions: Map<string, MonthSubscription>
   totalAmount: number
 }
+
+type ChartMonthData = {
+  month: string
+  [index: string]: number | string
+};
 
 const MONTH_COUNT_IN_RANGE: number = 12;
 const UNCATEGORIZED_TEXT: string = "(Uncategorized)";
@@ -37,16 +44,18 @@ function Chart() {
     endDate: new Date(today.getFullYear(), today.getMonth() + 1, 0)
   });
 
-  console.log(startDate.toISOString() + " " + endDate.toISOString());
-
   const months: ChartMonth[] = [];
+  const months2: ChartMonthData[] = [];
   for (let monthIndex = 0; monthIndex < MONTH_COUNT_IN_RANGE; monthIndex++) {
-    const month: number = startDate.getMonth() + monthIndex;
+    const firstDate: Date = new Date(startDate.getFullYear(), startDate.getMonth() + monthIndex, 1);
     months.push({
-      firstDate: new Date(startDate.getFullYear(), month, 1),
-      lastDate: new Date(startDate.getFullYear(), month + 1, 0),
+      firstDate: firstDate,
+      lastDate: new Date(firstDate.getFullYear(), firstDate.getMonth() + 1, 0),
       subscriptions: new Map<string, MonthSubscription>(),
       totalAmount: 0
+    });
+    months2.push({
+      month: `${firstDate.getFullYear()}-${firstDate.getMonth() + 1}`
     });
   }
 
@@ -58,9 +67,15 @@ function Chart() {
     filteredSubs = filteredSubs.filter((sub: Subscription) => isUncategorizedSelected && sub.category === undefined || sub.category !== undefined && selectedCategories.has(sub.category as string));
   }
 
+  let chartServices: Map<string, string> = new Map<string, string>();
+
   for (const sub of filteredSubs) {
     if (sub.start > endDate || sub.end < startDate) {
       continue;
+    }
+
+    if (sub.service !== undefined && !chartServices.has(sub.service)) {
+      chartServices.set(sub.service, `rgb(${Math.floor(Math.random() * 255)},${Math.floor(Math.random() * 255)},${Math.floor(Math.random() * 255)})`); // TODO proper colors
     }
 
     let subDayCount: number = Math.ceil((sub.end.getTime() - sub.start.getTime()) / (1000 * 3600 * 24) + 1);
@@ -87,6 +102,13 @@ function Chart() {
   for (const month of months) {
     for (const entry of month.subscriptions.values()) {
       entry.percentage = Math.round(entry.amount * 100 / month.totalAmount); // TODO rounding errors
+    }
+  }
+
+  for (let i = 0; i < months.length; i++) {
+    const month: ChartMonth = months[i];
+    for (const service of chartServices.keys()) {
+      months2[i][service] = month.subscriptions.get(service)?.amount ?? 0; // TODO handle prop collisions
     }
   }
   
@@ -123,6 +145,15 @@ function Chart() {
         <button className={(isUncategorizedSelected ? "selected" : "")} onClick={() => setUncategorizedSelected(!isUncategorizedSelected)}>{UNCATEGORIZED_TEXT}</button>
         <button onClick={() => setAllCategoriesUnselected()}>SHOW ALL</button>
       </div>
+      <BarChart data={months2} style={{ width: "100%", height: "70vh" }}>
+        <XAxis dataKey="month" />
+        <YAxis width="auto" />
+        {Array.from(chartServices.keys()).map((service: string) => (
+          <Bar dataKey={service} fill={chartServices.get(service)} stackId="1" />
+        ))}
+        <Tooltip />
+        <Legend />
+      </BarChart>
       {months.map((month: ChartMonth) => (
         <>
           <h4 key={month.firstDate.getFullYear() + "-" + month.firstDate.getMonth()}>
