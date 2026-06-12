@@ -8,6 +8,7 @@ import type { Subscription } from "./data";
 type DayEntry = {
   name: string
   amount: number
+  percentage: number
 }
 
 // const today: Date = new Date();
@@ -17,9 +18,14 @@ const subs: Subscription[] = getSubscriptions();
 
 function Dashboard() {
   const activeSubs: Subscription[] = subs.filter((sub) => sub.start <= today && today <= sub.end).sort((a, b) => a.end.getTime() - b.end.getTime());
+  
   const pieData: DayEntry[] = [];
+  let pieTotal: number = 0;
   for (const sub of activeSubs) {
-    pieData.push({ name: sub.name, amount: Math.floor(sub.totalAmount / Math.floor((sub.end.getTime() - sub.start.getTime()) / (1000 * 3600 * 24)) * 100) / 100 });
+    const daysInSub: number = Math.floor((sub.end.getTime() - sub.start.getTime()) / (1000 * 3600 * 24));
+    const amount: number = Math.floor(sub.totalAmount / daysInSub * 100) / 100;
+    pieData.push({ name: sub.name, amount: amount, percentage: 0 });
+    pieTotal += amount;
   }
 
   return (
@@ -45,7 +51,7 @@ function Dashboard() {
         ))}
       </div>
 
-      <h3>Today's spending</h3>
+      <h3>Daily spending: ${pieTotal}</h3>
       <PieChart style={{ width: "100%", height: "70vh" }}>
         <Pie data={pieData} dataKey="amount" label={true} />
         <Tooltip />
