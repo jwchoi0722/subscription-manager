@@ -1,5 +1,3 @@
-import { Link } from 'react-router'
-
 import { PieChart, Pie, Tooltip } from "recharts";
 
 import { getSubscriptions } from "./data";
@@ -65,19 +63,10 @@ function Dashboard() {
       upcomingSubs.push({ ...sub, start: new Date(sub.end.getTime()), end: new Date(sub.end.getTime() + (sub.end.getTime() - sub.start.getTime())) });
     }
   }
-  
+
   return (
     <>
       <h1>Dashboard</h1>
-
-      <div id="views_list">
-        <Link to="/Calendar">Calendar View</Link>
-        <br />
-        <Link to="/List">List View</Link>
-        <br />
-        <Link to="/Chart">Chart View</Link>
-        <br />
-      </div>
 
       <h2>Today is: {today.toDateString()}</h2>
       <h3>Active Subscriptions</h3>

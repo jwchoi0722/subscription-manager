@@ -5,6 +5,7 @@ import { BrowserRouter, Routes, Route } from 'react-router'
 import './index.css'
 
 import Welcome from './Welcome.tsx'
+import Layout from './Layout.tsx'
 import Dashboard from './Dashboard.tsx'
 import Calendar from './Calendar.tsx'
 import List from './List.tsx'
@@ -15,10 +16,12 @@ createRoot(document.getElementById('root')!).render(
     <BrowserRouter>
       <Routes>
         <Route index element={<Welcome />} />
-        <Route path="Dashboard" element={<Dashboard />} />
-        <Route path="Calendar" element={<Calendar />} />
-        <Route path="List" element={<List />} />
-        <Route path="Chart" element={<Chart />} />
+        <Route element={<Layout />}>
+          <Route path="Dashboard" element={<Dashboard />} />
+          <Route path="Calendar" element={<Calendar />} />
+          <Route path="List" element={<List />} />
+          <Route path="Chart" element={<Chart />} />
+        </Route>
       </Routes>
     </BrowserRouter>
   </StrictMode>,
