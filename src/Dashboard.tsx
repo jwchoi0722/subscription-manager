@@ -23,7 +23,9 @@ const today: Date = new Date(2026, 0, 2);
 const subs: Subscription[] = getSubscriptions();
 
 function Dashboard() {
-  const activeSubs: Subscription[] = subs.filter((sub) => sub.start <= today && today <= sub.end).sort((a, b) => a.end.getTime() - b.end.getTime());
+  const activeSubs: Subscription[] = subs
+    .filter((sub) => sub.start <= today && today <= sub.end)
+    .sort((a, b) => a.end.getTime() - b.end.getTime());
   
   const subsByCategory: Map<string, DaySub[]> = new Map<string, DaySub[]>();
   const sortedPieCategories: DayCategory[] = [];
@@ -52,6 +54,18 @@ function Dashboard() {
     sortedPieSubs.push(...subEntries);
   }
 
+  const upcomingSubs: Subscription[] = [];
+  for (const sub of subs) {
+    if (sub.start > today) {
+      upcomingSubs.push(sub);
+      continue;
+    }
+
+    if (sub.end > today && sub.isAutoRenew) {
+      upcomingSubs.push({ ...sub, start: new Date(sub.end.getTime()), end: new Date(sub.end.getTime() + (sub.end.getTime() - sub.start.getTime())) });
+    }
+  }
+  
   return (
     <>
       <h1>Dashboard</h1>
@@ -76,6 +90,13 @@ function Dashboard() {
       </div>
 
       <h3>Upcoming Subscriptions</h3>
+      <div>
+        {upcomingSubs.map((sub) => (
+          <div key={sub.id}>
+            <b>{sub.name}</b> starts on {sub.start.toDateString()} (in {Math.floor((sub.start.getTime() - today.getTime()) / (1000 * 3600 * 24))} day(s))
+          </div>
+        ))}
+      </div>
 
       <h3>Daily spending: ${pieTotal}</h3>
       <PieChart style={{ width: "100%", height: "70vh" }}>
