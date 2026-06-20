@@ -125,7 +125,7 @@ function MonthView({ subs, services, onAdd, onEdit, onDelete }:
       <div>
         <p>Current Month: {calendarHeaderDateTimeFormat.format(currDate)} -  {currMonthDayCount} Days</p>
 
-        <div className="calendar-container">
+        <div>
           <div className="calendar-grid-header">
             <div className="calendar-grid-header-entry">SUN</div>
             <div className="calendar-grid-header-entry">MON</div>

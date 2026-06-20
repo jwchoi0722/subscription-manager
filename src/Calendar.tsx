@@ -1,9 +1,21 @@
 import { create } from 'zustand';
-import MonthView from './MonthView';
+import FullCalendar from '@fullcalendar/react';
+import dayGridPlugin from '@fullcalendar/daygrid';
+import interactionPlugin from '@fullcalendar/interaction';
+
+// import MonthView from './MonthView';
+import SubscriptionDetails from './SubscriptionDetails';
+
 import './Calendar.css'
 
-import { addSubscription, updateSubscription, deleteSubscription, getSubscriptions, getServices } from "./data";
+// import { addSubscription, updateSubscription, deleteSubscription, getSubscriptions, getServices } from "./data";
+import { getSubscriptions, getServices } from "./data";
 import type { Subscription, Service } from "./data";
+
+import { useSubscriptionModalStore } from './store';
+
+// const today: Date = new Date();
+const today: Date = new Date(2026, 0, 2);
 
 interface SubscriptionsState {
   subscriptions: Subscription[]
@@ -23,28 +35,56 @@ const useSubscriptionStore = create<SubscriptionsState>()((set) => ({
 
 function Calendar() {
   const currSubs = useSubscriptionStore((state) => state.subscriptions);
-  const services = useSubscriptionStore((state) => state.services);
-  const addFunc = useSubscriptionStore((state) => state.add);
-  const editFunc = useSubscriptionStore((state) => state.edit);
-  const deleteFunc = useSubscriptionStore((state) => state.delete);
+  // const services = useSubscriptionStore((state) => state.services);
+  // const addFunc = useSubscriptionStore((state) => state.add);
+  // const editFunc = useSubscriptionStore((state) => state.edit);
+  // const deleteFunc = useSubscriptionStore((state) => state.delete);
 
-  const onAdd = (subscription: Subscription) => {
-    addFunc(subscription);
-    addSubscription(subscription);
-  };
-  const onEdit = (id: number, subscription: Subscription) => {
-    editFunc(id, subscription);
-    updateSubscription(id, subscription);
-  };
-  const onDelete = (id: number) => {
-    deleteFunc(id);
-    deleteSubscription(id);
+  const detailsModalValues: Subscription | null = useSubscriptionModalStore((state) => state.detailsModalValues);
+  const setDetailsModalValues: (sub: Subscription | null) => void = useSubscriptionModalStore((state) => state.setDetailsModalValues);
+  const isDetailsModalOpen: boolean = useSubscriptionModalStore((state) => state.isDetailsModalOpen);
+  const setIsDetailsModalOpen: (isOpen: boolean) => void = useSubscriptionModalStore((state) => state.setIsDetailsModalOpen);
+
+  // const onAdd = (subscription: Subscription) => {
+  //   addFunc(subscription);
+  //   addSubscription(subscription);
+  // };
+  // const onEdit = (id: number, subscription: Subscription) => {
+  //   editFunc(id, subscription);
+  //   updateSubscription(id, subscription);
+  // };
+  // const onDelete = (id: number) => {
+  //   deleteFunc(id);
+  //   deleteSubscription(id);
+  // }
+
+  const onEventClick = (info: { event: { id: string, title: string, setProp: (name: string, value: string) => void }, jsEvent: { pageX: number, pageY: number} }) => {
+    // console.log(info.jsEvent);
+    const sub: Subscription | undefined = currSubs.find((sub) => sub.id === Number(info.event.id));
+    if (sub === undefined) {
+      return;
+    }
+    info.event.setProp("borderColor", "red");
+    setDetailsModalValues(sub as Subscription);
+    setIsDetailsModalOpen(true);
   }
   
   return (
-    <>
-      <MonthView subs={currSubs} services={services} onAdd={onAdd} onEdit={onEdit} onDelete={onDelete} />
-    </>
+    <div className="calendar-container">
+      <FullCalendar plugins={[ dayGridPlugin, interactionPlugin ]} initialView="dayGridMonth" 
+        events={currSubs.map((sub) => ({ id: String(sub.id), title: sub.name, start: sub.start, end: sub.end, allDay: true }))}
+        editable={true}
+        eventDurationEditable={true}
+        eventResizableFromStart={true}
+        now={today}
+        eventClick={onEventClick}
+      />
+      {
+        isDetailsModalOpen &&
+        <SubscriptionDetails sub={detailsModalValues} relX={0} relY={5} closeModal={() => setIsDetailsModalOpen(false)} />
+      }
+      {/* <MonthView subs={currSubs} services={services} onAdd={onAdd} onEdit={onEdit} onDelete={onDelete} /> */}
+    </div>
   )
 }
 

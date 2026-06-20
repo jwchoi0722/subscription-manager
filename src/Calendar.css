@@ -6,5 +6,6 @@
 }
 
 .calendar-container {
+  position: relative;
   width: 1024px;
 }
