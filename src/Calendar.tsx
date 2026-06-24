@@ -1,9 +1,10 @@
 import { create } from 'zustand';
+import { useState } from 'react';
+
 import FullCalendar from '@fullcalendar/react';
 import dayGridPlugin from '@fullcalendar/daygrid';
 import interactionPlugin from '@fullcalendar/interaction';
 
-// import MonthView from './MonthView';
 import SubscriptionDetails from './SubscriptionDetails';
 
 import './Calendar.css'
@@ -40,6 +41,9 @@ function Calendar() {
   // const editFunc = useSubscriptionStore((state) => state.edit);
   // const deleteFunc = useSubscriptionStore((state) => state.delete);
 
+  const [selectedSub, setSelectedSub] = useState<Subscription | null>(null);
+  const [selectedDate, setSelectedDate] = useState<Date | null>(null);
+
   const detailsModalValues: Subscription | null = useSubscriptionModalStore((state) => state.detailsModalValues);
   const setDetailsModalValues: (sub: Subscription | null) => void = useSubscriptionModalStore((state) => state.setDetailsModalValues);
   const isDetailsModalOpen: boolean = useSubscriptionModalStore((state) => state.isDetailsModalOpen);
@@ -58,32 +62,48 @@ function Calendar() {
   //   deleteSubscription(id);
   // }
 
-  const onEventClick = (info: { event: { id: string, title: string, setProp: (name: string, value: string) => void }, jsEvent: { pageX: number, pageY: number} }) => {
-    // console.log(info.jsEvent);
+  const onEventClick = (info: { event: { id: string, title: string }, jsEvent: { pageX: number, pageY: number } }) => {
     const sub: Subscription | undefined = currSubs.find((sub) => sub.id === Number(info.event.id));
     if (sub === undefined) {
       return;
     }
-    info.event.setProp("borderColor", "red");
+    setSelectedSub(sub);
     setDetailsModalValues(sub as Subscription);
     setIsDetailsModalOpen(true);
-  }
+  };
+
+  const onDateClick = (info: { date: Date, dateStr: string }) => {
+    setSelectedDate(info.date);
+  };
+
+  const events = currSubs.map((sub) => {
+    let event = { id: String(sub.id), title: sub.name, start: sub.start, end: sub.end, allDay: true, 
+      borderColor: (selectedSub?.id == sub.id ? "white" : "")
+    };
+    return event;
+  });
   
   return (
     <div className="calendar-container">
       <FullCalendar plugins={[ dayGridPlugin, interactionPlugin ]} initialView="dayGridMonth" 
-        events={currSubs.map((sub) => ({ id: String(sub.id), title: sub.name, start: sub.start, end: sub.end, allDay: true }))}
+        events={events}
+        selectable={false}
         editable={true}
         eventDurationEditable={true}
         eventResizableFromStart={true}
+        eventClassNames={["event-bar"]}
         now={today}
         eventClick={onEventClick}
+        dateClick={onDateClick}
+        dayCellClassNames={(arg: { date: Date }) => selectedDate !== null && arg.date.getTime() == selectedDate.getTime() ? "date-selected" : ""}
+        height="auto"
+        headerToolbar={{ left: "title", right: "today prevYear prev next nextYear" }}
+        footerToolbar={{ left: "", right: "today prevYear prev next nextYear" }}
       />
       {
         isDetailsModalOpen &&
         <SubscriptionDetails sub={detailsModalValues} relX={0} relY={5} closeModal={() => setIsDetailsModalOpen(false)} />
       }
-      {/* <MonthView subs={currSubs} services={services} onAdd={onAdd} onEdit={onEdit} onDelete={onDelete} /> */}
     </div>
   )
 }
