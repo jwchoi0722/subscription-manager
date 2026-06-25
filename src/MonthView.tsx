@@ -156,7 +156,7 @@ function MonthView({ subs, services, onAdd, onEdit, onDelete }:
       }
       {
         isDetailsModalOpen &&
-        <SubscriptionDetails sub={detailsModalValues} closeModal={() => setIsDetailsModalOpen(false)} />
+        <SubscriptionDetails sub={detailsModalValues} closeModal={() => setIsDetailsModalOpen(false)} openEditModal={() => console.log("TODO")} />
       }
     </>
   );

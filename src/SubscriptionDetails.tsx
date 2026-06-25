@@ -1,6 +1,11 @@
 import type { Subscription } from "./data";
 
-function SubscriptionDetails({ sub, relX = 0, relY = 0, closeModal }: { sub: Subscription | null, relX?: number, relY?: number, closeModal: () => void}) {
+function SubscriptionDetails({ sub, relX = 0, relY = 0, closeModal, openEditModal }: 
+  {
+    sub: Subscription | null, relX?: number, relY?: number, 
+    closeModal: () => void,
+    openEditModal: () => void
+  }) {
   const x: string = (relX % 100) + "%";
   const y: string = (relY % 100) + "%";
 
@@ -10,6 +15,8 @@ function SubscriptionDetails({ sub, relX = 0, relY = 0, closeModal }: { sub: Sub
         sub &&
         <dialog id={"sub-details-" + sub.id} className="subscription-details-modal" open={true} style={{ position: "absolute", top: y, left: x, zIndex: 1000 }}>
           <div className="modal-close-button" onClick={() => closeModal()}>X</div>
+          <div className="modal-edit-button" onClick={() => openEditModal()}>EDIT</div>
+
           <h3>{sub.name}</h3>
           <div>
             <span>Service: </span>

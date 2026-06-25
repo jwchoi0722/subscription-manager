@@ -21,3 +21,10 @@
   padding-top: 0.1rem;
   padding-bottom: 0.1rem;
 }
+
+.calendar-container .add-subscription-modal {
+  position: absolute;
+  top: 5%;
+  left: 0%;
+  z-index: 1000;
+}
