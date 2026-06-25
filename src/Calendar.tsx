@@ -7,11 +7,12 @@ import interactionPlugin from '@fullcalendar/interaction';
 
 import SubscriptionDetails from './SubscriptionDetails';
 import SubscriptionModal from './SubscriptionModal';
+import SubscriptionDialog from './SubscriptionDialog';
 
 import './Calendar.css'
 
 // import { addSubscription, updateSubscription, deleteSubscription, getSubscriptions, getServices } from "./data";
-import { updateSubscription } from "./data";
+import { updateSubscription, deleteSubscription } from "./data";
 import { getSubscriptions, getServices } from "./data";
 import type { Subscription, Service } from "./data";
 
@@ -41,7 +42,7 @@ function Calendar() {
   // const services = useSubscriptionStore((state) => state.services);
   // const addFunc = useSubscriptionStore((state) => state.add);
   const editFunc = useSubscriptionStore((state) => state.edit);
-  // const deleteFunc = useSubscriptionStore((state) => state.delete);
+  const deleteFunc = useSubscriptionStore((state) => state.delete);
 
   const [selectedSub, setSelectedSub] = useState<Subscription | null>(null);
   const [selectedDate, setSelectedDate] = useState<Date | null>(null);
@@ -52,6 +53,8 @@ function Calendar() {
   const setIsDetailsModalOpen: (isOpen: boolean) => void = useSubscriptionModalStore((state) => state.setIsDetailsModalOpen);
   const isEditModalOpen: boolean = useSubscriptionModalStore((state) => state.isEditModalOpen);
   const setIsEditModalOpen: (isOpen: boolean) => void = useSubscriptionModalStore((state) => state.setIsEditModalOpen);
+  const isDeleteDialogOpen: boolean = useSubscriptionModalStore((state) => state.isDeleteDialogOpen);
+  const setIsDeleteDialogOpen: (isOpen: boolean) => void = useSubscriptionModalStore((state) => state.setIsDeleteDialogOpen);
 
   // const onAdd = (subscription: Subscription) => {
   //   addFunc(subscription);
@@ -61,10 +64,10 @@ function Calendar() {
     editFunc(subscription.id, subscription);
     updateSubscription(subscription.id, subscription); // TODO func signature
   };
-  // const onDelete = (id: number) => {
-  //   deleteFunc(id);
-  //   deleteSubscription(id);
-  // }
+  const onDelete = (id: number) => {
+    deleteFunc(id);
+    deleteSubscription(id);
+  }
 
   const onEventClick = (info: { event: { id: string, title: string }, jsEvent: { pageX: number, pageY: number } }) => {
     setIsEditModalOpen(false);
@@ -117,6 +120,10 @@ function Calendar() {
             setIsDetailsModalOpen(false);
             setIsEditModalOpen(true);
           }}
+          openDeleteDialog={() => {
+            setIsDetailsModalOpen(false);
+            setIsDeleteDialogOpen(true);
+          }}
         />
       }
       {
@@ -124,6 +131,14 @@ function Calendar() {
         <SubscriptionModal initValues={detailsModalValues} serviceOptions={[detailsModalValues?.service ?? ""]} // TODO proper category list
           isAdd={false}
           onSubmit={onEdit} closeModal={() => setIsEditModalOpen(false)}
+        />
+      }
+      {
+        isDeleteDialogOpen &&
+        <SubscriptionDialog
+          subscription={detailsModalValues} 
+          onSubmit={onDelete} 
+          close={() => setIsDeleteDialogOpen(false)} 
         />
       }
     </div>

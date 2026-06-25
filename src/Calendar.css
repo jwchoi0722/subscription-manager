@@ -22,7 +22,7 @@
   padding-bottom: 0.1rem;
 }
 
-.calendar-container .add-subscription-modal {
+.calendar-container .add-subscription-modal, .calendar-container .subscription-dialog {
   position: absolute;
   top: 5%;
   left: 0%;
