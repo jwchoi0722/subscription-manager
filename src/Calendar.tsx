@@ -11,8 +11,7 @@ import SubscriptionDialog from './SubscriptionDialog';
 
 import './Calendar.css'
 
-// import { addSubscription, updateSubscription, deleteSubscription, getSubscriptions, getServices } from "./data";
-import { updateSubscription, deleteSubscription } from "./data";
+import { addSubscription, updateSubscription, deleteSubscription } from "./data";
 import { getSubscriptions, getServices } from "./data";
 import type { Subscription, Service } from "./data";
 
@@ -40,7 +39,7 @@ const useSubscriptionStore = create<SubscriptionsState>()((set) => ({
 function Calendar() {
   const currSubs = useSubscriptionStore((state) => state.subscriptions);
   // const services = useSubscriptionStore((state) => state.services);
-  // const addFunc = useSubscriptionStore((state) => state.add);
+  const addFunc = useSubscriptionStore((state) => state.add);
   const editFunc = useSubscriptionStore((state) => state.edit);
   const deleteFunc = useSubscriptionStore((state) => state.delete);
 
@@ -51,15 +50,17 @@ function Calendar() {
   const setDetailsModalValues: (sub: Subscription | null) => void = useSubscriptionModalStore((state) => state.setDetailsModalValues);
   const isDetailsModalOpen: boolean = useSubscriptionModalStore((state) => state.isDetailsModalOpen);
   const setIsDetailsModalOpen: (isOpen: boolean) => void = useSubscriptionModalStore((state) => state.setIsDetailsModalOpen);
+  const isAddModalOpen: boolean = useSubscriptionModalStore((state) => state.isAddModalOpen);
+  const setIsAddModalOpen: (isOpen: boolean) => void = useSubscriptionModalStore((state) => state.setIsAddModalOpen);
   const isEditModalOpen: boolean = useSubscriptionModalStore((state) => state.isEditModalOpen);
   const setIsEditModalOpen: (isOpen: boolean) => void = useSubscriptionModalStore((state) => state.setIsEditModalOpen);
   const isDeleteDialogOpen: boolean = useSubscriptionModalStore((state) => state.isDeleteDialogOpen);
   const setIsDeleteDialogOpen: (isOpen: boolean) => void = useSubscriptionModalStore((state) => state.setIsDeleteDialogOpen);
 
-  // const onAdd = (subscription: Subscription) => {
-  //   addFunc(subscription);
-  //   addSubscription(subscription);
-  // };
+  const onAdd = (subscription: Subscription) => {
+    addFunc(subscription);
+    addSubscription(subscription);
+  };
   const onEdit = (subscription: Subscription) => {
     editFunc(subscription.id, subscription);
     updateSubscription(subscription.id, subscription); // TODO func signature
@@ -84,6 +85,17 @@ function Calendar() {
     setSelectedDate(info.date);
   };
 
+  const calendarButtons = {
+    addSubscriptionButton: {
+      text: "+ Add New",
+      click: () => {
+        setIsEditModalOpen(false);
+        setDetailsModalValues(null);
+        setIsAddModalOpen(true);
+      }
+    }
+  }
+
   const events = currSubs.map((sub) => {
     let event = { id: String(sub.id), title: sub.name, start: sub.start, end: sub.end, allDay: true, 
       borderColor: (selectedSub?.id == sub.id ? "white" : "")
@@ -93,6 +105,13 @@ function Calendar() {
   
   return (
     <div className="calendar-container">
+      {
+        isAddModalOpen &&
+        <SubscriptionModal initValues={detailsModalValues} serviceOptions={[detailsModalValues?.service ?? ""]} // TODO proper service list
+          isAdd={true}
+          onSubmit={onAdd} closeModal={() => setIsAddModalOpen(false)}
+        />
+      }
       <FullCalendar plugins={[ dayGridPlugin, interactionPlugin ]} initialView="dayGridMonth" 
         events={events}
         selectable={false}
@@ -106,7 +125,8 @@ function Calendar() {
         dateClick={onDateClick}
         dayCellClassNames={(arg: { date: Date }) => selectedDate !== null && arg.date.getTime() == selectedDate.getTime() ? "date-selected" : ""}
         height="auto"
-        headerToolbar={{ left: "title", right: "today prevYear prev next nextYear" }}
+        customButtons={calendarButtons}
+        headerToolbar={{ left: "title", center: "addSubscriptionButton", right: "today prevYear prev next nextYear" }}
         footerToolbar={{ left: "", right: "today prevYear prev next nextYear" }}
       />
       {
@@ -118,17 +138,19 @@ function Calendar() {
           }}
           openEditModal={() => {
             setIsDetailsModalOpen(false);
+            setIsAddModalOpen(false);
             setIsEditModalOpen(true);
           }}
           openDeleteDialog={() => {
             setIsDetailsModalOpen(false);
+            setIsAddModalOpen(false);
             setIsDeleteDialogOpen(true);
           }}
         />
       }
       {
         isEditModalOpen &&
-        <SubscriptionModal initValues={detailsModalValues} serviceOptions={[detailsModalValues?.service ?? ""]} // TODO proper category list
+        <SubscriptionModal initValues={detailsModalValues} serviceOptions={[detailsModalValues?.service ?? ""]} // TODO proper service list
           isAdd={false}
           onSubmit={onEdit} closeModal={() => setIsEditModalOpen(false)}
         />
