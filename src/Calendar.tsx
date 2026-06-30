@@ -102,6 +102,8 @@ function Calendar() {
     updateSubscription(idNum, sub);
   };
 
+  // TODO drag to resize
+
   const calendarButtons = {
     addSubscriptionButton: {
       text: "+ Add New",
@@ -112,6 +114,8 @@ function Calendar() {
       }
     }
   };
+
+  // TODO Undo Redo buttons
 
   const events = currSubs.map((sub) => {
     let event = { id: String(sub.id), title: sub.name, start: sub.start, end: sub.end, allDay: true, 
