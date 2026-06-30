@@ -38,7 +38,9 @@ const useSubscriptionStore = create<SubscriptionsState>()((set) => ({
 
 function Calendar() {
   const currSubs = useSubscriptionStore((state) => state.subscriptions);
-  // const services = useSubscriptionStore((state) => state.services);
+  const services = useSubscriptionStore((state) => state.services);
+  const serviceNames: string[] = services.map((ser) => ser.name);
+
   const addFunc = useSubscriptionStore((state) => state.add);
   const editFunc = useSubscriptionStore((state) => state.edit);
   const deleteFunc = useSubscriptionStore((state) => state.delete);
@@ -94,7 +96,7 @@ function Calendar() {
         setIsAddModalOpen(true);
       }
     }
-  }
+  };
 
   const events = currSubs.map((sub) => {
     let event = { id: String(sub.id), title: sub.name, start: sub.start, end: sub.end, allDay: true, 
@@ -107,7 +109,7 @@ function Calendar() {
     <div className="calendar-container">
       {
         isAddModalOpen &&
-        <SubscriptionModal initValues={detailsModalValues} serviceOptions={[detailsModalValues?.service ?? ""]} // TODO proper service list
+        <SubscriptionModal initValues={detailsModalValues} serviceOptions={serviceNames}
           isAdd={true}
           onSubmit={onAdd} closeModal={() => setIsAddModalOpen(false)}
         />
@@ -150,7 +152,7 @@ function Calendar() {
       }
       {
         isEditModalOpen &&
-        <SubscriptionModal initValues={detailsModalValues} serviceOptions={[detailsModalValues?.service ?? ""]} // TODO proper service list
+        <SubscriptionModal initValues={detailsModalValues} serviceOptions={serviceNames}
           isAdd={false}
           onSubmit={onEdit} closeModal={() => setIsEditModalOpen(false)}
         />
