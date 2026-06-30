@@ -38,6 +38,7 @@ const useSubscriptionStore = create<SubscriptionsState>()((set) => ({
 
 function Calendar() {
   const currSubs = useSubscriptionStore((state) => state.subscriptions);
+  // TODO future renewed events
   const services = useSubscriptionStore((state) => state.services);
   const serviceNames: string[] = services.map((ser) => ser.name);
 
@@ -87,6 +88,20 @@ function Calendar() {
     setSelectedDate(info.date);
   };
 
+  const onEventDrop = (info: any) => {
+    const idNum: number = Number(info.event.id);
+    const sub: Subscription | undefined = currSubs.find((sub) => sub.id === idNum);
+    if (sub === undefined) {
+      return;
+    }
+    sub.start = info.event.start;
+    sub.end = info.event.end;
+
+    setSelectedSub(sub);
+    editFunc(idNum, sub);
+    updateSubscription(idNum, sub);
+  };
+
   const calendarButtons = {
     addSubscriptionButton: {
       text: "+ Add New",
@@ -116,12 +131,12 @@ function Calendar() {
       }
       <FullCalendar plugins={[ dayGridPlugin, interactionPlugin ]} initialView="dayGridMonth" 
         events={events}
+        eventClassNames={["event-bar"]}
         selectable={false}
-        droppable={true}
-        editable={true}
+        eventStartEditable={true}
         eventDurationEditable={false}
         eventResizableFromStart={false}
-        eventClassNames={["event-bar"]}
+        eventDrop={onEventDrop}
         now={today}
         eventClick={onEventClick}
         dateClick={onDateClick}
