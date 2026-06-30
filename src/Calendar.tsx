@@ -79,6 +79,7 @@ function Calendar() {
     if (sub === undefined) {
       return;
     }
+    
     setSelectedSub(sub);
     setDetailsModalValues(sub as Subscription);
     setIsDetailsModalOpen(true);
@@ -88,14 +89,14 @@ function Calendar() {
     setSelectedDate(info.date);
   };
 
-  const onEventDrop = (info: any) => {
+  const onEventDrop = (info: { event: { id: string, start: Date | null, end: Date | null } }) => {
     const idNum: number = Number(info.event.id);
     const sub: Subscription | undefined = currSubs.find((sub) => sub.id === idNum);
     if (sub === undefined) {
       return;
     }
-    sub.start = info.event.start;
-    sub.end = info.event.end;
+    sub.start = info.event.start ?? sub.start;
+    sub.end = info.event.end ?? sub.end;
 
     setSelectedSub(sub);
     editFunc(idNum, sub);
