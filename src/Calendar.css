@@ -22,14 +22,17 @@
   padding-bottom: 0.1rem;
 }
 
-.calendar-container .add-subscription-modal {
+.calendar-container dialog {
   position: absolute;
   z-index: 1000;
 }
 
+.calendar-container .subscription-details-modal {
+  margin-left: 0;
+}
+
 .calendar-container .edit-subscription-modal, .calendar-container .subscription-dialog {
-  position: absolute;
   top: 5%;
   left: 0%;
-  z-index: 1000;
+  margin: 0;
 }

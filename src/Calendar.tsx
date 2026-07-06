@@ -1,5 +1,5 @@
 import { create } from 'zustand';
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 
 import FullCalendar from '@fullcalendar/react';
 import dayGridPlugin from '@fullcalendar/daygrid';
@@ -48,6 +48,9 @@ function Calendar() {
 
   const [selectedSub, setSelectedSub] = useState<Subscription | null>(null);
   const [selectedDate, setSelectedDate] = useState<Date | null>(null);
+  const [eventClickCoords, setEventClickCoords] = useState<{ x: number, y: number }>({ x: 0, y: 0 });
+
+  const containerElement = useRef<HTMLDivElement>(null);
 
   const detailsModalValues: Subscription | null = useSubscriptionModalStore((state) => state.detailsModalValues);
   const setDetailsModalValues: (sub: Subscription | null) => void = useSubscriptionModalStore((state) => state.setDetailsModalValues);
@@ -73,19 +76,22 @@ function Calendar() {
     deleteSubscription(id);
   }
 
-  const onEventClick = (info: { event: { id: string, title: string }, jsEvent: { pageX: number, pageY: number } }) => {
+  const onEventClick = (info: { event: { id: string, title: string }, jsEvent: { clientX: number, clientY: number } }) => {
     setIsEditModalOpen(false);
     const sub: Subscription | undefined = currSubs.find((sub) => sub.id === Number(info.event.id));
-    if (sub === undefined) {
+    if (sub === undefined || containerElement.current === null) {
       return;
     }
+
+    const containerRect = containerElement.current.getBoundingClientRect();
     
+    setEventClickCoords({ x: info.jsEvent.clientX - containerRect.left, y: info.jsEvent.clientY - containerRect.top + 50 });
     setSelectedSub(sub);
     setDetailsModalValues(sub as Subscription);
     setIsDetailsModalOpen(true);
   };
 
-  const onDateClick = (info: { date: Date, dateStr: string }) => {
+  const onDateClick = (info: { date: Date }) => {
     setSelectedDate(info.date);
   };
 
@@ -126,7 +132,7 @@ function Calendar() {
   });
   
   return (
-    <div className="calendar-container">
+    <div className="calendar-container" ref={containerElement}>
       {
         isAddModalOpen &&
         <SubscriptionModal initValues={detailsModalValues} serviceOptions={serviceNames}
@@ -153,7 +159,7 @@ function Calendar() {
       />
       {
         isDetailsModalOpen &&
-        <SubscriptionDetails sub={detailsModalValues} relX={0} relY={5}
+        <SubscriptionDetails sub={detailsModalValues} pos={eventClickCoords}
           closeModal={() => {
             setSelectedSub(null);
             setIsDetailsModalOpen(false);

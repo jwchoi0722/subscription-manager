@@ -1,14 +1,15 @@
 import type { Subscription } from "./data";
 
-function SubscriptionDetails({ sub, relX = 0, relY = 0, closeModal, openEditModal, openDeleteDialog }: 
+function SubscriptionDetails({ sub, pos = { x: 0, y: 0 }, closeModal, openEditModal, openDeleteDialog }: 
   {
-    sub: Subscription | null, relX?: number, relY?: number, 
+    sub: Subscription | null,
+    pos?: { x: number, y: number }, 
     closeModal: () => void,
     openEditModal: () => void,
     openDeleteDialog: () => void
   }) {
-  const x: string = (relX % 100) + "%";
-  const y: string = (relY % 100) + "%";
+  const x: string = (pos.x) + "px";
+  const y: string = (pos.y) + "px";
 
   return (
     <>
