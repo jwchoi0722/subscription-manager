@@ -136,6 +136,7 @@ function Calendar() {
       {
         isAddModalOpen &&
         <SubscriptionModal initValues={detailsModalValues} serviceOptions={serviceNames}
+          pos={eventClickCoords}
           isAdd={true}
           onSubmit={onAdd} closeModal={() => setIsAddModalOpen(false)}
         />
@@ -179,6 +180,7 @@ function Calendar() {
       {
         isEditModalOpen &&
         <SubscriptionModal initValues={detailsModalValues} serviceOptions={serviceNames}
+          pos={eventClickCoords}
           isAdd={false}
           onSubmit={onEdit} closeModal={() => setIsEditModalOpen(false)}
         />
@@ -187,6 +189,7 @@ function Calendar() {
         isDeleteDialogOpen &&
         <SubscriptionDialog
           subscription={detailsModalValues} 
+          pos={eventClickCoords}
           onSubmit={onDelete} 
           close={() => setIsDeleteDialogOpen(false)} 
         />

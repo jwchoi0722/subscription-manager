@@ -37,16 +37,20 @@ const blankSub: Subscription = {
   isChanged: false,
 };
 
-function SubscriptionModal({ isAdd, initValues, serviceOptions, closeModal, onSubmit }: 
+function SubscriptionModal({ isAdd, initValues, serviceOptions, pos = { x: 0, y: 0 }, closeModal, onSubmit }: 
   { 
     isAdd: boolean, 
     initValues: Subscription | null, 
     serviceOptions: string[],
+    pos?: { x: number, y: number },
     closeModal: () => void, 
     onSubmit: (subscription: Subscription) => void 
   }) 
 {
   let sub: Subscription = initValues ?? blankSub;
+
+  const left: string = (pos.x) + "px";
+  const top: string = (pos.y) + "px";
 
   function handleSubmit(formData: FormData): void {
     let id: number = sub.id;
@@ -75,7 +79,9 @@ function SubscriptionModal({ isAdd, initValues, serviceOptions, closeModal, onSu
 
   return (
     <>
-      <dialog id={(isAdd ? "add" : "edit") + "_subscription_modal"} className={(isAdd ? "add" : "edit") + "-subscription-modal"} open={true}>
+      <dialog id={(isAdd ? "add" : "edit") + "_subscription_modal"} className={(isAdd ? "add" : "edit") + "-subscription-modal"} 
+        style={{ position: "absolute", top: top, left: left }} open={true}
+      >
         <div className="modal-close-button" onClick={() => closeModal()}>X</div>
         <h3>{isAdd ? "Add New Subscription" : "Edit Subscription"}</h3>
         <form action={handleSubmit} className="add-subscription-form">

@@ -25,14 +25,5 @@
 .calendar-container dialog {
   position: absolute;
   z-index: 1000;
-}
-
-.calendar-container .subscription-details-modal {
   margin-left: 0;
-}
-
-.calendar-container .edit-subscription-modal, .calendar-container .subscription-dialog {
-  top: 5%;
-  left: 0%;
-  margin: 0;
 }

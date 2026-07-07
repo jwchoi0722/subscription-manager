@@ -15,7 +15,7 @@ function SubscriptionDetails({ sub, pos = { x: 0, y: 0 }, closeModal, openEditMo
     <>
       {
         sub &&
-        <dialog id={"sub-details-" + sub.id} className="subscription-details-modal" open={true} style={{ position: "absolute", top: y, left: x, zIndex: 1000 }}>
+        <dialog id={"sub-details-" + sub.id} className="subscription-details-modal" open={true} style={{ position: "absolute", top: y, left: x }}>
           <div className="modal-close-button" onClick={() => closeModal()}>X</div>
           <div className="modal-edit-button" onClick={() => openEditModal()}>EDIT</div>
           <div className="modal-delete-button" onClick={() => openDeleteDialog()}>DEL</div>
