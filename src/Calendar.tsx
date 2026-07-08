@@ -8,6 +8,7 @@ import interactionPlugin from '@fullcalendar/interaction';
 import SubscriptionDetails from './SubscriptionDetails';
 import SubscriptionModal from './SubscriptionModal';
 import SubscriptionDialog from './SubscriptionDialog';
+import CalendarDateDetails from './CalendarDateDetails';
 
 import './Calendar.css'
 
@@ -49,6 +50,8 @@ function Calendar() {
   const [selectedSub, setSelectedSub] = useState<Subscription | null>(null);
   const [selectedDate, setSelectedDate] = useState<Date | null>(null);
   const [eventClickCoords, setEventClickCoords] = useState<{ x: number, y: number }>({ x: 0, y: 0 });
+  const [dateClickCoords, setDateClickCoords] = useState<{ x: number, y: number }>({ x: 0, y: 0 });
+  const [isDateDetailsOpen, setIsDateDetailsOpen] = useState<boolean>(false);
 
   const containerElement = useRef<HTMLDivElement>(null);
 
@@ -92,7 +95,14 @@ function Calendar() {
     setIsDetailsModalOpen(true);
   };
 
-  const onDateClick = (info: { date: Date }) => {
+  const onDateClick = (info: { date: Date, dayEl: HTMLElement }) => {
+    if (selectedDate?.getTime() === info.date.getTime() && containerElement.current !== null) {
+      const containerRect = containerElement.current.getBoundingClientRect();
+      const dayElementRect = info.dayEl.getBoundingClientRect();
+      setDateClickCoords({ x: 0, y: dayElementRect.bottom - containerRect.top + 20 });
+
+      setIsDateDetailsOpen(true);
+    }
     setSelectedDate(info.date);
   };
 
@@ -140,6 +150,14 @@ function Calendar() {
           pos={eventClickCoords}
           isAdd={true}
           onSubmit={onAdd} closeModal={() => setIsAddModalOpen(false)}
+        />
+      }
+      {
+        isDateDetailsOpen &&
+        <CalendarDateDetails 
+          subs={currSubs.filter((sub) => sub.start <= today && today <= sub.end)} 
+          pos={dateClickCoords}
+          closeModal={() => setIsDateDetailsOpen(false)}
         />
       }
       <FullCalendar plugins={[ dayGridPlugin, interactionPlugin ]} initialView="dayGridMonth" 
