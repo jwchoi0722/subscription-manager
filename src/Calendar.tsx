@@ -77,6 +77,7 @@ function Calendar() {
   }
 
   const onEventClick = (info: { event: { id: string, title: string }, jsEvent: { clientX: number, clientY: number } }) => {
+    setIsAddModalOpen(false);
     setIsEditModalOpen(false);
     const sub: Subscription | undefined = currSubs.find((sub) => sub.id === Number(info.event.id));
     if (sub === undefined || containerElement.current === null) {

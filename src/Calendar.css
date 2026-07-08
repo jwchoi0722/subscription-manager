@@ -27,3 +27,9 @@
   z-index: 1000;
   margin-left: 0;
 }
+
+.calendar-container dialog.add-subscription-modal {
+  top: inherit;
+  left: inherit;
+  margin: auto;
+}
