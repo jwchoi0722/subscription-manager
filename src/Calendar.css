@@ -6,5 +6,35 @@
 }
 
 .calendar-container {
+  position: relative;
   width: 1024px;
+}
+
+.calendar-container .date-selected, .calendar-container .fc-day-today.date-selected {
+  background-color: skyblue;
+  border-width: 3px;
+}
+
+.calendar-container .event-bar {
+  margin-top: 0.8rem;
+  margin-bottom: 0.8rem;
+  padding-top: 0.1rem;
+  padding-bottom: 0.1rem;
+}
+
+.calendar-container dialog {
+  position: absolute;
+  z-index: 1000;
+  margin-left: 0;
+}
+
+.calendar-container dialog.add-subscription-modal {
+  top: inherit;
+  left: inherit;
+  margin: auto;
+}
+
+.calendar-container dialog.date-details-modal {
+  margin: auto;
+  width: 90%;
 }
