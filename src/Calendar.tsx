@@ -155,7 +155,7 @@ function Calendar() {
       {
         isDateDetailsOpen &&
         <CalendarDateDetails 
-          subs={currSubs.filter((sub) => sub.start <= today && today <= sub.end)} 
+          subs={currSubs.filter((sub) => selectedDate !== null && sub.start <= selectedDate && selectedDate <= sub.end)} 
           pos={dateClickCoords}
           closeModal={() => setIsDateDetailsOpen(false)}
         />
