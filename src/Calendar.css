@@ -36,4 +36,5 @@
 
 .calendar-container dialog.date-details-modal {
   margin: auto;
+  width: 90%;
 }
