@@ -1,6 +1,7 @@
 // import { create } from 'zustand';
 
 import type { Subscription } from "./data";
+import { TimeUnit } from "./data";
 
 // interface SubscriptionModalState {
 //   isOpen: boolean
@@ -30,6 +31,8 @@ const blankSub: Subscription = {
   name: "",
   start: today,
   end: new Date(today.getFullYear(), today.getMonth() + 1, today.getDate()),
+  durationLength: 1,
+  durationUnit: TimeUnit.Month,
   priceAmount: 0,
   priceCurrency: "CAD",
   totalAmount: 0,
@@ -65,6 +68,8 @@ function SubscriptionModal({ isAdd, initValues, serviceOptions, pos = { x: 0, y:
       name: formData.get("name") as string,
       start: new Date(formData.get("startDate") as string),
       end: new Date(formData.get("endDate") as string),
+      durationLength: Number(formData.get("durationLength")),
+      durationUnit: formData.get("durationUnit") as TimeUnit,
       priceAmount: Number(formData.get("amount") as string),
       priceCurrency: "CAD",
       totalAmount: Number(formData.get("totalAmount") as string),
@@ -105,6 +110,15 @@ function SubscriptionModal({ isAdd, initValues, serviceOptions, pos = { x: 0, y:
             <input type="date" name="startDate" defaultValue={sub.start.toISOString().slice(0, 10)} />
             <label htmlFor="endDate">End Date:</label>
             <input type="date" name="endDate" defaultValue={sub.end.toISOString().slice(0, 10)} />
+          </div>
+          <div>
+            <label htmlFor="durationLength">Duration:</label>
+            <input type="number" name="durationLength" defaultValue={sub.durationLength} />
+            <select name="durationUnit" defaultValue={sub.durationUnit}>
+              {Object.values(TimeUnit).map((unit: string) => (
+                <option value={unit}>{unit.toLowerCase()}</option>
+              ))}
+            </select>
           </div>
           <div>
             <label htmlFor="amount">Amount:</label>

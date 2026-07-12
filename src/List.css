@@ -18,7 +18,11 @@
   flex: 1;
 }
 
-.list-subscription-entry .list-subscription-time {
+.list-subscription-entry .list-subscription-duration {
+  flex: 1;
+}
+
+.list-subscription-entry .list-subscription-date {
   flex: 2;
 }
 

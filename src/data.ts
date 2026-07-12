@@ -5,6 +5,8 @@ export type Subscription = {
   name: string
   start: Date
   end: Date
+  durationLength: number
+  durationUnit: TimeUnit
   priceAmount: number
   priceCurrency: string
   totalAmount: number
@@ -21,6 +23,15 @@ export type Service = {
   accountUrl: string
 }
 
+export const TimeUnit = {
+  Year: "YEAR",
+  Month: "MONTH",
+  Week: "WEEK",
+  Day: "DAY",
+  Hour: "HOUR"
+} as const;
+export type TimeUnit = (typeof TimeUnit)[keyof typeof TimeUnit];
+
 const testSubscriptions: Subscription[] = [
   {
     id: 1003,
@@ -29,6 +40,8 @@ const testSubscriptions: Subscription[] = [
     name: "Netflix (Standard)",
     start: new Date("2025-12-04 00:00:00"),
     end: new Date("2026-01-04 00:00:00"),
+    durationLength: 1,
+    durationUnit: TimeUnit.Month,
     priceAmount: 14.93,
     priceCurrency: "CAD",
     totalAmount: 16.72,
@@ -43,6 +56,8 @@ const testSubscriptions: Subscription[] = [
     name: "Netflix (Standard with ads)",
     start: new Date("2025-11-23 00:00:00"),
     end: new Date("2025-12-04 00:00:00"),
+    durationLength: 2,
+    durationUnit: TimeUnit.Month,
     priceAmount: 7.99,
     priceCurrency: "CAD",
     totalAmount: 8.95,
@@ -57,6 +72,8 @@ const testSubscriptions: Subscription[] = [
     name: "Netflix (Standard with ads)",
     start: new Date("2025-10-23 00:00:00"),
     end: new Date("2025-11-23 00:00:00"),
+    durationLength: 1,
+    durationUnit: TimeUnit.Month,
     priceAmount: 7.99,
     priceCurrency: "CAD",
     totalAmount: 8.95,
@@ -71,6 +88,8 @@ const testSubscriptions: Subscription[] = [
     name: "Disney+ (Premium)",
     start: new Date("2025-12-02 00:00:00"),
     end: new Date("2026-01-02 00:00:00"),
+    durationLength: 1,
+    durationUnit: TimeUnit.Month,
     priceAmount: 16.99,
     priceCurrency: "CAD",
     totalAmount: 18.98,
@@ -84,6 +103,8 @@ const testSubscriptions: Subscription[] = [
     name: "Crunchyroll (Fan)",
     start: new Date("2025-11-02 00:00:00"),
     end: new Date("2026-11-02 00:00:00"),
+    durationLength: 1,
+    durationUnit: TimeUnit.Year,
     priceAmount: 82.99,
     priceCurrency: "CAD",
     totalAmount: 93.74,
@@ -97,6 +118,8 @@ const testSubscriptions: Subscription[] = [
     name: "HIDIVE (Free Trial)",
     start: new Date("2026-01-02 00:00:00"),
     end: new Date("2026-01-09 00:00:00"),
+    durationLength: 1,
+    durationUnit: TimeUnit.Week,
     priceAmount: 0.00,
     priceCurrency: "CAD",
     totalAmount: 0.00,
@@ -111,6 +134,8 @@ const testSubscriptions: Subscription[] = [
     name: "Spotify (Duo)",
     start: new Date("2025-12-31 00:00:00"),
     end: new Date("2026-01-31 00:00:00"),
+    durationLength: 1,
+    durationUnit: TimeUnit.Month,
     priceAmount: 15.89,
     priceCurrency: "CAD",
     totalAmount: 17.89,

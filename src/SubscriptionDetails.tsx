@@ -10,6 +10,7 @@ function SubscriptionDetails({ sub, pos = { x: 0, y: 0 }, closeModal, openEditMo
   }) {
   const x: string = (pos.x) + "px";
   const y: string = (pos.y) + "px";
+  const durationText: string = sub ? `${sub.durationLength} ${sub.durationUnit.toLowerCase()}${sub.durationLength > 1 ? "s" : ""}` : "";
 
   return (
     <>
@@ -36,6 +37,10 @@ function SubscriptionDetails({ sub, pos = { x: 0, y: 0 }, closeModal, openEditMo
           <div>
             <span>End Date: </span>
             <span>{sub.end.toISOString().slice(0, 10)}</span>
+          </div>
+          <div>
+            <span>Plan Duration: </span>
+            <span>{durationText}</span>
           </div>
           <div>
             <span>Auto-renew? </span>
