@@ -91,30 +91,30 @@ function SubscriptionModal({ isAdd, initValues, serviceOptions, pos = { x: 0, y:
         <h3>{isAdd ? "Add New Subscription" : "Edit Subscription"}</h3>
         <form action={handleSubmit} className="add-subscription-form">
           <div>
-            <label htmlFor="serviceName">Service:</label>
-            <select name="serviceName" defaultValue={sub.service}>
+            <label htmlFor="service_name">Service:</label>
+            <select id="service_name" name="serviceName" defaultValue={sub.service}>
               <option value="">Select a Service</option>
               {serviceOptions.map((service: string) => 
                 <option key={"service_option_" + service} value={service}>{service}</option>
               )}
             </select>
-            <label htmlFor="servicePlanName">Plan:</label>
-            <input type="text" name="servicePlanName" defaultValue={sub.servicePlan} placeholder="Premium" />
+            <label htmlFor="service_plan_name">Plan:</label>
+            <input type="text" id="service_plan_name" name="servicePlanName" defaultValue={sub.servicePlan} placeholder="Premium" />
           </div>
           <div>
-            <label htmlFor="name">Name:</label>
-            <input type="text" name="name" defaultValue={sub.name} placeholder="Streamer (Premium)" />
+            <label htmlFor="sub_name">Name:</label>
+            <input type="text" id="sub_name" name="name" defaultValue={sub.name} placeholder="Streamer (Premium)" />
           </div>
           <div>
-            <label htmlFor="startDate">Start Date:</label>
-            <input type="date" name="startDate" defaultValue={sub.start.toISOString().slice(0, 10)} />
-            <label htmlFor="endDate">End Date:</label>
-            <input type="date" name="endDate" defaultValue={sub.end.toISOString().slice(0, 10)} />
+            <label htmlFor="start_date">Start Date:</label>
+            <input type="date" id="start_date" name="startDate" defaultValue={sub.start.toISOString().slice(0, 10)} />
+            <label htmlFor="end_date">End Date:</label>
+            <input type="date" id="end_date" name="endDate" defaultValue={sub.end.toISOString().slice(0, 10)} />
           </div>
           <div>
-            <label htmlFor="durationLength">Duration:</label>
-            <input type="number" name="durationLength" defaultValue={sub.durationLength} />
-            <select name="durationUnit" defaultValue={sub.durationUnit}>
+            <label htmlFor="duration_length">Duration:</label>
+            <input type="number" id="duration_length" name="durationLength" defaultValue={sub.durationLength} />
+            <select id="duration_unit" name="durationUnit" defaultValue={sub.durationUnit}>
               {Object.values(TimeUnit).map((unit: string) => (
                 <option key={"timeunit_option_" + unit} value={unit}>{unit.toLowerCase()}</option>
               ))}
@@ -122,13 +122,13 @@ function SubscriptionModal({ isAdd, initValues, serviceOptions, pos = { x: 0, y:
           </div>
           <div>
             <label htmlFor="amount">Amount:</label>
-            <input type="number" name="amount" step="0.01" defaultValue={sub.priceAmount} />
-            <label htmlFor="totalAmount">Total:</label>
-            <input type="number" name="totalAmount" step="0.01" defaultValue={sub.totalAmount} />
+            <input type="number" id="amount" name="amount" step="0.01" defaultValue={sub.priceAmount} />
+            <label htmlFor="total_amount">Total:</label>
+            <input type="number" id="total_amount" name="totalAmount" step="0.01" defaultValue={sub.totalAmount} />
           </div>
           <div>
-            <label htmlFor="isAutoRenew">Auto-Renew:</label>
-            <input type="checkbox" name="isAutoRenew" defaultChecked={sub.isAutoRenew} />
+            <label htmlFor="is_auto_renew">Auto-Renew:</label>
+            <input type="checkbox" id="is_auto_renew" name="isAutoRenew" defaultChecked={sub.isAutoRenew} />
           </div>
           <div className="add-subscription-save-button">
             <button>
