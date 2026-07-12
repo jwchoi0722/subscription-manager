@@ -95,7 +95,7 @@ function SubscriptionModal({ isAdd, initValues, serviceOptions, pos = { x: 0, y:
             <select name="serviceName" defaultValue={sub.service}>
               <option value="">Select a Service</option>
               {serviceOptions.map((service: string) => 
-                <option value={service} selected={service === sub.service}>{service}</option>
+                <option key={"service_option_" + service} value={service}>{service}</option>
               )}
             </select>
             <label htmlFor="servicePlanName">Plan:</label>
@@ -116,7 +116,7 @@ function SubscriptionModal({ isAdd, initValues, serviceOptions, pos = { x: 0, y:
             <input type="number" name="durationLength" defaultValue={sub.durationLength} />
             <select name="durationUnit" defaultValue={sub.durationUnit}>
               {Object.values(TimeUnit).map((unit: string) => (
-                <option value={unit}>{unit.toLowerCase()}</option>
+                <option key={"timeunit_option_" + unit} value={unit}>{unit.toLowerCase()}</option>
               ))}
             </select>
           </div>
