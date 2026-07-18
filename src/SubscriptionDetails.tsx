@@ -1,16 +1,46 @@
-import type { Subscription } from "./data";
+import { TimeUnit, type Subscription } from "./data";
 
-function SubscriptionDetails({ sub, pos = { x: 0, y: 0 }, closeModal, openEditModal, openDeleteDialog }: 
+function SubscriptionDetails({ sub, pos = { x: 0, y: 0 }, closeModal, openEditModal, openDeleteDialog, openAddModal }: 
   {
     sub: Subscription | null,
     pos?: { x: number, y: number }, 
     closeModal: () => void,
     openEditModal: () => void,
-    openDeleteDialog: () => void
+    openDeleteDialog: () => void,
+    openAddModal: (initValues: Subscription) => void
   }) {
   const x: string = (pos.x) + "px";
   const y: string = (pos.y) + "px";
   const durationText: string = sub ? `${sub.durationLength} ${sub.durationUnit.toLowerCase()}${sub.durationLength > 1 ? "s" : ""}` : "";
+
+  function onExtendClick(): void {
+    if (!!!sub) {
+      return;
+    }
+
+    let extendedSub: Subscription = { ...sub };
+    extendedSub.start = new Date(sub.end);
+    let extendedEnd: Date = new Date(sub.end);
+    switch (sub.durationUnit) {
+      case TimeUnit.Day:
+        extendedEnd.setDate(extendedEnd.getDate() + sub.durationLength);
+        break;
+      case TimeUnit.Week:
+        extendedEnd.setDate(extendedEnd.getDate() + (sub.durationLength * 7));
+        break;
+      case TimeUnit.Month:
+        extendedEnd.setMonth(extendedEnd.getMonth() + sub.durationLength);
+        break;
+      case TimeUnit.Year:
+        extendedEnd.setFullYear(extendedEnd.getFullYear() + sub.durationLength);
+        break;
+      default:
+        break;
+    }
+    extendedSub.end = extendedEnd;
+
+    openAddModal(extendedSub);
+  }
 
   return (
     <>
@@ -20,6 +50,7 @@ function SubscriptionDetails({ sub, pos = { x: 0, y: 0 }, closeModal, openEditMo
           <div className="modal-close-button" onClick={() => closeModal()}>X</div>
           <div className="modal-edit-button" onClick={() => openEditModal()}>EDIT</div>
           <div className="modal-delete-button" onClick={() => openDeleteDialog()}>DEL</div>
+          <div id="sub_details_extend_button" onClick={() => onExtendClick()}>EXTEND</div>
 
           <h3>{sub.name}</h3>
           <div>

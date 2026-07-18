@@ -194,6 +194,12 @@ function Calendar() {
             setIsAddModalOpen(false);
             setIsDeleteDialogOpen(true);
           }}
+          openAddModal={(initValues: Subscription) => {
+            setIsDetailsModalOpen(false);
+            setIsEditModalOpen(false);
+            setDetailsModalValues(initValues);
+            setIsAddModalOpen(true);
+          }}
         />
       }
       {
