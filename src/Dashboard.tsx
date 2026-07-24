@@ -54,7 +54,7 @@ function Dashboard() {
 
   for (const [category, subEntries] of subsByCategory) {
     const categoryAmount: number = subEntries.reduce((sum, entry) => sum + entry.amount, 0);
-    sortedPieCategories.push({ name: category, amount: categoryAmount });
+    sortedPieCategories.push({ name: category, amount: categoryAmount }); // TODO category colors
     sortedPieSubs.push(...subEntries);
   }
 
