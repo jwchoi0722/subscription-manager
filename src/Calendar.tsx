@@ -39,7 +39,6 @@ const useSubscriptionStore = create<SubscriptionsState>()((set) => ({
 
 function Calendar() {
   const currSubs = useSubscriptionStore((state) => state.subscriptions);
-  // TODO future renewed events
   const services = useSubscriptionStore((state) => state.services);
   const serviceNames: string[] = services.map((ser) => ser.name);
 
@@ -122,22 +121,17 @@ function Calendar() {
 
   // TODO drag to resize
 
-  const calendarButtons = {
-    addSubscriptionButton: {
-      text: "+ Add New",
-      click: () => {
-        setIsEditModalOpen(false);
-        setDetailsModalValues(null);
-        setIsAddModalOpen(true);
-      }
+  const serviceColors: Map<string, string> = new Map();
+  for (const service of services) {
+    if (service.color !== undefined) {
+      serviceColors.set(service.name, service.color);
     }
-  };
-
-  // TODO Undo Redo buttons
+  }
 
   const events: { id: string, title: string, start: Date, end: Date, allDay: boolean }[] = [];
   for (const sub of currSubs) {
     let event = { id: String(sub.id), title: sub.name, start: sub.start, end: sub.end, allDay: true, 
+      backgroundColor: (serviceColors.get(sub.service) ?? ""),
       borderColor: (selectedSub?.id == sub.id ? "white" : "")
     };
 
@@ -163,12 +157,26 @@ function Calendar() {
           break;
       }
       let next = { id: String(sub.id) + "_upcoming", title: sub.name, start: nextStart, end: nextEnd, allDay: true, 
-        classNames: [ "upcoming-event-bar" ]
+        classNames: [ "upcoming-event-bar" ],
+        backgroundColor: (serviceColors.get(sub.service) ?? "")
       }
       events.push(next);
     }
   }
   
+  const calendarButtons = {
+    addSubscriptionButton: {
+      text: "+ Add New",
+      click: () => {
+        setIsEditModalOpen(false);
+        setDetailsModalValues(null);
+        setIsAddModalOpen(true);
+      }
+    }
+  };
+
+  // TODO Undo Redo buttons
+
   return (
     <div className="calendar-container" ref={containerElement}>
       {

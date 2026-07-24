@@ -20,7 +20,8 @@ export type Service = {
   name: string,
   homeUrl: string,
   logoUrl: string,
-  accountUrl: string
+  accountUrl: string,
+  color?: string
 }
 
 export const TimeUnit = {
@@ -151,21 +152,24 @@ const testServices: Service[] = [
     name: "Netflix",
     homeUrl: "https://www.netflix.com",
     logoUrl: "",
-    accountUrl: "https://www.netflix.com/account"
+    accountUrl: "https://www.netflix.com/account",
+    color: "#d80005"
   },
   {
     id: 2,
     name: "Disney Plus",
     homeUrl: "https://www.disneyplus.com",
     logoUrl: "",
-    accountUrl: "https://www.disneyplus.com/commerce/account"
+    accountUrl: "https://www.disneyplus.com/commerce/account",
+    color: "#005567"
   },
   {
     id: 3,
     name: "Crunchyroll",
     homeUrl: "https://www.crunchyroll.com",
     logoUrl: "",
-    accountUrl: "https://www.crunchyroll.com/account/membership"
+    accountUrl: "https://www.crunchyroll.com/account/membership",
+    color: "#f65a05"
   },
   {
     id: 4,
@@ -179,7 +183,8 @@ const testServices: Service[] = [
     name: "Spotify",
     homeUrl: "https://open.spotify.com",
     logoUrl: "",
-    accountUrl: "https://accounts.spotify.com"
+    accountUrl: "https://accounts.spotify.com",
+    color: "#20d05d"
   }
 ]
 
