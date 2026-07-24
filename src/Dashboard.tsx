@@ -1,11 +1,12 @@
 import { PieChart, Pie, Tooltip } from "recharts";
 
-import { getSubscriptions } from "./data";
-import type { Subscription } from "./data";
+import { getSubscriptions, getServices } from "./data";
+import type { Subscription, Service } from "./data";
 
 type DaySub = {
   name: string
-  amount: number
+  amount: number,
+  fill?: string
 }
 
 type DayCategory = {
@@ -19,6 +20,7 @@ const UNCATEGORIZED_TEXT: string = "(Uncategorized)";
 const today: Date = new Date(2026, 0, 2);
 
 const subs: Subscription[] = getSubscriptions();
+const services: Service[] = getServices();
 
 function Dashboard() {
   const activeSubs: Subscription[] = subs
@@ -33,6 +35,10 @@ function Dashboard() {
     const daysInSub: number = Math.floor((sub.end.getTime() - sub.start.getTime()) / (1000 * 3600 * 24));
     const amount: number = Math.floor(sub.totalAmount / daysInSub * 100) / 100;
     const subEntry: DaySub = { name: sub.name, amount: amount };
+    const service: Service | undefined = services.find((service) => service.name === sub.service);
+    if (service !== undefined && service.color !== undefined) {
+      subEntry.fill = service.color;
+    }
 
     const categoryName: string = sub.category ?? UNCATEGORIZED_TEXT;
     if (subsByCategory.has(categoryName)) {
