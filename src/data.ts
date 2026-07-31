@@ -18,9 +18,9 @@ export type Subscription = {
 export type Service = {
   id: number,
   name: string,
-  homeUrl: string,
-  logoUrl: string,
-  accountUrl: string,
+  homeUrl?: string,
+  logoUrl?: string,
+  accountUrl?: string,
   color?: string
 }
 
@@ -188,14 +188,15 @@ const testServices: Service[] = [
   }
 ]
 
-const STORAGE_KEY = "subscriptions";
+const SUBSCRIPTIONS_STORAGE_KEY = "subscriptions";
+const SERVICES_STORAGE_KEY = "services";
 
 export function getSubscriptions(): Subscription[] {
-  if (localStorage.getItem(STORAGE_KEY) === null) {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(testSubscriptions));
+  if (localStorage.getItem(SUBSCRIPTIONS_STORAGE_KEY) === null) {
+    localStorage.setItem(SUBSCRIPTIONS_STORAGE_KEY, JSON.stringify(testSubscriptions));
   }
 
-  const subscriptionObjs: any[] = JSON.parse(localStorage.getItem(STORAGE_KEY) as string);
+  const subscriptionObjs: any[] = JSON.parse(localStorage.getItem(SUBSCRIPTIONS_STORAGE_KEY) as string);
   const subscriptions: Subscription[] = subscriptionObjs.map((obj) => {
     let sub: Subscription = obj as Subscription;
     sub.start = new Date(obj.start);
@@ -211,21 +212,34 @@ export function getSubscriptionsByService(service: string): Subscription[] {
 }
 
 export function addSubscription(subscription: Subscription): void {
-  localStorage.setItem(STORAGE_KEY, JSON.stringify([...getSubscriptions(), subscription]));
+  localStorage.setItem(SUBSCRIPTIONS_STORAGE_KEY, JSON.stringify([...getSubscriptions(), subscription]));
 }
 
 export function updateSubscription(id: number, subscription: Subscription): void {
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(getSubscriptions().map((entry) => entry.id === id ? subscription : entry)));
+  localStorage.setItem(SUBSCRIPTIONS_STORAGE_KEY, JSON.stringify(getSubscriptions().map((entry) => entry.id === id ? subscription : entry)));
 }
 
 export function deleteSubscription(id: number): void {
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(getSubscriptions().filter((entry) => entry.id !== id)));
+  localStorage.setItem(SUBSCRIPTIONS_STORAGE_KEY, JSON.stringify(getSubscriptions().filter((entry) => entry.id !== id)));
 }
 
 export function getServices(): Service[] {
-  return testServices;
+  if (localStorage.getItem(SERVICES_STORAGE_KEY) === null) {
+    localStorage.setItem(SERVICES_STORAGE_KEY, JSON.stringify(testServices));
+  }
+
+  const serviceObjs: any[] = JSON.parse(localStorage.getItem(SERVICES_STORAGE_KEY) as string);
+  const services: Service[] = serviceObjs.map((obj) => {
+    return obj as Service;
+  });
+
+  return services;
 }
 
 export function getService(id: number): Service | undefined {
-  return testServices.find((service) => service.id === id);
+  return getServices().find((service) => service.id === id);
+}
+
+export function addService(service: Service): void {
+  localStorage.setItem(SERVICES_STORAGE_KEY, JSON.stringify([...getServices(), service]));
 }

@@ -25,8 +25,8 @@ function ServiceDetails() {
       <h1>{service.name}</h1>
       <div>
         <p style={{ backgroundColor: service.color }}>Color: {service.color}</p>
-        <p><Link to={service.homeUrl}>Website</Link></p>
-        <p><Link to={service.accountUrl}>Manage Account</Link></p>
+        {service.homeUrl && <p><Link to={service.homeUrl}>Website</Link></p>}
+        {service.accountUrl && <p><Link to={service.accountUrl}>Manage Account</Link></p>}
       </div>
       <div>
         <h2>Past Subscriptions</h2>
