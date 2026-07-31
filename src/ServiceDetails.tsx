@@ -30,18 +30,23 @@ function ServiceDetails() {
       </div>
       <div>
         <h2>Past Subscriptions</h2>
-        {subscriptions.map((sub) => (
-          <div key={sub.id} className={"list-subscription-entry" + (today <= sub.end && today >= sub.start ? " active-sub" : "")}>
-            <div className="list-subscription-duration">
-              {sub.durationLength} {sub.durationUnit.toLowerCase()}{sub.durationLength > 1 ? "s" : ""}
+        {subscriptions.length === 0 ? 
+          (
+            <p>No subscriptions yet.</p>
+          ) : 
+          subscriptions.map((sub) => (
+            <div key={sub.id} className={"list-subscription-entry" + (today <= sub.end && today >= sub.start ? " active-sub" : "")}>
+              <div className="list-subscription-duration">
+                {sub.durationLength} {sub.durationUnit.toLowerCase()}{sub.durationLength > 1 ? "s" : ""}
+              </div>
+              <div className="list-subscription-date">
+                {listDateTimeFormat.format(sub.start)} - {listDateTimeFormat.format(sub.end)}
+              </div>
+              <div className="list-subscription-plan">{sub.servicePlan}</div>
+              <div className="list-subscription-price">{sub.priceAmount} {sub.priceCurrency}</div>
             </div>
-            <div className="list-subscription-date">
-              {listDateTimeFormat.format(sub.start)} - {listDateTimeFormat.format(sub.end)}
-            </div>
-            <div className="list-subscription-plan">{sub.servicePlan}</div>
-            <div className="list-subscription-price">{sub.priceAmount} {sub.priceCurrency}</div>
-          </div>
-        ))}
+          ))
+        }
       </div>
     </>
   );
