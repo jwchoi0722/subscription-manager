@@ -206,6 +206,10 @@ export function getSubscriptions(): Subscription[] {
   return subscriptions;
 }
 
+export function getSubscriptionsByService(service: string): Subscription[] {
+  return getSubscriptions().filter((sub) => sub.service === service);
+}
+
 export function addSubscription(subscription: Subscription): void {
   localStorage.setItem(STORAGE_KEY, JSON.stringify([...getSubscriptions(), subscription]));
 }
@@ -220,4 +224,8 @@ export function deleteSubscription(id: number): void {
 
 export function getServices(): Service[] {
   return testServices;
+}
+
+export function getService(id: number): Service | undefined {
+  return testServices.find((service) => service.id === id);
 }

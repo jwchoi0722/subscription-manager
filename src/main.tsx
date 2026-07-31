@@ -10,6 +10,8 @@ import Dashboard from './Dashboard.tsx'
 import Calendar from './Calendar.tsx'
 import List from './List.tsx'
 import Chart from './Chart.tsx'
+import Services from './Services.tsx'
+import ServiceDetails from './ServiceDetails.tsx'
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
@@ -21,6 +23,10 @@ createRoot(document.getElementById('root')!).render(
           <Route path="Calendar" element={<Calendar />} />
           <Route path="List" element={<List />} />
           <Route path="Chart" element={<Chart />} />
+          <Route path="Services">
+            <Route index element={<Services />} />
+            <Route path=":id" element={<ServiceDetails />} />
+          </Route>
         </Route>
       </Routes>
     </BrowserRouter>

@@ -11,6 +11,7 @@ function Layout() {
         <Link to="/Calendar" className="link-item">Calendar View</Link>
         <Link to="/List" className="link-item">List View</Link>
         <Link to="/Chart" className="link-item">Chart View</Link>
+        <Link to="/Services" className="link-item">Manage Services</Link>
       </div>
       <Outlet />
     </>
