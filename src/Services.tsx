@@ -34,12 +34,22 @@ function Services() {
     }
   }
 
+  function onSubmit(service: Service): void {
+    addService(service);
+
+    closeModal();
+  }
+
+  function closeModal(): void {
+    setIsAddModalOpen(false);
+  }
+
   return (
     <div>
       <h1>Services</h1>
       {
         isAddModalOpen && (
-          <ServiceModal onSubmit={addService} closeModal={() => setIsAddModalOpen(false)} />
+          <ServiceModal isEdit={false} onSubmit={onSubmit} closeModal={closeModal} />
         )
       }
       <button onClick={() => {setIsAddModalOpen(true)}}>

@@ -1,13 +1,19 @@
+import { useState } from 'react';
+
 import { Link, useParams } from 'react-router';
 
-import { getService, getSubscriptionsByService } from './data.ts'
+import { getService, getSubscriptionsByService, updateService } from './data.ts'
 import type { Service, Subscription } from './data.ts'
+
+import ServiceModal from './ServiceModal.tsx'
 
 // const today: Date = new Date();
 const today: Date = new Date(2026, 0, 2);
 
 function ServiceDetails() {
   const { id } = useParams();
+
+  const [isEditMode, setIsEditMode] = useState<boolean>(false);
 
   const listDateTimeFormat = new Intl.DateTimeFormat("en-US", { month: "short", day: "2-digit", year: "numeric", timeZone: "UTC" });
 
@@ -20,14 +26,43 @@ function ServiceDetails() {
   let subscriptions: Subscription[] = getSubscriptionsByService(service.name);
   subscriptions.sort((a, b) => b.start.getTime() - a.start.getTime());
 
+  function closeModal(): void {
+    setIsEditMode(false);
+  }
+
+  function onSubmit(updatedService: Service): void {
+    updateService(service.id, updatedService);
+
+    closeModal();
+  }
+
   return (
     <>
       <h1>{service.name}</h1>
-      <div>
-        <p style={{ backgroundColor: service.color }}>Color: {service.color}</p>
-        {service.homeUrl && <p><Link to={service.homeUrl}>Website</Link></p>}
-        {service.accountUrl && <p><Link to={service.accountUrl}>Manage Account</Link></p>}
-      </div>
+      <button onClick={() => setIsEditMode(true)}>EDIT</button>
+      { isEditMode && 
+        <ServiceModal isEdit={true} initValues={service} closeModal={closeModal} onSubmit={onSubmit} />
+      }
+      { !isEditMode && 
+        <div>
+          {service.color &&
+            <p style={{ backgroundColor: service.color }}>Color: {service.color}</p>
+          }
+          {service.homeUrl && 
+            <div>
+              <label>Website</label>
+              <Link to={service.homeUrl}>{service.homeUrl}</Link>
+            </div>
+          }
+          {service.accountUrl && 
+            <div>
+              <label>Manage Account</label>
+              <Link to={service.accountUrl}>{service.accountUrl}</Link>
+            </div>
+          }
+        </div>
+      }
+      
       <div>
         <h2>Past Subscriptions</h2>
         {subscriptions.length === 0 ? 

@@ -243,3 +243,7 @@ export function getService(id: number): Service | undefined {
 export function addService(service: Service): void {
   localStorage.setItem(SERVICES_STORAGE_KEY, JSON.stringify([...getServices(), service]));
 }
+
+export function updateService(id: number, service: Service): void {
+  localStorage.setItem(SERVICES_STORAGE_KEY, JSON.stringify(getServices().map((entry) => entry.id === id ? service : entry)));
+}
