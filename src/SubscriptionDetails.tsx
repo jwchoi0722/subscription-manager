@@ -1,4 +1,4 @@
-import { TimeUnit, type Subscription } from "./data";
+import { TimeUnit, SubscriptionStatus, type Subscription } from "./data";
 
 function SubscriptionDetails({ sub, pos = { x: 0, y: 0 }, closeModal, openEditModal, openDeleteDialog, openAddModal }: 
   {
@@ -38,6 +38,7 @@ function SubscriptionDetails({ sub, pos = { x: 0, y: 0 }, closeModal, openEditMo
         break;
     }
     extendedSub.end = extendedEnd;
+    extendedSub.status = SubscriptionStatus.Pending;
 
     openAddModal(extendedSub);
   }
@@ -72,6 +73,10 @@ function SubscriptionDetails({ sub, pos = { x: 0, y: 0 }, closeModal, openEditMo
           <div>
             <span>Plan Duration: </span>
             <span>{durationText}</span>
+          </div>
+          <div>
+            <span>Status: </span>
+            <span>{sub.status}</span>
           </div>
           <div>
             <span>Auto-renew? </span>

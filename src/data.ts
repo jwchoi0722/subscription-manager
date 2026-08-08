@@ -3,6 +3,7 @@ export type Subscription = {
   service: string
   servicePlan: string
   name: string
+  status: SubscriptionStatus
   start: Date
   end: Date
   durationLength: number
@@ -33,12 +34,21 @@ export const TimeUnit = {
 } as const;
 export type TimeUnit = (typeof TimeUnit)[keyof typeof TimeUnit];
 
+export const SubscriptionStatus = {
+  Pending: "Pending",
+  Subscribed: "Subscribed",
+  Expired: "Expired",
+  Changed: "Changed"
+}
+export type SubscriptionStatus = (typeof SubscriptionStatus)[keyof typeof SubscriptionStatus];
+
 const testSubscriptions: Subscription[] = [
   {
     id: 1003,
     service: "Netflix",
     servicePlan: "Standard",
     name: "Netflix (Standard)",
+    status: SubscriptionStatus.Subscribed,
     start: new Date("2025-12-04 00:00:00"),
     end: new Date("2026-01-04 00:00:00"),
     durationLength: 1,
@@ -55,6 +65,7 @@ const testSubscriptions: Subscription[] = [
     service: "Netflix",
     servicePlan: "Standard with ads",
     name: "Netflix (Standard with ads)",
+    status: SubscriptionStatus.Expired,
     start: new Date("2025-11-23 00:00:00"),
     end: new Date("2025-12-04 00:00:00"),
     durationLength: 2,
@@ -71,6 +82,7 @@ const testSubscriptions: Subscription[] = [
     service: "Netflix",
     servicePlan: "Standard with ads",
     name: "Netflix (Standard with ads)",
+    status: SubscriptionStatus.Expired,
     start: new Date("2025-10-23 00:00:00"),
     end: new Date("2025-11-23 00:00:00"),
     durationLength: 1,
@@ -87,6 +99,7 @@ const testSubscriptions: Subscription[] = [
     service: "Disney Plus",
     servicePlan: "Premium",
     name: "Disney+ (Premium)",
+    status: SubscriptionStatus.Subscribed,
     start: new Date("2025-12-02 00:00:00"),
     end: new Date("2026-01-02 00:00:00"),
     durationLength: 1,
@@ -102,6 +115,7 @@ const testSubscriptions: Subscription[] = [
     service: "Crunchyroll",
     servicePlan: "Fan",
     name: "Crunchyroll (Fan)",
+    status: SubscriptionStatus.Expired,
     start: new Date("2025-11-02 00:00:00"),
     end: new Date("2026-11-02 00:00:00"),
     durationLength: 1,
@@ -117,6 +131,7 @@ const testSubscriptions: Subscription[] = [
     service: "HIDIVE",
     servicePlan: "Free Trial",
     name: "HIDIVE (Free Trial)",
+    status: SubscriptionStatus.Subscribed,
     start: new Date("2026-01-02 00:00:00"),
     end: new Date("2026-01-09 00:00:00"),
     durationLength: 1,
@@ -133,6 +148,7 @@ const testSubscriptions: Subscription[] = [
     service: "Spotify",
     servicePlan: "Duo",
     name: "Spotify (Duo)",
+    status: SubscriptionStatus.Subscribed,
     start: new Date("2025-12-31 00:00:00"),
     end: new Date("2026-01-31 00:00:00"),
     durationLength: 1,

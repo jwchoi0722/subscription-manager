@@ -1,7 +1,7 @@
 // import { create } from 'zustand';
 
 import type { Subscription } from "./data";
-import { TimeUnit } from "./data";
+import { TimeUnit, SubscriptionStatus } from "./data";
 
 // interface SubscriptionModalState {
 //   isOpen: boolean
@@ -29,6 +29,7 @@ const blankSub: Subscription = {
   service: "",
   servicePlan: "",
   name: "",
+  status: SubscriptionStatus.Pending,
   start: today,
   end: new Date(today.getFullYear(), today.getMonth() + 1, today.getDate()),
   durationLength: 1,
@@ -61,11 +62,12 @@ function SubscriptionModal({ isAdd, initValues, serviceOptions, pos = { x: 0, y:
       id = Math.floor(new Date().getTime() / 10);
     }
 
-    const addedSub: Subscription = {
+    const newSub: Subscription = {
       id: id,
       service: formData.get("serviceName") as string,
       servicePlan: formData.get("servicePlanName") as string,
       name: formData.get("name") as string,
+      status: formData.get("status") as SubscriptionStatus,
       start: new Date((formData.get("startDate") + "T00:00:00") as string),
       end: new Date((formData.get("endDate") + "T00:00:00") as string),
       durationLength: Number(formData.get("durationLength")),
@@ -77,7 +79,7 @@ function SubscriptionModal({ isAdd, initValues, serviceOptions, pos = { x: 0, y:
       isChanged: false
     }
 
-    onSubmit(addedSub);
+    onSubmit(newSub);
 
     closeModal();
   }
@@ -127,6 +129,12 @@ function SubscriptionModal({ isAdd, initValues, serviceOptions, pos = { x: 0, y:
             <input type="number" id="total_amount" name="totalAmount" step="0.01" defaultValue={sub.totalAmount} />
           </div>
           <div>
+            <label htmlFor="status">Status:</label>
+            <select id="status" name="status" defaultValue={sub.status}>
+              {Object.values(SubscriptionStatus).map((status: string) => (
+                <option key={"status_option_" + status} value={status}>{status}</option>
+              ))}
+            </select>
             <label htmlFor="is_auto_renew">Auto-Renew:</label>
             <input type="checkbox" id="is_auto_renew" name="isAutoRenew" defaultChecked={sub.isAutoRenew} />
           </div>
