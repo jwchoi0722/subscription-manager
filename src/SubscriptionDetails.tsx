@@ -12,6 +12,8 @@ function SubscriptionDetails({ sub, pos = { x: 0, y: 0 }, closeModal, openEditMo
   const x: string = (pos.x) + "px";
   const y: string = (pos.y) + "px";
   const durationText: string = sub ? `${sub.durationLength} ${sub.durationUnit.toLowerCase()}${sub.durationLength > 1 ? "s" : ""}` : "";
+  
+  // TODO pause/skip a month - with renewal date property
 
   function onExtendClick(): void {
     if (!!!sub) {

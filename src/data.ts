@@ -44,6 +44,23 @@ export type SubscriptionStatus = (typeof SubscriptionStatus)[keyof typeof Subscr
 
 const testSubscriptions: Subscription[] = [
   {
+    id: 1004,
+    service: "Netflix",
+    servicePlan: "Standard",
+    name: "Netflix (Standard)",
+    status: SubscriptionStatus.Pending,
+    start: new Date("2026-01-04 00:00:00"),
+    end: new Date("2026-02-04 00:00:00"),
+    durationLength: 1,
+    durationUnit: TimeUnit.Month,
+    priceAmount: 14.93,
+    priceCurrency: "CAD",
+    totalAmount: 16.72,
+    isAutoRenew: true,
+    isChanged: false,
+    category: "Movies/TV",
+  },
+  {
     id: 1003,
     service: "Netflix",
     servicePlan: "Standard",

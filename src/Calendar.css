@@ -22,7 +22,7 @@
   padding-bottom: 0.1rem;
 }
 
-.calendar-container .event-bar.upcoming-event-bar {
+.calendar-container .event-bar.pending-event-bar {
   opacity: 0.7;
 }
 

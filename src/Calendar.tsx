@@ -12,7 +12,7 @@ import CalendarDateDetails from './CalendarDateDetails';
 
 import './Calendar.css'
 
-import { addSubscription, updateSubscription, deleteSubscription, TimeUnit } from "./data";
+import { addSubscription, updateSubscription, deleteSubscription, TimeUnit, SubscriptionStatus } from "./data";
 import { getSubscriptions, getServices } from "./data";
 import type { Subscription, Service } from "./data";
 
@@ -130,38 +130,17 @@ function Calendar() {
 
   const events: { id: string, title: string, start: Date, end: Date, allDay: boolean }[] = [];
   for (const sub of currSubs) {
+    let classes: string[] = [];
+    if (sub.status === SubscriptionStatus.Pending) {
+      classes.push("pending-event-bar");
+    }
     let event = { id: String(sub.id), title: sub.name, start: sub.start, end: sub.end, allDay: true, 
+      classNames: classes,
       backgroundColor: (serviceColors.get(sub.service) ?? ""),
       borderColor: (selectedSub?.id == sub.id ? "white" : "")
     };
 
     events.push(event);
-
-    if (sub.isAutoRenew && sub.start <= today && sub.end > today) {
-      const nextStart: Date = new Date(sub.end);
-      const nextEnd: Date = new Date(sub.end);
-      switch (sub.durationUnit) {
-        case TimeUnit.Year:
-          nextEnd.setFullYear(nextEnd.getFullYear() + sub.durationLength);
-          break;
-        case TimeUnit.Month:
-          nextEnd.setMonth(nextEnd.getMonth() + sub.durationLength);
-          break;
-        case TimeUnit.Week:
-          nextEnd.setDate(nextEnd.getDate() + 7 * sub.durationLength);
-          break;
-        case TimeUnit.Day:
-          nextEnd.setDate(nextEnd.getDate() + sub.durationLength);
-          break;
-        default:
-          break;
-      }
-      let next = { id: String(sub.id) + "_upcoming", title: sub.name, start: nextStart, end: nextEnd, allDay: true, 
-        classNames: [ "upcoming-event-bar" ],
-        backgroundColor: (serviceColors.get(sub.service) ?? "")
-      }
-      events.push(next);
-    }
   }
   
   const calendarButtons = {
