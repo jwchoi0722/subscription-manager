@@ -15,34 +15,34 @@ function SubscriptionDetails({ sub, pos = { x: 0, y: 0 }, closeModal, openEditMo
   
   // TODO pause/skip a month - with renewal date property
 
-  function onExtendClick(): void {
+  function onRenewClick(): void {
     if (!!!sub) {
       return;
     }
 
-    let extendedSub: Subscription = { ...sub };
-    extendedSub.start = new Date(sub.end);
-    let extendedEnd: Date = new Date(sub.end);
+    let renewedSub: Subscription = { ...sub };
+    renewedSub.start = new Date(sub.end);
+    let renewedEnd: Date = new Date(sub.end);
     switch (sub.durationUnit) {
       case TimeUnit.Day:
-        extendedEnd.setDate(extendedEnd.getDate() + sub.durationLength);
+        renewedEnd.setDate(renewedEnd.getDate() + sub.durationLength);
         break;
       case TimeUnit.Week:
-        extendedEnd.setDate(extendedEnd.getDate() + (sub.durationLength * 7));
+        renewedEnd.setDate(renewedEnd.getDate() + (sub.durationLength * 7));
         break;
       case TimeUnit.Month:
-        extendedEnd.setMonth(extendedEnd.getMonth() + sub.durationLength);
+        renewedEnd.setMonth(renewedEnd.getMonth() + sub.durationLength);
         break;
       case TimeUnit.Year:
-        extendedEnd.setFullYear(extendedEnd.getFullYear() + sub.durationLength);
+        renewedEnd.setFullYear(renewedEnd.getFullYear() + sub.durationLength);
         break;
       default:
         break;
     }
-    extendedSub.end = extendedEnd;
-    extendedSub.status = SubscriptionStatus.Pending;
+    renewedSub.end = renewedEnd;
+    renewedSub.status = SubscriptionStatus.Pending;
 
-    openAddModal(extendedSub);
+    openAddModal(renewedSub);
   }
 
   return (
@@ -53,7 +53,7 @@ function SubscriptionDetails({ sub, pos = { x: 0, y: 0 }, closeModal, openEditMo
           <div className="modal-close-button" onClick={() => closeModal()}>X</div>
           <div className="modal-edit-button" onClick={() => openEditModal()}>EDIT</div>
           <div className="modal-delete-button" onClick={() => openDeleteDialog()}>DEL</div>
-          <div id="sub_details_extend_button" onClick={() => onExtendClick()}>EXTEND</div>
+          <div id="sub_details_renew_button" onClick={() => onRenewClick()}>RENEW</div>
 
           <h3>{sub.name}</h3>
           <div>
