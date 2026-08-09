@@ -1,6 +1,6 @@
 import { PieChart, Pie, Tooltip } from "recharts";
 
-import { getSubscriptions, getServices } from "./data";
+import { getSubscriptions, getServices, SubscriptionStatus } from "./data";
 import type { Subscription, Service } from "./data";
 
 type DaySub = {
@@ -24,7 +24,7 @@ const services: Service[] = getServices();
 
 function Dashboard() {
   const activeSubs: Subscription[] = subs
-    .filter((sub) => sub.start <= today && today <= sub.end)
+    .filter((sub) => sub.status === SubscriptionStatus.Subscribed)
     .sort((a, b) => a.end.getTime() - b.end.getTime());
   
   const subsByCategory: Map<string, DaySub[]> = new Map<string, DaySub[]>();
@@ -58,17 +58,9 @@ function Dashboard() {
     sortedPieSubs.push(...subEntries);
   }
 
-  const upcomingSubs: Subscription[] = [];
-  for (const sub of subs) {
-    if (sub.start > today) {
-      upcomingSubs.push(sub);
-      continue;
-    }
-
-    if (sub.end > today && sub.isAutoRenew) {
-      upcomingSubs.push({ ...sub, start: new Date(sub.end.getTime()), end: new Date(sub.end.getTime() + (sub.end.getTime() - sub.start.getTime())) });
-    }
-  }
+   const upcomingSubs: Subscription[] = subs
+    .filter((sub) => sub.status === SubscriptionStatus.Pending && sub.start > today)
+    .sort((a, b) => a.end.getTime() - b.end.getTime());
 
   return (
     <>

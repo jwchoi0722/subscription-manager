@@ -12,7 +12,7 @@ import CalendarDateDetails from './CalendarDateDetails';
 
 import './Calendar.css'
 
-import { addSubscription, updateSubscription, deleteSubscription, TimeUnit, SubscriptionStatus } from "./data";
+import { addSubscription, updateSubscription, deleteSubscription, SubscriptionStatus } from "./data";
 import { getSubscriptions, getServices } from "./data";
 import type { Subscription, Service } from "./data";
 

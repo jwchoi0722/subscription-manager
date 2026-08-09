@@ -1,6 +1,7 @@
 import "./List.css";
 
-import { getSubscriptions, getServices, type Subscription, type Service } from "./data";
+import { getSubscriptions, getServices, SubscriptionStatus } from "./data";
+import type { Subscription, Service } from "./data";
 
 import { useSubscriptionListStore } from "./store";
 
@@ -62,7 +63,7 @@ function List() {
 
       <div className="list-container">
         {filteredSubs.map((sub: Subscription) => (
-          <div key={"sub_" + sub.id} className={"list-subscription-entry" + (today <= sub.end && today >= sub.start ? " active-sub" : "")}>
+          <div key={"sub_" + sub.id} className={"list-subscription-entry" + (sub.status === SubscriptionStatus.Subscribed ? " active-sub" : "")}>
             <div className="list-subscription-service">{sub.service}</div> 
             <div className="list-subscription-duration">
               {sub.durationLength} {sub.durationUnit.toLowerCase()}{sub.durationLength > 1 ? "s" : ""}
