@@ -63,7 +63,7 @@ function List() {
 
       <div className="list-container">
         {filteredSubs.map((sub: Subscription) => (
-          <div key={"sub_" + sub.id} className={"list-subscription-entry" + (sub.status === SubscriptionStatus.Subscribed ? " active-sub" : "")}>
+          <div key={"sub_" + sub.id} className={`list-subscription-entry ${sub.status === SubscriptionStatus.Subscribed ? "active-sub" : ""} ${sub.status === SubscriptionStatus.Pending ? "pending-sub": ""}`}>
             <div className="list-subscription-service">{sub.service}</div> 
             <div className="list-subscription-duration">
               {sub.durationLength} {sub.durationUnit.toLowerCase()}{sub.durationLength > 1 ? "s" : ""}

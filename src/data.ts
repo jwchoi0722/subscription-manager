@@ -132,7 +132,7 @@ const testSubscriptions: Subscription[] = [
     service: "Crunchyroll",
     servicePlan: "Fan",
     name: "Crunchyroll (Fan)",
-    status: SubscriptionStatus.Expired,
+    status: SubscriptionStatus.Subscribed,
     start: new Date("2025-11-02 00:00:00"),
     end: new Date("2026-11-02 00:00:00"),
     durationLength: 1,
