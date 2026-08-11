@@ -1,6 +1,6 @@
 import { useState } from "react";
 
-import { getServices, getSubscriptions } from "./data"
+import { getServices, getSubscriptions, SubscriptionStatus } from "./data"
 import type { Subscription, Service } from "./data"
 
 import { useSubscriptionListStore } from "./store";
@@ -73,7 +73,7 @@ function Chart() {
   }
   const categoryNames: string[] = Array.from(new Set(subs.filter((sub: Subscription) => sub.category !== undefined).map((sub: Subscription) => sub.category as string)));
   
-  let filteredSubs: Subscription[] = subs;
+  let filteredSubs: Subscription[] = subs.filter((sub: Subscription) => sub.status !== SubscriptionStatus.Upcoming);
   if (selectedCategories.size > 0 || isUncategorizedSelected) {
     filteredSubs = filteredSubs.filter((sub: Subscription) => isUncategorizedSelected && sub.category === undefined || sub.category !== undefined && selectedCategories.has(sub.category as string));
   }
