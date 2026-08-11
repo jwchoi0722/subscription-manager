@@ -160,7 +160,7 @@ function Chart() {
         <XAxis dataKey="month" />
         <YAxis width="auto" />
         {Array.from(chartServices.keys()).map((key: string) => (
-          <Bar dataKey={key} fill={serviceColors.get(key)} stackId="1" />
+          <Bar dataKey={key} fill={serviceColors.get(key)} stackId="1" isAnimationActive={false} />
         ))}
         <Tooltip labelStyle={{ color: "black" }} />
         <Legend />
