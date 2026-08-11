@@ -25,7 +25,7 @@ type ChartMonthData = {
   [index: string]: number | string
 };
 
-const MONTH_COUNT_IN_RANGE: number = 12;
+const MONTH_COUNT_IN_RANGE: number = 6;
 const UNCATEGORIZED_TEXT: string = "(Uncategorized)";
 
 // const today: Date = new Date();
@@ -162,7 +162,7 @@ function Chart() {
         {Array.from(chartServices.keys()).map((key: string) => (
           <Bar dataKey={key} fill={serviceColors.get(key)} stackId="1" />
         ))}
-        <Tooltip />
+        <Tooltip labelStyle={{ color: "black" }} />
         <Legend />
       </BarChart>
       {months.map((month: ChartMonth) => (
