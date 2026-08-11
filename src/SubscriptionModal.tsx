@@ -29,7 +29,7 @@ const blankSub: Subscription = {
   service: "",
   servicePlan: "",
   name: "",
-  status: SubscriptionStatus.Pending,
+  status: SubscriptionStatus.Upcoming,
   start: today,
   end: new Date(today.getFullYear(), today.getMonth() + 1, today.getDate()),
   durationLength: 1,

@@ -40,7 +40,7 @@ function SubscriptionDetails({ sub, pos = { x: 0, y: 0 }, closeModal, openEditMo
         break;
     }
     renewedSub.end = renewedEnd;
-    renewedSub.status = SubscriptionStatus.Pending;
+    renewedSub.status = SubscriptionStatus.Upcoming;
 
     openAddModal(renewedSub);
   }

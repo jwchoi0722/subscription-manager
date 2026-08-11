@@ -8,7 +8,7 @@ import { useSubscriptionListStore } from "./store";
 const UNCATEGORIZED_TEXT: string = "(Uncategorized)";
 
 // const today: Date = new Date();
-const today: Date = new Date(2026, 0, 2);
+// const today: Date = new Date(2026, 0, 2);
 const listDateTimeFormat = new Intl.DateTimeFormat("en-US", { month: "short", day: "2-digit", year: "numeric", timeZone: "UTC" });
 
 
@@ -63,7 +63,7 @@ function List() {
 
       <div className="list-container">
         {filteredSubs.map((sub: Subscription) => (
-          <div key={"sub_" + sub.id} className={`list-subscription-entry ${sub.status === SubscriptionStatus.Subscribed ? "active-sub" : ""} ${sub.status === SubscriptionStatus.Pending ? "pending-sub": ""}`}>
+          <div key={"sub_" + sub.id} className={`list-subscription-entry ${sub.status === SubscriptionStatus.Subscribed ? "active-sub" : ""} ${sub.status === SubscriptionStatus.Upcoming ? "upcoming-sub": ""}`}>
             <div className="list-subscription-service">{sub.service}</div> 
             <div className="list-subscription-duration">
               {sub.durationLength} {sub.durationUnit.toLowerCase()}{sub.durationLength > 1 ? "s" : ""}

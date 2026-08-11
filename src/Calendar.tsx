@@ -131,8 +131,8 @@ function Calendar() {
   const events: { id: string, title: string, start: Date, end: Date, allDay: boolean }[] = [];
   for (const sub of currSubs) {
     let classes: string[] = [];
-    if (sub.status === SubscriptionStatus.Pending) {
-      classes.push("pending-event-bar");
+    if (sub.status === SubscriptionStatus.Upcoming) {
+      classes.push("upcoming-event-bar");
     }
     let event = { id: String(sub.id), title: sub.name, start: sub.start, end: sub.end, allDay: true, 
       classNames: classes,

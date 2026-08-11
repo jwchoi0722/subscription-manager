@@ -59,7 +59,7 @@ function Dashboard() {
   }
 
    const upcomingSubs: Subscription[] = subs
-    .filter((sub) => sub.status === SubscriptionStatus.Pending && sub.start > today)
+    .filter((sub) => sub.status === SubscriptionStatus.Upcoming && sub.start > today)
     .sort((a, b) => a.end.getTime() - b.end.getTime());
 
   return (

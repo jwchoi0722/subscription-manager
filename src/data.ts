@@ -35,7 +35,7 @@ export const TimeUnit = {
 export type TimeUnit = (typeof TimeUnit)[keyof typeof TimeUnit];
 
 export const SubscriptionStatus = {
-  Pending: "Pending",
+  Upcoming: "Upcoming",
   Subscribed: "Subscribed",
   Expired: "Expired",
   Changed: "Changed"
@@ -48,7 +48,7 @@ const testSubscriptions: Subscription[] = [
     service: "Netflix",
     servicePlan: "Standard",
     name: "Netflix (Standard)",
-    status: SubscriptionStatus.Pending,
+    status: SubscriptionStatus.Upcoming,
     start: new Date("2026-01-04 00:00:00"),
     end: new Date("2026-02-04 00:00:00"),
     durationLength: 1,
