@@ -1,6 +1,7 @@
 import { useState } from "react";
 
-import { getSubscriptions, type Subscription } from "./data";
+import { getServices, getSubscriptions } from "./data"
+import type { Subscription, Service } from "./data"
 
 import { useSubscriptionListStore } from "./store";
 
@@ -60,6 +61,16 @@ function Chart() {
   }
 
   const subs: Subscription[] = getSubscriptions();
+  const services: Service[] = getServices();
+  const serviceColors: Map<string, string> = new Map<string, string>();
+  for (const service of services) {
+    if (service.color === undefined) {
+      serviceColors.set(service.name, `rgb(${Math.floor(Math.random() * 255)},${Math.floor(Math.random() * 255)},${Math.floor(Math.random() * 255)})`);
+    }
+    else {
+      serviceColors.set(service.name, service.color);
+    }
+  }
   const categoryNames: string[] = Array.from(new Set(subs.filter((sub: Subscription) => sub.category !== undefined).map((sub: Subscription) => sub.category as string)));
   
   let filteredSubs: Subscription[] = subs;
@@ -67,7 +78,7 @@ function Chart() {
     filteredSubs = filteredSubs.filter((sub: Subscription) => isUncategorizedSelected && sub.category === undefined || sub.category !== undefined && selectedCategories.has(sub.category as string));
   }
 
-  let chartServices: Map<string, string> = new Map<string, string>();
+  let chartServices: Set<string> = new Set<string>();
 
   for (const sub of filteredSubs) {
     if (sub.start > endDate || sub.end < startDate) {
@@ -75,7 +86,7 @@ function Chart() {
     }
 
     if (sub.service !== undefined && !chartServices.has(sub.service)) {
-      chartServices.set(sub.service, `rgb(${Math.floor(Math.random() * 255)},${Math.floor(Math.random() * 255)},${Math.floor(Math.random() * 255)})`); // TODO proper colors
+      chartServices.add(sub.service);
     }
 
     let subDayCount: number = Math.ceil((sub.end.getTime() - sub.start.getTime()) / (1000 * 3600 * 24) + 1);
@@ -148,8 +159,8 @@ function Chart() {
       <BarChart data={months2} style={{ width: "100%", height: "70vh" }}>
         <XAxis dataKey="month" />
         <YAxis width="auto" />
-        {Array.from(chartServices.keys()).map((service: string) => (
-          <Bar dataKey={service} fill={chartServices.get(service)} stackId="1" />
+        {Array.from(chartServices.keys()).map((key: string) => (
+          <Bar dataKey={key} fill={serviceColors.get(key)} stackId="1" />
         ))}
         <Tooltip />
         <Legend />
