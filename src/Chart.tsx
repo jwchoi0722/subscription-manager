@@ -132,7 +132,7 @@ function Chart() {
 
   return (
     <>
-      <h2>Chart</h2>
+      <h1>Chart</h1>
       <div className="control-container">
         <button onClick={() => setDateRange(-1, 0)}>
           &lt;&lt;

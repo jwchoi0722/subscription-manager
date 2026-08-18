@@ -42,7 +42,7 @@ function List() {
 
   return (
     <>
-      <h2>List</h2>
+      <h1>List</h1>
       <div id="service_button_list" className="button-container">
         {serviceNames.map((service: string) => (
           <button key={service} className={(selectedServices.has(service) ? "selected" : "")} onClick={() => setServiceSelectState(service, !selectedServices.has(service))}>

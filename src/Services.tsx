@@ -55,14 +55,14 @@ function Services() {
       <button onClick={() => {setIsAddModalOpen(true)}}>
         + Add New
       </button>
-      <h3>Active Services</h3>
+      <h2>Active Services</h2>
       <div>
         {activeServices.length === 0 && <p>No active services.</p>}
         {activeServices.map((service) => (
           <p key={`service_link_${service.id}`}><Link to={`${service.id}`}>{service.name}</Link></p>
         ))}
       </div>
-      <h3>Inactive Services</h3>
+      <h2>Inactive Services</h2>
       <div>
         {inactiveServices.length === 0 && <p>No inactive services.</p>}
         {inactiveServices.map((service) => (

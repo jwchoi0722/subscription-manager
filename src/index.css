@@ -127,4 +127,10 @@
   html {
     @apply font-sans;
     }
+  h1 {
+    @apply text-4xl font-bold py-4;
+  }
+  h2 {
+    @apply text-2xl font-bold py-2;
+  }
 }
