@@ -1,11 +1,11 @@
 import { Outlet } from "react-router";
 
-import Navigation from "./Navigation";
+import TopNavBar from "./TopNavBar";
 
 function Layout() {
   return (
     <>
-      <Navigation />
+      <TopNavBar />
       <Outlet />
     </>
   );
