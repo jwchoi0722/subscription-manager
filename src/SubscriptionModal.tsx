@@ -2,6 +2,9 @@
 
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog"
 import { FieldGroup, Field, FieldLabel } from "@/components/ui/field"
+import { Input } from "@/components/ui/input"
+import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from "@/components/ui/select"
+import { Checkbox } from "@/components/ui/checkbox"
 import { Button } from "@/components/ui/button"
 
 import type { Subscription } from "./data";
@@ -44,6 +47,8 @@ const blankSub: Subscription = {
   isAutoRenew: true,
   isChanged: false,
 };
+
+const durationUnitOptions: { label: string, value: string }[] = Object.values(TimeUnit).map((unit: string) => ({ label: unit.toLowerCase(), value: unit }));
 
 function SubscriptionModal({ isAdd, initValues, serviceOptions, closeModal, onSubmit }: 
   { 
@@ -105,65 +110,87 @@ function SubscriptionModal({ isAdd, initValues, serviceOptions, closeModal, onSu
               <FieldGroup>
                 <Field>
                   <FieldLabel htmlFor="service_name">Service:</FieldLabel>
-                  <select id="service_name" name="serviceName" defaultValue={sub.service}>
-                    <option value="">Select a Service</option>
-                    {serviceOptions.map((service: string) => 
-                      <option key={"service_option_" + service} value={service}>{service}</option>
-                    )}
-                  </select>
+                  <Select id="service_name" name="serviceName" defaultValue={sub.service}>
+                    <SelectTrigger>
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="">Select a Service</SelectItem>
+                      {serviceOptions.map((service: string) => 
+                        <SelectItem key={"service_option_" + service} value={service}>
+                          {service}
+                        </SelectItem>
+                      )}
+                    </SelectContent>
+                  </Select>
                 </Field>
                 <Field>
                   <FieldLabel htmlFor="service_plan_name">Plan:</FieldLabel>
-                  <input type="text" id="service_plan_name" name="servicePlanName" defaultValue={sub.servicePlan} placeholder="Premium" />
+                  <Input type="text" id="service_plan_name" name="servicePlanName" defaultValue={sub.servicePlan} placeholder="Premium" />
                 </Field>
                 <Field>
                   <FieldLabel htmlFor="sub_name">Name:</FieldLabel>
-                  <input type="text" id="sub_name" name="name" defaultValue={sub.name} placeholder="Streamer (Premium)" />
+                  <Input type="text" id="sub_name" name="name" defaultValue={sub.name} placeholder="Streamer (Premium)" />
                 </Field>
                 <Field>
                   <FieldLabel htmlFor="start_date">Start Date:</FieldLabel>
-                  <input type="date" id="start_date" name="startDate" defaultValue={sub.start.toISOString().slice(0, 10)} />
+                  <Input type="date" id="start_date" name="startDate" defaultValue={sub.start.toISOString().slice(0, 10)} />
                 </Field>
                 <Field>
                   <FieldLabel htmlFor="end_date">End Date:</FieldLabel>
-                  <input type="date" id="end_date" name="endDate" defaultValue={sub.end.toISOString().slice(0, 10)} />
+                  <Input type="date" id="end_date" name="endDate" defaultValue={sub.end.toISOString().slice(0, 10)} />
                 </Field>
-                <Field>
+                <Field orientation="horizontal">
                   <FieldLabel htmlFor="duration_length">Duration:</FieldLabel>
-                  <input type="number" id="duration_length" name="durationLength" defaultValue={sub.durationLength} />
-                  <select id="duration_unit" name="durationUnit" defaultValue={sub.durationUnit}>
-                    {Object.values(TimeUnit).map((unit: string) => (
-                      <option key={"timeunit_option_" + unit} value={unit}>{unit.toLowerCase()}</option>
-                    ))}
-                  </select>
+                  <Input type="number" id="duration_length" name="durationLength" defaultValue={sub.durationLength} />
+                  <Select id="duration_unit" name="durationUnit" items={durationUnitOptions} defaultValue={sub.durationUnit}>
+                    <SelectTrigger>
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {durationUnitOptions.map((option) => (
+                        <SelectItem key={"timeunit_option_" + option.value} value={option.value}>
+                          {option.label}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
                 </Field>
                 <Field>
                   <FieldLabel htmlFor="amount">Amount:</FieldLabel>
-                  <input type="number" id="amount" name="amount" step="0.01" defaultValue={sub.priceAmount} />
+                  <Input type="number" id="amount" name="amount" step="0.01" defaultValue={sub.priceAmount} />
                 </Field>
                 <Field>
                   <FieldLabel htmlFor="total_amount">Total:</FieldLabel>
-                  <input type="number" id="total_amount" name="totalAmount" step="0.01" defaultValue={sub.totalAmount} />
+                  <Input type="number" id="total_amount" name="totalAmount" step="0.01" defaultValue={sub.totalAmount} />
                 </Field>
-                <Field>
+                <Field orientation="horizontal">
                   <FieldLabel htmlFor="status">Status:</FieldLabel>
-                  <select id="status" name="status" defaultValue={sub.status}>
-                    {Object.values(SubscriptionStatus).map((status: string) => (
-                      <option key={"status_option_" + status} value={status}>{status}</option>
-                    ))}
-                  </select>
+                  <Select id="status" name="status" defaultValue={sub.status}>
+                    <SelectTrigger>
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {Object.values(SubscriptionStatus).map((status: string) => (
+                        <SelectItem key={"status_option_" + status} value={status}>
+                          {status}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </Field>
+                <Field orientation="horizontal">
+                  <FieldLabel htmlFor="is_auto_renew">Auto-Renew:</FieldLabel>
+                  <Checkbox id="is_auto_renew" name="isAutoRenew" defaultChecked={sub.isAutoRenew} />
                 </Field>
                 <Field>
-                  <FieldLabel htmlFor="is_auto_renew">Auto-Renew:</FieldLabel>
-                  <input type="checkbox" id="is_auto_renew" name="isAutoRenew" defaultChecked={sub.isAutoRenew} />
-                </Field>
+                  <div className="add-subscription-save-button">
+                    <Button type="submit">
+                      Save
+                    </Button>
+                  </div>
+                  </Field>
               </FieldGroup>
-
-              <div className="add-subscription-save-button">
-                <Button>
-                  Save
-                </Button>
-              </div>
             </form>
           </div>
 
