@@ -45,20 +45,16 @@ const blankSub: Subscription = {
   isChanged: false,
 };
 
-function SubscriptionModal({ isAdd, initValues, serviceOptions, pos = { x: 0, y: 0 }, closeModal, onSubmit }: 
+function SubscriptionModal({ isAdd, initValues, serviceOptions, closeModal, onSubmit }: 
   { 
     isAdd: boolean, 
     initValues: Subscription | null, 
     serviceOptions: string[],
-    pos?: { x: number, y: number },
     closeModal: () => void, 
     onSubmit: (subscription: Subscription) => void 
   }) 
 {
   let sub: Subscription = initValues ?? blankSub;
-
-  const left: string = (pos.x) + "px";
-  const top: string = (pos.y) + "px";
 
   function handleSubmit(formData: FormData): void {
     let id: number = sub.id;

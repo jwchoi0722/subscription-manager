@@ -48,7 +48,7 @@ function Calendar() {
 
   const [selectedSub, setSelectedSub] = useState<Subscription | null>(null);
   const [selectedDate, setSelectedDate] = useState<Date | null>(null);
-  const [eventClickCoords, setEventClickCoords] = useState<{ x: number, y: number }>({ x: 0, y: 0 });
+  // const [eventClickCoords, setEventClickCoords] = useState<{ x: number, y: number }>({ x: 0, y: 0 });
   const [dateClickCoords, setDateClickCoords] = useState<{ x: number, y: number }>({ x: 0, y: 0 });
   const [isDateDetailsOpen, setIsDateDetailsOpen] = useState<boolean>(false);
 
@@ -87,8 +87,8 @@ function Calendar() {
     setIsAddModalOpen(false);
     setIsEditModalOpen(false);
 
-    const containerRect = containerElement.current.getBoundingClientRect();
-    setEventClickCoords({ x: info.jsEvent.clientX - containerRect.left, y: info.jsEvent.clientY - containerRect.top + 50 });
+    // const containerRect = containerElement.current.getBoundingClientRect();
+    // setEventClickCoords({ x: info.jsEvent.clientX - containerRect.left, y: info.jsEvent.clientY - containerRect.top + 50 });
     setSelectedSub(sub);
     setDetailsModalValues(sub as Subscription);
     setIsDetailsModalOpen(true);
@@ -161,7 +161,6 @@ function Calendar() {
       {
         isAddModalOpen &&
         <SubscriptionModal initValues={detailsModalValues} serviceOptions={serviceNames}
-          pos={eventClickCoords}
           isAdd={true}
           onSubmit={onAdd} closeModal={() => setIsAddModalOpen(false)}
         />
@@ -193,7 +192,7 @@ function Calendar() {
       />
       {
         isDetailsModalOpen &&
-        <SubscriptionDetails sub={detailsModalValues} pos={eventClickCoords}
+        <SubscriptionDetails sub={detailsModalValues}
           closeModal={() => {
             setSelectedSub(null);
             setIsDetailsModalOpen(false);
@@ -219,7 +218,6 @@ function Calendar() {
       {
         isEditModalOpen &&
         <SubscriptionModal initValues={detailsModalValues} serviceOptions={serviceNames}
-          pos={eventClickCoords}
           isAdd={false}
           onSubmit={onEdit} closeModal={() => setIsEditModalOpen(false)}
         />
@@ -227,8 +225,7 @@ function Calendar() {
       {
         isDeleteDialogOpen &&
         <SubscriptionDialog
-          subscription={detailsModalValues} 
-          pos={eventClickCoords}
+          subscription={detailsModalValues}
           onSubmit={onDelete} 
           close={() => setIsDeleteDialogOpen(false)} 
         />

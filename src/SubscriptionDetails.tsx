@@ -3,17 +3,14 @@ import { Button } from "@/components/ui/button"
 
 import { TimeUnit, SubscriptionStatus, type Subscription } from "./data";
 
-function SubscriptionDetails({ sub, pos = { x: 0, y: 0 }, closeModal, openEditModal, openDeleteDialog, openAddModal }: 
+function SubscriptionDetails({ sub, closeModal, openEditModal, openDeleteDialog, openAddModal }: 
   {
     sub: Subscription | null,
-    pos?: { x: number, y: number }, 
     closeModal: () => void,
     openEditModal: () => void,
     openDeleteDialog: () => void,
     openAddModal: (initValues: Subscription) => void
   }) {
-  const x: string = (pos.x) + "px";
-  const y: string = (pos.y) + "px";
   const durationText: string = sub ? `${sub.durationLength} ${sub.durationUnit.toLowerCase()}${sub.durationLength > 1 ? "s" : ""}` : "";
   
   // TODO pause/skip a month - with renewal date property

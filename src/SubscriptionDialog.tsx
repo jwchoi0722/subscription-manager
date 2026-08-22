@@ -3,10 +3,9 @@ import { Button } from "@/components/ui/button"
 
 import type { Subscription } from "./data";
 
-function SubscriptionDialog({ subscription, pos = { x: 0, y: 0 }, onSubmit, close }: 
+function SubscriptionDialog({ subscription, onSubmit, close }: 
   { 
     subscription: Subscription | null,
-    pos?: { x: number, y: number },
     onSubmit: (id: number) => void, 
     close: () => void 
   }) 
@@ -14,9 +13,6 @@ function SubscriptionDialog({ subscription, pos = { x: 0, y: 0 }, onSubmit, clos
   if (subscription === null) {
     return null;
   }
-
-  const left: string = (pos.x) + "px";
-  const top: string = (pos.y) + "px";
 
   return (
     <Dialog open={true}
