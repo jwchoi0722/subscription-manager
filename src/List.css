@@ -6,38 +6,10 @@
   width: 1024px;
 }
 
-.list-subscription-entry {
-  display: flex;
-}
-
 .list-subscription-entry.active-sub {
   font-weight: bold;
 }
 
 .list-subscription-entry.upcoming-sub {
   font-style: italic;
-}
-
-.list-subscription-entry .list-subscription-service {
-  flex: 1;
-}
-
-.list-subscription-entry .list-subscription-duration {
-  flex: 1;
-}
-
-.list-subscription-entry .list-subscription-date {
-  flex: 2;
-}
-
-.list-subscription-entry .list-subscription-plan {
-  flex: 2;
-}
-
-.list-subscription-entry .list-subscription-price {
-  flex: 1;
-}
-
-.list-subscription-entry .list-subscription-category {
-  flex: 1;
 }
