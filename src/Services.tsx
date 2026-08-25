@@ -2,6 +2,9 @@ import { useState } from 'react';
 
 import { Link } from 'react-router';
 
+import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card'
+import { Button } from "@/components/ui/button"
+
 import ServiceModal from './ServiceModal.tsx'
 
 import { addService, getServices, getSubscriptions } from './data.ts'
@@ -52,22 +55,40 @@ function Services() {
           <ServiceModal isEdit={false} onSubmit={onSubmit} closeModal={closeModal} />
         )
       }
-      <button onClick={() => {setIsAddModalOpen(true)}}>
+      <Button onClick={() => {setIsAddModalOpen(true)}}>
         + Add New
-      </button>
-      <h2>Active Services</h2>
-      <div>
-        {activeServices.length === 0 && <p>No active services.</p>}
-        {activeServices.map((service) => (
-          <p key={`service_link_${service.id}`}><Link to={`${service.id}`}>{service.name}</Link></p>
-        ))}
+      </Button>
+      <div className="py-4">
+        <h2>Active Services</h2>
+        <div className="grid grid-cols-3 gap-4">
+          {activeServices.length === 0 && <p>No active services.</p>}
+          {activeServices.map((service) => (
+            <Card key={`service_link_${service.id}`}>
+              <Link to={`${service.id}`}>
+                <CardHeader>
+                  <CardTitle>
+                    {service.name}
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div className="h-6 w-6 mx-auto my-1" style={{ backgroundColor: service.color }}></div>
+                </CardContent>
+              </Link>
+            </Card>
+          ))}
+        </div>
       </div>
-      <h2>Inactive Services</h2>
-      <div>
-        {inactiveServices.length === 0 && <p>No inactive services.</p>}
-        {inactiveServices.map((service) => (
-          <p key={`service_link_${service.id}`}><Link to={`${service.id}`}>{service.name}</Link></p>
-        ))}
+
+      <div className="py-4">
+        <h2>Inactive Services</h2>
+        <div>
+          {inactiveServices.length === 0 && <p>No inactive services.</p>}
+          {inactiveServices.map((service) => (
+            <Card key={`service_link_${service.id}`}>
+              <Link to={`${service.id}`}>{service.name}</Link>
+            </Card>
+          ))}
+        </div>
       </div>
     </div>
   );

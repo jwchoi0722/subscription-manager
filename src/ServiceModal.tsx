@@ -1,3 +1,8 @@
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog"
+import { FieldGroup, Field, FieldLabel } from "@/components/ui/field"
+import { Input } from "@/components/ui/input"
+import { Button } from "@/components/ui/button"
+
 import type { Service } from "./data";
 
 function ServiceModal({ initValues, isEdit, closeModal, onSubmit }: { initValues?: Service, isEdit: boolean, closeModal: () => void, onSubmit: (service: Service) => void }) {
@@ -20,27 +25,50 @@ function ServiceModal({ initValues, isEdit, closeModal, onSubmit }: { initValues
     : { id: -1, name: "" };
 
   return (
-    <>
-      <dialog id="add_service_modal" open>
-        <div className="modal-close-button" onClick={() => closeModal()}>X</div>
-        <h3>{title}</h3>
+    <Dialog open={true}
+      onOpenChange={(open) => {
+        if (!open) {
+          closeModal();
+        }
+      }}
+    >
+      <DialogContent>
+        <DialogHeader>
+          <DialogTitle>
+            {title}
+          </DialogTitle>
+        </DialogHeader>
+        
         <form action={handleSubmit}>
-          <label htmlFor="service_name">Name:</label>
-          <input type="text" id="service_name" name="serviceName" defaultValue={defaultValues.name} />
-          <label htmlFor="service_home_url">Home URL:</label>
-          <input type="text" id="service_home_url" name="serviceHomeUrl" defaultValue={defaultValues.homeUrl} />
-          <label htmlFor="service_account_url">Account URL:</label>
-          <input type="text" id="service_account_url" name="serviceAccountUrl" defaultValue={defaultValues.accountUrl} />
-          <label htmlFor="service_color">Color:</label>
-          <input type="text" id="service_color" name="serviceColor" defaultValue={defaultValues.color} />
-          <div className="add-service-save-button">
-            <button>
-              Save
-            </button>
-          </div>
+          <FieldGroup>
+            <Field>
+              <FieldLabel htmlFor="service_name">Name:</FieldLabel>
+              <Input type="text" id="service_name" name="serviceName" defaultValue={defaultValues.name} />
+            </Field>
+            <Field>
+              <FieldLabel htmlFor="service_home_url">Home URL:</FieldLabel>
+              <Input type="text" id="service_home_url" name="serviceHomeUrl" defaultValue={defaultValues.homeUrl} />
+            </Field>
+            <Field>
+              <FieldLabel htmlFor="service_account_url">Account URL:</FieldLabel>
+              <Input type="text" id="service_account_url" name="serviceAccountUrl" defaultValue={defaultValues.accountUrl} />
+            </Field>
+            <Field>
+              <FieldLabel htmlFor="service_color">Color:</FieldLabel>
+              <Input type="text" id="service_color" name="serviceColor" defaultValue={defaultValues.color} />
+            </Field>
+            <Field>
+              <div className="add-service-save-button">
+                <Button type="submit">
+                  Save
+                </Button>
+              </div>
+            </Field>
+          </FieldGroup>
         </form>
-      </dialog>
-    </>
+
+      </DialogContent>
+    </Dialog>
   );
 }
 

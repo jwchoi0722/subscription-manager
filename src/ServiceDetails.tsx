@@ -1,6 +1,8 @@
 import { useState } from 'react';
 
 import { Link, useParams } from 'react-router';
+import { Button } from "@/components/ui/button"
+import { Table, TableHeader, TableHead, TableRow, TableBody, TableCell } from "@/components/ui/table"
 
 import { getService, getSubscriptionsByService, updateService } from './data.ts'
 import type { Service, Subscription } from './data.ts'
@@ -39,48 +41,66 @@ function ServiceDetails() {
   return (
     <>
       <h1>{service.name}</h1>
-      <button onClick={() => setIsEditMode(true)}>EDIT</button>
+      <Button onClick={() => setIsEditMode(true)}>
+        EDIT
+      </Button>
       { isEditMode && 
         <ServiceModal isEdit={true} initValues={service} closeModal={closeModal} onSubmit={onSubmit} />
       }
       { !isEditMode && 
-        <div>
+        <div className="py-4">
+          <h2>Info</h2>
           {service.color &&
-            <p style={{ backgroundColor: service.color }}>Color: {service.color}</p>
+            <div className="py-2">
+              <span>Color: </span>
+              <span className="p-2" style={{ backgroundColor: service.color }}>{service.color}</span>
+            </div>
           }
           {service.homeUrl && 
             <div>
-              <label>Website</label>
-              <Link to={service.homeUrl}>{service.homeUrl}</Link>
+              <span>Website: </span>
+              <Link className="underline" to={service.homeUrl}>{service.homeUrl}</Link>
             </div>
           }
           {service.accountUrl && 
             <div>
-              <label>Manage Account</label>
-              <Link to={service.accountUrl}>{service.accountUrl}</Link>
+              <span>Manage Account: </span>
+              <Link className="underline" to={service.accountUrl}>{service.accountUrl}</Link>
             </div>
           }
         </div>
       }
       
-      <div>
+      <div className="py-4">
         <h2>Past Subscriptions</h2>
         {subscriptions.length === 0 ? 
           (
             <p>No subscriptions yet.</p>
           ) : 
-          subscriptions.map((sub) => (
-            <div key={sub.id} className={"list-subscription-entry" + (today <= sub.end && today >= sub.start ? " active-sub" : "")}>
-              <div className="list-subscription-duration">
-                {sub.durationLength} {sub.durationUnit.toLowerCase()}{sub.durationLength > 1 ? "s" : ""}
-              </div>
-              <div className="list-subscription-date">
-                {listDateTimeFormat.format(sub.start)} - {listDateTimeFormat.format(sub.end)}
-              </div>
-              <div className="list-subscription-plan">{sub.servicePlan}</div>
-              <div className="list-subscription-price">{sub.priceAmount} {sub.priceCurrency}</div>
-            </div>
-          ))
+          <Table>
+            <TableHeader>
+              <TableRow>
+                <TableHead>Duration</TableHead>
+                <TableHead>Date</TableHead>
+                <TableHead>Plan</TableHead>
+                <TableHead className="text-right">Price</TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody className="text-left">
+              {subscriptions.map((sub) => (
+                <TableRow key={sub.id} className={"list-subscription-entry" + (today <= sub.end && today >= sub.start ? " active-sub" : "")}>
+                  <TableCell className="list-subscription-duration">
+                    {sub.durationLength} {sub.durationUnit.toLowerCase()}{sub.durationLength > 1 ? "s" : ""}
+                  </TableCell>
+                  <TableCell className="list-subscription-date">
+                    {listDateTimeFormat.format(sub.start)} - {listDateTimeFormat.format(sub.end)}
+                  </TableCell>
+                  <TableCell className="list-subscription-plan">{sub.servicePlan}</TableCell>
+                  <TableCell className="list-subscription-price text-right">{sub.priceAmount} {sub.priceCurrency}</TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
         }
       </div>
     </>
