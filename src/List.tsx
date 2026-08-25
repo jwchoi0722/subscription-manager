@@ -1,5 +1,7 @@
 import "./List.css";
 
+import { Button } from "@/components/ui/button"
+
 import { getSubscriptions, getServices, SubscriptionStatus } from "./data";
 import type { Subscription, Service } from "./data";
 
@@ -45,20 +47,20 @@ function List() {
       <h1>List</h1>
       <div id="service_button_list" className="button-container">
         {serviceNames.map((service: string) => (
-          <button key={service} className={(selectedServices.has(service) ? "selected" : "")} onClick={() => setServiceSelectState(service, !selectedServices.has(service))}>
+          <Button key={service} className={(selectedServices.has(service) ? "selected" : "")} onClick={() => setServiceSelectState(service, !selectedServices.has(service))}>
             {service}
-          </button>
+          </Button>
         ))}
-        <button onClick={() => setAllServicesUnselected()}>SHOW ALL</button>
+        <Button onClick={() => setAllServicesUnselected()}>SHOW ALL</Button>
       </div>
       <div id="category_button_list" className="button-container">
         {categoryNames.map((category: string) => (
-          <button key={category} className={(selectedCategories.has(category) ? "selected" : "")} onClick={() => setCategorySelectState(category, !selectedCategories.has(category))}>
+          <Button key={category} className={(selectedCategories.has(category) ? "selected" : "")} onClick={() => setCategorySelectState(category, !selectedCategories.has(category))}>
             {category}
-          </button>
+          </Button>
         ))}
-        <button className={(isUncategorizedSelected ? "selected" : "")} onClick={() => setUncategorizedSelected(!isUncategorizedSelected)}>{UNCATEGORIZED_TEXT}</button>
-        <button onClick={() => setAllCategoriesUnselected()}>SHOW ALL</button>
+        <Button className={(isUncategorizedSelected ? "selected" : "")} onClick={() => setUncategorizedSelected(!isUncategorizedSelected)}>{UNCATEGORIZED_TEXT}</Button>
+        <Button onClick={() => setAllCategoriesUnselected()}>SHOW ALL</Button>
       </div>
 
       <div className="list-container">

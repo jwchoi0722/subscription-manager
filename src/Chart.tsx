@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { Button } from "@/components/ui/button"
 
 import { getServices, getSubscriptions, SubscriptionStatus } from "./data"
 import type { Subscription, Service } from "./data"
@@ -134,27 +135,27 @@ function Chart() {
     <>
       <h1>Chart</h1>
       <div className="control-container">
-        <button onClick={() => setDateRange(-1, 0)}>
+        <Button onClick={() => setDateRange(-1, 0)}>
           &lt;&lt;
-        </button>
-        <button onClick={() => setDateRange(0, -1)}>
+        </Button>
+        <Button onClick={() => setDateRange(0, -1)}>
           &lt;
-        </button>
-        <button onClick={() => setDateRange(0, 1)}>
+        </Button>
+        <Button onClick={() => setDateRange(0, 1)}>
           &gt;
-        </button>
-        <button onClick={() => setDateRange(1, 0)}>
+        </Button>
+        <Button onClick={() => setDateRange(1, 0)}>
           &gt;&gt;
-        </button>
+        </Button>
       </div>
       <div id="category_button_list" className="button-container">
         {categoryNames.map((category: string) => (
-          <button key={category} className={(selectedCategories.has(category) ? "selected" : "")} onClick={() => setCategorySelectState(category, !selectedCategories.has(category))}>
+          <Button key={category} className={(selectedCategories.has(category) ? "selected" : "")} onClick={() => setCategorySelectState(category, !selectedCategories.has(category))}>
             {category}
-          </button>
+          </Button>
         ))}
-        <button className={(isUncategorizedSelected ? "selected" : "")} onClick={() => setUncategorizedSelected(!isUncategorizedSelected)}>{UNCATEGORIZED_TEXT}</button>
-        <button onClick={() => setAllCategoriesUnselected()}>SHOW ALL</button>
+        <Button className={(isUncategorizedSelected ? "selected" : "")} onClick={() => setUncategorizedSelected(!isUncategorizedSelected)}>{UNCATEGORIZED_TEXT}</Button>
+        <Button onClick={() => setAllCategoriesUnselected()}>SHOW ALL</Button>
       </div>
       <BarChart data={months2} style={{ width: "100%", height: "70vh" }}>
         <XAxis dataKey="month" />
