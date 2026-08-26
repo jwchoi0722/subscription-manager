@@ -1,5 +1,8 @@
 import "./List.css";
 
+import { Button } from "@/components/ui/button"
+import { Table, TableHeader, TableHead, TableRow, TableBody, TableCell } from "@/components/ui/table"
+
 import { getSubscriptions, getServices, SubscriptionStatus } from "./data";
 import type { Subscription, Service } from "./data";
 
@@ -42,40 +45,56 @@ function List() {
 
   return (
     <>
-      <h2>List</h2>
+      <h1>List</h1>
       <div id="service_button_list" className="button-container">
         {serviceNames.map((service: string) => (
-          <button key={service} className={(selectedServices.has(service) ? "selected" : "")} onClick={() => setServiceSelectState(service, !selectedServices.has(service))}>
+          <Button key={service} className={(selectedServices.has(service) ? "selected" : "")} onClick={() => setServiceSelectState(service, !selectedServices.has(service))}>
             {service}
-          </button>
+          </Button>
         ))}
-        <button onClick={() => setAllServicesUnselected()}>SHOW ALL</button>
+        <Button onClick={() => setAllServicesUnselected()}>SHOW ALL</Button>
       </div>
       <div id="category_button_list" className="button-container">
         {categoryNames.map((category: string) => (
-          <button key={category} className={(selectedCategories.has(category) ? "selected" : "")} onClick={() => setCategorySelectState(category, !selectedCategories.has(category))}>
+          <Button key={category} className={(selectedCategories.has(category) ? "selected" : "")} onClick={() => setCategorySelectState(category, !selectedCategories.has(category))}>
             {category}
-          </button>
+          </Button>
         ))}
-        <button className={(isUncategorizedSelected ? "selected" : "")} onClick={() => setUncategorizedSelected(!isUncategorizedSelected)}>{UNCATEGORIZED_TEXT}</button>
-        <button onClick={() => setAllCategoriesUnselected()}>SHOW ALL</button>
+        <Button className={(isUncategorizedSelected ? "selected" : "")} onClick={() => setUncategorizedSelected(!isUncategorizedSelected)}>{UNCATEGORIZED_TEXT}</Button>
+        <Button onClick={() => setAllCategoriesUnselected()}>SHOW ALL</Button>
       </div>
 
       <div className="list-container">
-        {filteredSubs.map((sub: Subscription) => (
-          <div key={"sub_" + sub.id} className={`list-subscription-entry ${sub.status === SubscriptionStatus.Subscribed ? "active-sub" : ""} ${sub.status === SubscriptionStatus.Upcoming ? "upcoming-sub": ""}`}>
-            <div className="list-subscription-service">{sub.service}</div> 
-            <div className="list-subscription-duration">
-              {sub.durationLength} {sub.durationUnit.toLowerCase()}{sub.durationLength > 1 ? "s" : ""}
-            </div>
-            <div className="list-subscription-date">
-              {listDateTimeFormat.format(sub.start)} - {listDateTimeFormat.format(sub.end)}
-            </div>
-            <div className="list-subscription-plan">{sub.servicePlan}</div>
-            <div className="list-subscription-price">{sub.priceAmount} {sub.priceCurrency}</div>
-            <div className="list-subscription-category">{sub.category ?? ""}</div>
-          </div>
-        ))}
+        <Table>
+          <TableHeader>
+            <TableRow>
+              <TableHead className="w-12">Service</TableHead>
+              <TableHead className="">Duration</TableHead>
+              <TableHead className="">Date</TableHead>
+              <TableHead className="">Plan</TableHead>
+              <TableHead className="text-right">Price</TableHead>
+              <TableHead className="">Category</TableHead>
+            </TableRow>
+          </TableHeader>
+          <TableBody className="text-left">
+            {filteredSubs.map((sub: Subscription) => (
+              <TableRow key={"sub_" + sub.id} className={`list-subscription-entry ${sub.status === SubscriptionStatus.Subscribed ? "active-sub" : ""} ${sub.status === SubscriptionStatus.Upcoming ? "upcoming-sub": ""}`}>
+                <TableCell className="list-subscription-service">{sub.service}</TableCell> 
+                <TableCell className="list-subscription-duration">
+                  {sub.durationLength} {sub.durationUnit.toLowerCase()}{sub.durationLength > 1 ? "s" : ""}
+                </TableCell>
+                <TableCell className="list-subscription-date">
+                  {listDateTimeFormat.format(sub.start)} - {listDateTimeFormat.format(sub.end)}
+                </TableCell>
+                <TableCell className="list-subscription-plan">{sub.servicePlan}</TableCell>
+                <TableCell className="list-subscription-price text-right">
+                  {sub.priceAmount} {sub.priceCurrency}
+                </TableCell>
+                <TableCell className="list-subscription-category">{sub.category ?? ""}</TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
       </div>
       <div className="services-container">
         {selectedServiceDetails.map((service: Service) => (
