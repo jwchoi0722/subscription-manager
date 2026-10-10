@@ -17,9 +17,7 @@ import { getSubscriptions, getServices } from "./data";
 import type { Subscription, Service } from "./data";
 
 import { useSubscriptionModalStore } from './store';
-
-// const today: Date = new Date();
-const today: Date = new Date(2026, 0, 2);
+import { getCurrDate } from './dateTimeService';
 
 interface SubscriptionsState {
   subscriptions: Subscription[]
@@ -38,6 +36,8 @@ const useSubscriptionStore = create<SubscriptionsState>()((set) => ({
 }));
 
 function Calendar() {
+  const today: Date = getCurrDate();
+  
   const currSubs = useSubscriptionStore((state) => state.subscriptions);
   const services = useSubscriptionStore((state) => state.services);
   const serviceNames: string[] = services.map((ser) => ser.name);

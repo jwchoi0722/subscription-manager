@@ -3,6 +3,7 @@ import { create } from 'zustand';
 import type { Subscription, Service } from "./data";
 
 import { useSubscriptionModalStore } from './store';
+import { getCurrDate } from "./dateTimeService";
 import MonthEntryView from './MonthEntryView';
 import SubscriptionModal from './SubscriptionModal';
 import SubscriptionDialog from './SubscriptionDialog';
@@ -15,11 +16,10 @@ interface CalendarMonthState {
   setYearMonth: (year: number, month: number) => void
 }
 
-// const today: Date = new Date();
-const today: Date = new Date(2026, 0, 2);
+const calendarHeaderDateTimeFormat = new Intl.DateTimeFormat("en-US", { month: "long", year: "numeric" });
 
 const useCalendarMonthStore = create<CalendarMonthState>()((set) => ({
-  date: today,
+  date: new Date(),
   setYearMonth: (year: number, month: number) => set(() => ({ date: new Date(year, month) }))
 }));
 
@@ -32,7 +32,7 @@ function MonthView({ subs, services, onAdd, onEdit, onDelete }:
     onDelete: (id: number) => void
   }) 
 {
-  const calendarHeaderDateTimeFormat = new Intl.DateTimeFormat("en-US", { month: "long", year: "numeric", timeZone: "UTC" });
+  const today: Date = getCurrDate();
 
   const addModalInitialValues: Subscription | null = useSubscriptionModalStore((state) => state.addModalInitialValues);
   const setAddModalInitialValues: (sub: Subscription | null) => void = useSubscriptionModalStore((state) => state.setAddModalInitialValues);

@@ -10,11 +10,7 @@ import { useSubscriptionListStore } from "./store";
 
 const UNCATEGORIZED_TEXT: string = "(Uncategorized)";
 
-// const today: Date = new Date();
-// const today: Date = new Date(2026, 0, 2);
 const listDateTimeFormat = new Intl.DateTimeFormat("en-US", { month: "short", day: "2-digit", year: "numeric", timeZone: "UTC" });
-
-
 
 function List() {
   const subs: Subscription[] = getSubscriptions();

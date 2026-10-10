@@ -1,12 +1,13 @@
 import { useState } from "react";
 import { Button } from "@/components/ui/button"
 
+import { BarChart, Bar, XAxis, YAxis, Tooltip, Legend } from "recharts";
+
 import { getServices, getSubscriptions, SubscriptionStatus } from "./data"
 import type { Subscription, Service } from "./data"
 
 import { useSubscriptionListStore } from "./store";
-
-import { BarChart, Bar, XAxis, YAxis, Tooltip, Legend } from "recharts";
+import { getCurrDate } from "./dateTimeService";
 
 type MonthSubscription = {
   service: string
@@ -29,12 +30,11 @@ type ChartMonthData = {
 const MONTH_COUNT_IN_RANGE: number = 6;
 const UNCATEGORIZED_TEXT: string = "(Uncategorized)";
 
-// const today: Date = new Date();
-const today: Date = new Date(2026, 0, 2);
-
 const calendarHeaderDateTimeFormat = new Intl.DateTimeFormat("en-US", { month: "short", year: "numeric" });
 
 function Chart() {
+  const today: Date = getCurrDate();
+  
   const selectedCategories: Set<string> = useSubscriptionListStore((state) => state.selectedCategories);
   const setCategorySelectState: (category: string, isSelected: boolean) => void = useSubscriptionListStore((state) => state.setCategorySelectState);
   const setAllCategoriesUnselected: () => void = useSubscriptionListStore((state) => state.setAllCategoriesUnselected);

@@ -6,18 +6,18 @@ import { Table, TableHeader, TableHead, TableRow, TableBody, TableCell } from "@
 
 import { getService, getSubscriptionsByService, updateService } from './data.ts'
 import type { Service, Subscription } from './data.ts'
+import { getCurrDate } from "./dateTimeService";
 
 import ServiceModal from './ServiceModal.tsx'
 
-// const today: Date = new Date();
-const today: Date = new Date(2026, 0, 2);
+const listDateTimeFormat = new Intl.DateTimeFormat("en-US", { month: "short", day: "2-digit", year: "numeric" });
 
 function ServiceDetails() {
   const { id } = useParams();
+  
+  const today: Date = getCurrDate();
 
   const [isEditMode, setIsEditMode] = useState<boolean>(false);
-
-  const listDateTimeFormat = new Intl.DateTimeFormat("en-US", { month: "short", day: "2-digit", year: "numeric", timeZone: "UTC" });
 
   const serviceResult: Service | undefined = getService(Number(id));
   if (serviceResult === undefined) {

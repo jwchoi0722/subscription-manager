@@ -2,6 +2,7 @@ import { PieChart, Pie, Tooltip } from "recharts";
 
 import { getSubscriptions, getServices, SubscriptionStatus } from "./data";
 import type { Subscription, Service } from "./data";
+import { getCurrDate } from "./dateTimeService";
 
 type DaySub = {
   name: string
@@ -16,13 +17,12 @@ type DayCategory = {
 
 const UNCATEGORIZED_TEXT: string = "(Uncategorized)";
 
-// const today: Date = new Date();
-const today: Date = new Date(2026, 0, 2);
-
 const subs: Subscription[] = getSubscriptions();
 const services: Service[] = getServices();
 
 function Dashboard() {
+  const today: Date = getCurrDate();
+  
   const activeSubs: Subscription[] = subs
     .filter((sub) => sub.status === SubscriptionStatus.Subscribed)
     .sort((a, b) => a.end.getTime() - b.end.getTime());

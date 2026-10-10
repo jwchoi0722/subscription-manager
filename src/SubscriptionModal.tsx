@@ -9,6 +9,7 @@ import { Button } from "@/components/ui/button"
 
 import type { Subscription } from "./data";
 import { TimeUnit, SubscriptionStatus } from "./data";
+import { getCurrDate } from "./dateTimeService";
 
 // interface SubscriptionModalState {
 //   isOpen: boolean
@@ -29,24 +30,6 @@ import { TimeUnit, SubscriptionStatus } from "./data";
 // }));
 
 // const today: Date = new Date();
-const today: Date = new Date(2026, 0, 2);
-
-const blankSub: Subscription = {
-  id: 0,
-  service: "",
-  servicePlan: "",
-  name: "",
-  status: SubscriptionStatus.Upcoming,
-  start: today,
-  end: new Date(today.getFullYear(), today.getMonth() + 1, today.getDate()),
-  durationLength: 1,
-  durationUnit: TimeUnit.Month,
-  priceAmount: 0,
-  priceCurrency: "CAD",
-  totalAmount: 0,
-  isAutoRenew: true,
-  isChanged: false,
-};
 
 const durationUnitOptions: { label: string, value: string }[] = Object.values(TimeUnit).map((unit: string) => ({ label: unit.toLowerCase(), value: unit }));
 
@@ -59,6 +42,23 @@ function SubscriptionModal({ isAdd, initValues, serviceOptions, closeModal, onSu
     onSubmit: (subscription: Subscription) => void 
   }) 
 {
+  const today: Date = getCurrDate();
+  const blankSub: Subscription = {
+    id: 0,
+    service: "",
+    servicePlan: "",
+    name: "",
+    status: SubscriptionStatus.Upcoming,
+    start: today,
+    end: new Date(today.getFullYear(), today.getMonth() + 1, today.getDate()),
+    durationLength: 1,
+    durationUnit: TimeUnit.Month,
+    priceAmount: 0,
+    priceCurrency: "CAD",
+    totalAmount: 0,
+    isAutoRenew: true,
+    isChanged: false,
+  };
   let sub: Subscription = initValues ?? blankSub;
 
   function handleSubmit(formData: FormData): void {

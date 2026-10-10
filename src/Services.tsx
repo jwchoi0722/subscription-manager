@@ -9,12 +9,12 @@ import ServiceModal from './ServiceModal.tsx'
 
 import { addService, getServices, getSubscriptions } from './data.ts'
 import type { Service, Subscription } from './data.ts'
-
-// const today: Date = new Date();
-const today: Date = new Date(2026, 0, 2);
+import { getCurrDate } from "./dateTimeService";
 
 function Services() {
   const [isAddModalOpen, setIsAddModalOpen] = useState<boolean>(false);
+
+  const today: Date = getCurrDate();
 
   const services: Service[] = getServices();
   

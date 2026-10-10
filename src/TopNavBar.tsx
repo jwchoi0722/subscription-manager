@@ -1,10 +1,11 @@
 import { NavigationMenu, NavigationMenuList, NavigationMenuItem, NavigationMenuLink } from "@/components/ui/navigation-menu";
 
-const listDateTimeFormat = new Intl.DateTimeFormat("en-US", { month: "short", day: "2-digit", year: "numeric", timeZone: "UTC" });
+import { getCurrDate } from "./dateTimeService";
+
+const listDateTimeFormat = new Intl.DateTimeFormat("en-US", { month: "short", day: "2-digit", year: "numeric" });
 
 function TopNavBar() {
-  // const today: Date = new Date();
-  const today: Date = new Date(2026, 0, 2);
+  const today: Date = getCurrDate();
 
   return (
     <div id="top_nav_bar" className="flex w-full justify-between">
