@@ -1,6 +1,26 @@
 import { create } from 'zustand';
+import { persist } from 'zustand/middleware'
 
 import type { Subscription } from "./data";
+
+const APP_STORAGE_KEY: string = "app-storage";
+
+interface AppState {
+  isTestMode: boolean
+  setTestMode: (isTestMode: boolean) => void
+}
+
+export const useAppStore = create<AppState>()(
+  persist(
+    (set) => ({
+      isTestMode: false,
+      setTestMode: (isTestMode: boolean) => set(() => ({ isTestMode: isTestMode }))
+    }),
+    {
+      name: APP_STORAGE_KEY
+    }
+  )
+);
 
 interface SubscriptionModalState {
   addModalInitialValues: Subscription | null
