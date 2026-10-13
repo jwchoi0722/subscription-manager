@@ -29,8 +29,6 @@ import { getCurrDate } from "./dateTimeService";
 //   setIsOpen: (open: boolean) => set(() => ({ isOpen: open}))
 // }));
 
-// const today: Date = new Date();
-
 const durationUnitOptions: { label: string, value: string }[] = Object.values(TimeUnit).map((unit: string) => ({ label: unit.toLowerCase(), value: unit }));
 
 function SubscriptionModal({ isAdd, initValues, serviceOptions, closeModal, onSubmit }: 

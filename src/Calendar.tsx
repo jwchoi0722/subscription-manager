@@ -1,12 +1,12 @@
 import { create } from 'zustand';
-import { useState, useRef } from 'react';
+import { useState, useRef, lazy } from 'react';
 
 import FullCalendar from '@fullcalendar/react';
 import dayGridPlugin from '@fullcalendar/daygrid';
 import interactionPlugin from '@fullcalendar/interaction';
 
 import SubscriptionDetails from './SubscriptionDetails';
-import SubscriptionModal from './SubscriptionModal';
+const SubscriptionModal = lazy(() => import('./SubscriptionModal'));
 import SubscriptionDialog from './SubscriptionDialog';
 import CalendarDateDetails from './CalendarDateDetails';
 
