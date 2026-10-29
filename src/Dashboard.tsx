@@ -67,37 +67,44 @@ function Dashboard() {
       <h1>Dashboard</h1>
 
       <h2>Today is: {today.toDateString()}</h2>
-      <h3>Active Subscriptions</h3>
-      <div>
-        {activeSubs.map((sub) => (
-          <div key={sub.id}>
-            <b>{sub.name}</b> {(sub.isAutoRenew ? "renews" : "ends")} on {sub.end.toDateString()} ({Math.floor((sub.end.getTime() - today.getTime()) / (1000 * 3600 * 24))} day(s) left)
-          </div>
-        ))}
+
+      <div id="section_subscriptions" className="py-4">
+        <h2>Subscriptions</h2>
+        <h3>Active Subscriptions</h3>
+        <div>
+          {activeSubs.map((sub) => (
+            <div key={sub.id}>
+              <b>{sub.name}</b> {(sub.isAutoRenew ? "renews" : "ends")} on {sub.end.toDateString()} ({Math.floor((sub.end.getTime() - today.getTime()) / (1000 * 3600 * 24))} day(s) left)
+            </div>
+          ))}
+        </div>
+
+        <h3>Upcoming Subscriptions</h3>
+        <div>
+          {upcomingSubs.map((sub) => (
+            <div key={sub.id}>
+              <b>{sub.name}</b> starts on {sub.start.toDateString()} (in {Math.floor((sub.start.getTime() - today.getTime()) / (1000 * 3600 * 24))} day(s))
+            </div>
+          ))}
+        </div>
       </div>
 
-      <h3>Upcoming Subscriptions</h3>
-      <div>
-        {upcomingSubs.map((sub) => (
-          <div key={sub.id}>
-            <b>{sub.name}</b> starts on {sub.start.toDateString()} (in {Math.floor((sub.start.getTime() - today.getTime()) / (1000 * 3600 * 24))} day(s))
-          </div>
-        ))}
+      <div id="section_spending" className="py-4">
+        <h2>Daily Spending Breakdown</h2>
+        <h3>${pieTotal}</h3>
+        <PieChart style={{ width: "100%", height: "70vh" }}>
+          {isCategoryPieActive && (
+            <>
+              <Pie data={sortedPieCategories} dataKey="amount" outerRadius="55%" />
+              <Pie data={sortedPieSubs} dataKey="amount" label={true} innerRadius="60%" outerRadius="85%" />
+            </>
+          )}
+          {!isCategoryPieActive && (
+            <Pie data={sortedPieSubs} dataKey="amount" label={true} />
+          )}
+          <Tooltip />
+        </PieChart>
       </div>
-
-      <h3>Daily spending: ${pieTotal}</h3>
-      <PieChart style={{ width: "100%", height: "70vh" }}>
-        {isCategoryPieActive && (
-          <>
-            <Pie data={sortedPieCategories} dataKey="amount" outerRadius="55%" />
-            <Pie data={sortedPieSubs} dataKey="amount" label={true} innerRadius="60%" outerRadius="85%" />
-          </>
-        )}
-        {!isCategoryPieActive && (
-          <Pie data={sortedPieSubs} dataKey="amount" label={true} />
-        )}
-        <Tooltip />
-      </PieChart>
     </>
   );
 }

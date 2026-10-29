@@ -133,4 +133,7 @@
   h2 {
     @apply text-2xl font-bold py-2;
   }
+  h3 {
+    @apply text-lg font-bold py-2;
+  }
 }
