@@ -58,9 +58,21 @@ function Dashboard() {
     sortedPieSubs.push(...subEntries);
   }
 
-   const upcomingSubs: Subscription[] = subs
+  const upcomingSubs: Subscription[] = subs
     .filter((sub) => sub.status === SubscriptionStatus.Upcoming && sub.start > today)
     .sort((a, b) => a.end.getTime() - b.end.getTime());
+  
+  const past30DaysStart: Date = new Date(today.getFullYear(), today.getMonth(), today.getDate() - 30);
+  const next30DaysEnd: Date = new Date(today.getFullYear(), today.getMonth() + 1, today.getDate() + 30);
+  const todayEnd: Date = new Date(today.getFullYear(), today.getMonth(), today.getDate() + 1);
+  const past30DaysSubs: Subscription[] = subs
+    .filter((sub) => past30DaysStart <= sub.start && sub.start < today)
+    .sort((a, b) => a.start.getTime() - b.start.getTime());
+  const todaySubs: Subscription[] = subs
+    .filter((sub) => today <= sub.start && sub.start < todayEnd);
+  const next30DaysSubs: Subscription[] = subs
+    .filter((sub) => todayEnd <= sub.start && sub.start <= next30DaysEnd)
+    .sort((a, b) => a.start.getTime() - b.start.getTime());
 
   return (
     <>
@@ -90,7 +102,44 @@ function Dashboard() {
       </div>
 
       <div id="section_spending" className="py-4">
-        <h2>Daily Spending Breakdown</h2>
+          <h2>Spending</h2>
+          <div className="py-2">
+            <h3>Past 30 days</h3>
+            {past30DaysSubs.map((sub) => (
+              <div key={sub.id}>
+                {sub.start.toDateString()}: ${sub.totalAmount} for {sub.name}
+              </div>
+            ))}
+            {(past30DaysSubs.length === 0) &&
+              <div>-</div>
+            }
+          </div>
+          <div className="py-2 font-bold">
+            <h3>Today</h3>
+            {todaySubs.map((sub) => (
+              <div key={sub.id}>
+                {sub.start.toDateString()}: ${sub.totalAmount} for {sub.name}
+              </div>
+            ))}
+            {(todaySubs.length === 0) &&
+              <div>-</div>
+            }
+          </div>
+          <div className="py-2">
+            <h3>Next 30 days</h3>
+            {next30DaysSubs.map((sub) => (
+              <div key={sub.id}>
+                {sub.start.toDateString()}: ${sub.totalAmount} for {sub.name}
+              </div>
+            ))}
+            {(next30DaysSubs.length === 0) &&
+              <div>-</div>
+            }
+          </div>
+      </div>
+
+      <div id="section_daily_cost" className="py-4">
+        <h2>Daily Cost Breakdown</h2>
         <h3>${pieTotal}</h3>
         <PieChart style={{ width: "100%", height: "70vh" }}>
           {isCategoryPieActive && (
