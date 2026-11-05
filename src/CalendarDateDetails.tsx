@@ -1,3 +1,5 @@
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog"
+
 import type { Subscription } from "./data";
 
 type DaySub = {
@@ -5,7 +7,8 @@ type DaySub = {
   amount: number
 }
 
-function CalendarDateDetails({ subs, pos = { x: 0, y: 0 }, closeModal }: {
+function CalendarDateDetails({ date, subs, pos = { x: 0, y: 0 }, closeModal }: {
+  date: Date,
   subs: Subscription[],
   pos?: { x: number, y: number },
   closeModal: () => void
@@ -26,18 +29,34 @@ function CalendarDateDetails({ subs, pos = { x: 0, y: 0 }, closeModal }: {
     // TODO percentage?
   }
 
+  // TODO position className="date-details-modal" style={{ position: "absolute", top: y, left: x }}
+  console.log(`(${x},${y}`);
+
   return (
-    <dialog className="date-details-modal" style={{ position: "absolute", top: y, left: x }} open={true}>
-      <div className="modal-close-button" onClick={() => closeModal()}>X</div>
-      {daySubs.map((sub) => (
-        <div key={sub.name}>
-          <h4>{sub.name}</h4>
-          <span>$ {sub.amount}</span>
-        </div>
-      ))}
-      <h3>Daily Total : </h3>
-      <span>$ {dayTotal}</span>
-    </dialog>
+    <Dialog open={true}
+      onOpenChange={(open) => {
+        if (!open) {
+          closeModal();
+        }
+      }}
+    >
+      <DialogContent>
+        <DialogHeader>
+          <DialogTitle>
+            {date.toDateString()}
+          </DialogTitle>
+        </DialogHeader>
+        
+        {daySubs.map((sub) => (
+          <div key={sub.name}>
+            <span>{sub.name}: $ {sub.amount}</span>
+          </div>
+        ))}
+
+        <h4>Daily Total : </h4>
+        <span>$ {dayTotal}</span>
+      </DialogContent>
+    </Dialog>
   );
 }
 
