@@ -188,7 +188,7 @@ function Calendar() {
         now={today}
         eventClick={onEventClick}
         dateClick={onDateClick}
-        dayCellClass="" // TODO v7 selected date
+        dayCellClass={(info: { date: Date }) => clsx(selectedDate !== null && info.date.getTime() == selectedDate.getTime() && "date-selected")}
         height="auto"
         buttons={calendarButtons}
         headerToolbar={{ left: "title", center: "addSubscriptionButton", right: "today prevYear prev next nextYear" }}
