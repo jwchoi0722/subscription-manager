@@ -2,14 +2,18 @@ import { create } from 'zustand';
 import { useState, useRef, lazy } from 'react';
 
 import FullCalendar from '@fullcalendar/react';
-import dayGridPlugin from '@fullcalendar/daygrid';
-import interactionPlugin from '@fullcalendar/interaction';
+import dayGridPlugin from '@fullcalendar/react/daygrid';
+import interactionPlugin from '@fullcalendar/react/interaction';
+import themePlugin from '@fullcalendar/react/themes/classic';
 
 import SubscriptionDetails from './SubscriptionDetails';
 const SubscriptionModal = lazy(() => import('./SubscriptionModal'));
 import SubscriptionDialog from './SubscriptionDialog';
 import CalendarDateDetails from './CalendarDateDetails';
 
+import '@fullcalendar/react/skeleton.css'
+import '@fullcalendar/react/themes/classic/theme.css'
+import '@fullcalendar/react/themes/classic/palette.css'
 import './Calendar.css'
 
 import { addSubscription, updateSubscription, deleteSubscription, SubscriptionStatus } from "./data";
@@ -136,7 +140,7 @@ function Calendar() {
     }
     let event = { id: String(sub.id), title: sub.name, start: sub.start, end: sub.end, allDay: true, 
       classNames: classes,
-      backgroundColor: (serviceColors.get(sub.service) ?? ""),
+      // backgroundColor: (serviceColors.get(sub.service) ?? ""), // TODO v7 "individual themes can decide"?
       borderColor: (selectedSub?.id == sub.id ? "white" : "")
     };
 
@@ -173,9 +177,9 @@ function Calendar() {
           closeModal={() => setIsDateDetailsOpen(false)}
         />
       }
-      <FullCalendar plugins={[ dayGridPlugin, interactionPlugin ]} initialView="dayGridMonth" 
+      <FullCalendar plugins={[ dayGridPlugin, interactionPlugin, themePlugin ]} initialView="dayGridMonth" 
         events={events}
-        eventClassNames={["event-bar"]}
+        eventClass="event-bar"
         selectable={false}
         eventStartEditable={true}
         eventDurationEditable={false}
@@ -184,9 +188,9 @@ function Calendar() {
         now={today}
         eventClick={onEventClick}
         dateClick={onDateClick}
-        dayCellClassNames={(arg: { date: Date }) => selectedDate !== null && arg.date.getTime() == selectedDate.getTime() ? "date-selected" : ""}
+        dayCellClass="" // TODO v7 selected date
         height="auto"
-        customButtons={calendarButtons}
+        buttons={calendarButtons}
         headerToolbar={{ left: "title", center: "addSubscriptionButton", right: "today prevYear prev next nextYear" }}
         footerToolbar={{ left: "", right: "today prevYear prev next nextYear" }}
       />
