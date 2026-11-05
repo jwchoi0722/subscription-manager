@@ -1,4 +1,5 @@
 import { create } from 'zustand';
+import { clsx } from 'clsx'
 import { useState, useRef, lazy } from 'react';
 
 import FullCalendar from '@fullcalendar/react';
@@ -134,14 +135,13 @@ function Calendar() {
 
   const events: { id: string, title: string, start: Date, end: Date, allDay: boolean }[] = [];
   for (const sub of currSubs) {
-    let classes: string[] = [];
-    if (sub.status === SubscriptionStatus.Upcoming) {
-      classes.push("upcoming-event-bar");
-    }
+    let classes: string = clsx(
+      sub.status === SubscriptionStatus.Upcoming && "upcoming-event-bar",
+      selectedSub?.id == sub.id && "selected-event"
+    );
     let event = { id: String(sub.id), title: sub.name, start: sub.start, end: sub.end, allDay: true, 
-      classNames: classes,
-      // backgroundColor: (serviceColors.get(sub.service) ?? ""), // TODO v7 "individual themes can decide"?
-      borderColor: (selectedSub?.id == sub.id ? "white" : "")
+      className: classes,
+      color: (serviceColors.get(sub.service) ?? "")
     };
 
     events.push(event);

@@ -18,6 +18,9 @@
 .calendar-container .event-bar.upcoming-event-bar {
   opacity: 0.7;
 }
+.calendar-container .event-bar.selected-event {
+  border: 2px solid white;
+}
 
 .calendar-container dialog {
   position: absolute;
