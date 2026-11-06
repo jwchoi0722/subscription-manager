@@ -189,6 +189,7 @@ function Calendar() {
         now={today}
         eventClick={onEventClick}
         dateClick={onDateClick}
+        dayCellTopClass="mb-6"
         dayCellClass={(info: { date: Date }) => clsx(selectedDate !== null && info.date.getTime() == selectedDate.getTime() && "date-selected")}
         height="auto"
         buttons={calendarButtons}
