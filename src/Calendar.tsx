@@ -136,7 +136,7 @@ function Calendar() {
   const events: { id: string, title: string, start: Date, end: Date, allDay: boolean }[] = [];
   for (const sub of currSubs) {
     let classes: string = clsx(
-      sub.status === SubscriptionStatus.Upcoming && "upcoming-event-bar",
+      sub.status === SubscriptionStatus.Upcoming && "upcoming-event-bar italic",
       selectedSub?.id == sub.id && "selected-event"
     );
     let event = { id: String(sub.id), title: sub.name, start: sub.start, end: sub.end, allDay: true, 
@@ -189,7 +189,7 @@ function Calendar() {
         now={today}
         eventClick={onEventClick}
         dateClick={onDateClick}
-        dayCellTopClass="mb-6"
+        dayCellTopClass="mb-8"
         dayCellClass={(info: { date: Date }) => clsx(selectedDate !== null && info.date.getTime() == selectedDate.getTime() && "date-selected")}
         height="auto"
         buttons={calendarButtons}
