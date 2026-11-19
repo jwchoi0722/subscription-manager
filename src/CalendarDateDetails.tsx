@@ -1,9 +1,11 @@
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog"
+import { Table, TableHeader, TableHead, TableRow, TableBody, TableCell, TableFooter } from "@/components/ui/table"
 
 import type { Subscription } from "./data";
 
 type DaySub = {
   name: string
+  service: string
   amount: number
 }
 
@@ -22,7 +24,7 @@ function CalendarDateDetails({ date, subs, pos = { x: 0, y: 0 }, closeModal }: {
   for (const sub of subs) {
     const daysInSub: number = Math.floor((sub.end.getTime() - sub.start.getTime()) / (1000 * 3600 * 24));
     const amount: number = Math.floor(sub.totalAmount / daysInSub * 100) / 100;
-    const subEntry: DaySub = { name: sub.name, amount: amount };
+    const subEntry: DaySub = { name: sub.name, service: sub.service, amount: amount };
 
     daySubs.push(subEntry);
     dayTotal += amount;
@@ -46,15 +48,32 @@ function CalendarDateDetails({ date, subs, pos = { x: 0, y: 0 }, closeModal }: {
             {date.toDateString()}
           </DialogTitle>
         </DialogHeader>
-        
-        {daySubs.map((sub) => (
-          <div key={sub.name}>
-            <span>{sub.name}: $ {sub.amount}</span>
-          </div>
-        ))}
 
-        <h4>Daily Total : </h4>
-        <span>$ {dayTotal}</span>
+        <Table>
+          <TableHeader>
+            <TableRow>
+              <TableHead>Name</TableHead>
+              <TableHead>Service</TableHead>
+              <TableHead className="text-right">Daily Amount</TableHead>
+            </TableRow>
+          </TableHeader>
+          <TableBody>
+            {daySubs.map((sub) => (
+              <TableRow key={sub.name}>
+                <TableCell>{sub.name}</TableCell>
+                <TableCell>{sub.service}</TableCell>
+                <TableCell className="text-right">${sub.amount}</TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+          <TableFooter>
+            <TableRow key="total">
+              <TableCell colSpan={2} className="font-bold">Daily Total</TableCell>
+              <TableCell className="text-right">${dayTotal}</TableCell>
+            </TableRow>
+          </TableFooter>
+        </Table>
+
       </DialogContent>
     </Dialog>
   );
