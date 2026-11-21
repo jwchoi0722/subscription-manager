@@ -41,6 +41,7 @@ function CalendarDateDetails({ date, subs, pos = { x: 0, y: 0 }, closeModal }: {
           closeModal();
         }
       }}
+      modal={false}
     >
       <SheetContent side="bottom">
         <SheetHeader>
