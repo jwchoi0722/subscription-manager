@@ -1,4 +1,4 @@
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog"
+import { Sheet, SheetContent, SheetHeader, SheetTitle } from "@/components/ui/sheet"
 import { Table, TableHeader, TableHead, TableRow, TableBody, TableCell, TableFooter } from "@/components/ui/table"
 
 import type { Subscription } from "./data";
@@ -35,19 +35,19 @@ function CalendarDateDetails({ date, subs, pos = { x: 0, y: 0 }, closeModal }: {
   console.log(`(${x},${y}`);
 
   return (
-    <Dialog open={true}
+    <Sheet open={true}
       onOpenChange={(open) => {
         if (!open) {
           closeModal();
         }
       }}
     >
-      <DialogContent>
-        <DialogHeader>
-          <DialogTitle>
+      <SheetContent side="bottom">
+        <SheetHeader>
+          <SheetTitle>
             {date.toDateString()}
-          </DialogTitle>
-        </DialogHeader>
+          </SheetTitle>
+        </SheetHeader>
 
         <Table>
           <TableHeader>
@@ -74,8 +74,8 @@ function CalendarDateDetails({ date, subs, pos = { x: 0, y: 0 }, closeModal }: {
           </TableFooter>
         </Table>
 
-      </DialogContent>
-    </Dialog>
+      </SheetContent>
+    </Sheet>
   );
 }
 
