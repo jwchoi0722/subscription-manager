@@ -42,6 +42,7 @@ function CalendarDateDetails({ date, subs, pos = { x: 0, y: 0 }, closeModal }: {
         }
       }}
       modal={false}
+      disablePointerDismissal={true}
     >
       <SheetContent side="bottom">
         <SheetHeader>

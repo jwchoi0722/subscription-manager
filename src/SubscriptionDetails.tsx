@@ -53,8 +53,10 @@ function SubscriptionDetails({ sub, closeModal, openEditModal, openDeleteDialog,
           closeModal();
         }
       }}
+      modal={false}
+      disablePointerDismissal={true}
     >
-      <DialogContent>
+      <DialogContent showOverlay={false}>
         <DialogHeader>
           <DialogTitle>
             {sub.name}
