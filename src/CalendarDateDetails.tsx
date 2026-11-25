@@ -9,15 +9,11 @@ type DaySub = {
   amount: number
 }
 
-function CalendarDateDetails({ date, subs, pos = { x: 0, y: 0 }, closeModal }: {
+function CalendarDateDetails({ date, subs, closeModal }: {
   date: Date,
   subs: Subscription[],
-  pos?: { x: number, y: number },
   closeModal: () => void
 }) {
-  const x: string = (pos.x) + "px";
-  const y: string = (pos.y) + "px";
-
   let daySubs: DaySub[] = [];
   let dayTotal: number = 0;
   
@@ -30,9 +26,6 @@ function CalendarDateDetails({ date, subs, pos = { x: 0, y: 0 }, closeModal }: {
     dayTotal += amount;
     // TODO percentage?
   }
-
-  // TODO position className="date-details-modal" style={{ position: "absolute", top: y, left: x }}
-  console.log(`(${x},${y}`);
 
   return (
     <Sheet open={true}

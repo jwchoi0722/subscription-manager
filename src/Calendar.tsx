@@ -1,6 +1,6 @@
 import { create } from 'zustand';
 import { clsx } from 'clsx'
-import { useState, useRef, lazy } from 'react';
+import { useState, lazy } from 'react';
 
 import FullCalendar from '@fullcalendar/react';
 import dayGridPlugin from '@fullcalendar/react/daygrid';
@@ -53,11 +53,7 @@ function Calendar() {
 
   const [selectedSub, setSelectedSub] = useState<Subscription | null>(null);
   const [selectedDate, setSelectedDate] = useState<Date | null>(null);
-  // const [eventClickCoords, setEventClickCoords] = useState<{ x: number, y: number }>({ x: 0, y: 0 });
-  const [dateClickCoords, setDateClickCoords] = useState<{ x: number, y: number }>({ x: 0, y: 0 });
   const [isDateDetailsOpen, setIsDateDetailsOpen] = useState<boolean>(false);
-
-  const containerElement = useRef<HTMLDivElement>(null);
 
   const detailsModalValues: Subscription | null = useSubscriptionModalStore((state) => state.detailsModalValues);
   const setDetailsModalValues: (sub: Subscription | null) => void = useSubscriptionModalStore((state) => state.setDetailsModalValues);
@@ -85,26 +81,20 @@ function Calendar() {
 
   const onEventClick = (info: { event: { id: string, title: string }, jsEvent: { clientX: number, clientY: number } }) => {
     const sub: Subscription | undefined = currSubs.find((sub) => sub.id === Number(info.event.id)); // TODO filter out upcoming subs properly instead of id match
-    if (sub === undefined || containerElement.current === null) {
+    if (sub === undefined) {
       return;
     }
 
     setIsAddModalOpen(false);
     setIsEditModalOpen(false);
 
-    // const containerRect = containerElement.current.getBoundingClientRect();
-    // setEventClickCoords({ x: info.jsEvent.clientX - containerRect.left, y: info.jsEvent.clientY - containerRect.top + 50 });
     setSelectedSub(sub);
     setDetailsModalValues(sub as Subscription);
     setIsDetailsModalOpen(true);
   };
 
   const onDateClick = (info: { date: Date, dayEl: HTMLElement }) => {
-    if (selectedDate?.getTime() === info.date.getTime() && containerElement.current !== null) {
-      const containerRect = containerElement.current.getBoundingClientRect();
-      const dayElementRect = info.dayEl.getBoundingClientRect();
-      setDateClickCoords({ x: 0, y: dayElementRect.bottom - containerRect.top + 20 });
-
+    if (selectedDate?.getTime() === info.date.getTime()) {
       setIsDateDetailsOpen(true);
     }
     setSelectedDate(info.date);
@@ -161,7 +151,7 @@ function Calendar() {
   // TODO Undo Redo buttons
 
   return (
-    <div className="calendar-container" ref={containerElement}>
+    <div className="calendar-container">
       {
         isAddModalOpen &&
         <SubscriptionModal initValues={detailsModalValues} serviceOptions={serviceNames}
@@ -174,7 +164,6 @@ function Calendar() {
         <CalendarDateDetails 
           date={selectedDate as Date}
           subs={currSubs.filter((sub) => selectedDate !== null && sub.start <= selectedDate && selectedDate <= sub.end)} 
-          pos={dateClickCoords}
           closeModal={() => setIsDateDetailsOpen(false)}
         />
       }
