@@ -1,5 +1,3 @@
-// import { create } from 'zustand';
-
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog"
 import { FieldGroup, Field, FieldLabel } from "@/components/ui/field"
 import { Input } from "@/components/ui/input"
@@ -10,24 +8,6 @@ import { Button } from "@/components/ui/button"
 import type { Subscription } from "./data";
 import { TimeUnit, SubscriptionStatus } from "./data";
 import { getCurrDate } from "./dateTimeService";
-
-// interface SubscriptionModalState {
-//   isOpen: boolean
-//   setIsOpen: (open: boolean) => void
-// }
-
-// interface SubscriptionFormState {
-//   serviceName: string,
-//   servicePlanName: string,
-//   name: string,
-//   startDate: string,
-
-// }
-
-// const useAddSubscriptionModalStore = create<SubscriptionModalState>()((set) => ({
-//   isOpen: false,
-//   setIsOpen: (open: boolean) => set(() => ({ isOpen: open}))
-// }));
 
 const durationUnitOptions: { label: string, value: string }[] = Object.values(TimeUnit).map((unit: string) => ({ label: unit.toLowerCase(), value: unit }));
 
@@ -103,8 +83,8 @@ function SubscriptionModal({ isAdd, initValues, serviceOptions, closeModal, onSu
             </DialogTitle>
           </DialogHeader>
           
-          <div id={(isAdd ? "add" : "edit") + "_subscription_modal"} className={(isAdd ? "add" : "edit") + "-subscription-modal"}>
-            <form action={handleSubmit} className="add-subscription-form">
+          <div id={(isAdd ? "add" : "edit") + "_subscription_modal"} className="pr-2 max-h-[80vh] overflow-x-hidden overflow-y-scroll">
+            <form action={handleSubmit} className="text-left">
               <FieldGroup>
                 <Field>
                   <FieldLabel htmlFor="service_name">Service:</FieldLabel>
@@ -130,14 +110,16 @@ function SubscriptionModal({ isAdd, initValues, serviceOptions, closeModal, onSu
                   <FieldLabel htmlFor="sub_name">Name:</FieldLabel>
                   <Input type="text" id="sub_name" name="name" defaultValue={sub.name} placeholder="Streamer (Premium)" />
                 </Field>
-                <Field>
-                  <FieldLabel htmlFor="start_date">Start Date:</FieldLabel>
-                  <Input type="date" id="start_date" name="startDate" defaultValue={sub.start.toISOString().slice(0, 10)} />
-                </Field>
-                <Field>
-                  <FieldLabel htmlFor="end_date">End Date:</FieldLabel>
-                  <Input type="date" id="end_date" name="endDate" defaultValue={sub.end.toISOString().slice(0, 10)} />
-                </Field>
+                <FieldGroup className="grid grid-cols-2">
+                  <Field>
+                    <FieldLabel htmlFor="start_date">Start Date:</FieldLabel>
+                    <Input type="date" id="start_date" name="startDate" defaultValue={sub.start.toISOString().slice(0, 10)} />
+                  </Field>
+                  <Field>
+                    <FieldLabel htmlFor="end_date">End Date:</FieldLabel>
+                    <Input type="date" id="end_date" name="endDate" defaultValue={sub.end.toISOString().slice(0, 10)} />
+                  </Field>
+                </FieldGroup>
                 <Field orientation="horizontal">
                   <FieldLabel htmlFor="duration_length">Duration:</FieldLabel>
                   <Input type="number" id="duration_length" name="durationLength" defaultValue={sub.durationLength} />
@@ -154,11 +136,11 @@ function SubscriptionModal({ isAdd, initValues, serviceOptions, closeModal, onSu
                     </SelectContent>
                   </Select>
                 </Field>
-                <Field>
+                <Field orientation="horizontal">
                   <FieldLabel htmlFor="amount">Amount:</FieldLabel>
                   <Input type="number" id="amount" name="amount" step="0.01" defaultValue={sub.priceAmount} />
                 </Field>
-                <Field>
+                <Field orientation="horizontal">
                   <FieldLabel htmlFor="total_amount">Total:</FieldLabel>
                   <Input type="number" id="total_amount" name="totalAmount" step="0.01" defaultValue={sub.totalAmount} />
                 </Field>
@@ -182,12 +164,10 @@ function SubscriptionModal({ isAdd, initValues, serviceOptions, closeModal, onSu
                   <Checkbox id="is_auto_renew" name="isAutoRenew" defaultChecked={sub.isAutoRenew} />
                 </Field>
                 <Field>
-                  <div className="add-subscription-save-button">
-                    <Button type="submit">
-                      Save
-                    </Button>
-                  </div>
-                  </Field>
+                  <Button type="submit">
+                    Save
+                  </Button>
+                </Field>
               </FieldGroup>
             </form>
           </div>
