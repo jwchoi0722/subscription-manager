@@ -63,6 +63,7 @@ export function EventCalendar({
         className='px-3'
         controller={controller}
         addButton={addButton}
+        showTitle={true}
       />
       <div className='grow min-h-0'>
         <EventCalendarViews
@@ -82,6 +83,12 @@ export function EventCalendar({
           {...restOptions}
         />
       </div>
+      <EventCalendarToolbar
+        className='px-3'
+        controller={controller}
+        addButton={addButton}
+        showTitle={false}
+      />
     </div>
   )
 }

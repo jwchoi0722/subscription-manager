@@ -1,4 +1,4 @@
-import { XIcon, ChevronDownIcon, ChevronLeftIcon, ChevronRightIcon } from 'lucide-react'
+import { XIcon, ChevronDownIcon, ChevronLeftIcon, ChevronRightIcon, ChevronsLeftIcon, ChevronsRightIcon } from 'lucide-react'
 import { cn } from '@/lib/utils'
 
 export function EventCalendarPrevIcon() {
@@ -10,6 +10,18 @@ export function EventCalendarPrevIcon() {
 export function EventCalendarNextIcon() {
   return (
     <ChevronRightIcon className="[[dir=rtl]_&]:rotate-180" />
+  )
+}
+
+export function EventCalendarPrevYearIcon() {
+  return (
+    <ChevronsLeftIcon className="[[dir=rtl]_&]:rotate-180" />
+  )
+}
+
+export function EventCalendarNextYearIcon() {
+  return (
+    <ChevronsRightIcon className="[[dir=rtl]_&]:rotate-180" />
   )
 }
 
