@@ -4,10 +4,15 @@ import interactionPlugin from '@fullcalendar/react/interaction'
 import listPlugin from '@fullcalendar/react/list'
 import multiMonthPlugin from '@fullcalendar/react/multimonth'
 import timeGridPlugin from '@fullcalendar/react/timegrid'
+import themePlugin from '@fullcalendar/react/themes/classic'
 import { EventCalendarViews } from '@/components/ui/event-calendar-views'
 import { EventCalendarToolbar } from '@/components/event-calendar-toolbar'
 import { EventCalendarCloseIcon } from '@/components/event-calendar-icons'
 import { cn } from '@/lib/utils'
+
+import '@fullcalendar/react/skeleton.css'
+import '@fullcalendar/react/themes/classic/theme.css'
+import '@fullcalendar/react/themes/classic/palette.css'
 
 const plugins = [
   dayGridPlugin,
@@ -15,13 +20,10 @@ const plugins = [
   listPlugin,
   interactionPlugin,
   multiMonthPlugin,
+  themePlugin,
 ]
 const defaultAvailableViews = [
   'dayGridMonth',
-  'timeGridWeek',
-  'timeGridDay',
-  'listWeek',
-  'multiMonthYear',
 ]
 const navLinkDayClick = 'timeGridDay'
 const navLinkWeekClick = 'timeGridWeek'
@@ -49,8 +51,6 @@ export function EventCalendar({
 }: EventCalendarProps) {
   const controller = useCalendarController()
 
-  const hasBorderX = !(restOptions.borderlessX ?? restOptions.borderless)
-  const hasBorderBottom = !(restOptions.borderlessBottom ?? restOptions.borderless)
   const isHeightAuto = height === 'auto' || contentHeight === 'auto'
 
   return (
@@ -60,19 +60,14 @@ export function EventCalendar({
       dir={direction === 'rtl' ? 'rtl' : undefined}
     >
       <EventCalendarToolbar
-        className={!hasBorderX ? 'px-3' : undefined}
+        className='px-3'
         controller={controller}
-        availableViews={availableViews}
         addButton={addButton}
       />
       <div className='grow min-h-0'>
         <EventCalendarViews
           className={cn(
-            'bg-background border-t',
-            hasBorderX && 'border-x',
-            hasBorderBottom && 'border-b',
-            (hasBorderX && !isHeightAuto) && 'rounded-t-xs',
-            (hasBorderBottom && hasBorderX && !isHeightAuto) && 'rounded-b-xs',
+            'bg-background',
             !isHeightAuto && 'overflow-hidden',
           )}
           height={isHeightAuto ? 'auto' : height !== undefined ? '100%' : contentHeight}

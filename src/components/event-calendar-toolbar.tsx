@@ -1,13 +1,11 @@
 import { CalendarController } from '@fullcalendar/react'
 import { EventCalendarNextIcon, EventCalendarPrevIcon } from '@/components/event-calendar-icons'
 import { Button } from '@/components/ui/button'
-import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { cn } from '@/lib/utils'
 
 export interface EventCalendarToolbarProps {
   className?: string
   controller: CalendarController
-  availableViews: string[]
   addButton?: {
     isPrimary?: boolean
     text?: string
@@ -19,7 +17,6 @@ export interface EventCalendarToolbarProps {
 export function EventCalendarToolbar({
   className,
   controller,
-  availableViews,
   addButton,
 }: EventCalendarToolbarProps) {
   const buttons = controller.getButtonState()
@@ -65,18 +62,6 @@ export function EventCalendarToolbar({
         </div>
         <div className='text-xl'>{controller.view?.title}</div>
       </div>
-      <Tabs value={controller.view?.type ?? availableViews[0]}>
-        <TabsList>
-          {availableViews.map((availableView) => (
-            <TabsTrigger
-              key={availableView}
-              value={availableView}
-              onClick={() => controller.changeView(availableView)}
-              aria-label={buttons[availableView]?.hint}
-            >{buttons[availableView]?.text}</TabsTrigger>
-          ))}
-        </TabsList>
-      </Tabs>
     </div>
   )
 }

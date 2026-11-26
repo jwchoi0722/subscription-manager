@@ -2,19 +2,13 @@ import { create } from 'zustand';
 import { clsx } from 'clsx'
 import { useState, lazy } from 'react';
 
-import FullCalendar from '@fullcalendar/react';
-import dayGridPlugin from '@fullcalendar/react/daygrid';
-import interactionPlugin from '@fullcalendar/react/interaction';
-import themePlugin from '@fullcalendar/react/themes/classic';
+import { EventCalendar } from '@/components/event-calendar'
 
 import SubscriptionDetails from './SubscriptionDetails';
 const SubscriptionModal = lazy(() => import('./SubscriptionModal'));
 import SubscriptionDialog from './SubscriptionDialog';
 import CalendarDateDetails from './CalendarDateDetails';
 
-import '@fullcalendar/react/skeleton.css'
-import '@fullcalendar/react/themes/classic/theme.css'
-import '@fullcalendar/react/themes/classic/palette.css'
 import './Calendar.css'
 
 import { addSubscription, updateSubscription, deleteSubscription, SubscriptionStatus } from "./data";
@@ -137,14 +131,12 @@ function Calendar() {
     events.push(event);
   }
   
-  const calendarButtons = {
-    addSubscriptionButton: {
-      text: "+ Add New",
-      click: () => {
-        setIsEditModalOpen(false);
-        setDetailsModalValues(null);
-        setIsAddModalOpen(true);
-      }
+  const addSubscriptionButton = {
+    text: "+ Add New",
+    click: () => {
+      setIsEditModalOpen(false);
+      setDetailsModalValues(null);
+      setIsAddModalOpen(true);
     }
   };
 
@@ -167,7 +159,7 @@ function Calendar() {
           closeModal={() => setIsDateDetailsOpen(false)}
         />
       }
-      <FullCalendar plugins={[ dayGridPlugin, interactionPlugin, themePlugin ]} initialView="dayGridMonth" 
+      <EventCalendar initialView="dayGridMonth" 
         events={events}
         eventClass="event-bar"
         selectable={false}
@@ -181,9 +173,7 @@ function Calendar() {
         dayCellTopClass="mb-8"
         dayCellClass={(info: { date: Date }) => clsx(selectedDate !== null && info.date.getTime() == selectedDate.getTime() && "date-selected")}
         height="auto"
-        buttons={calendarButtons}
-        headerToolbar={{ left: "title", center: "addSubscriptionButton", right: "today prevYear prev next nextYear" }}
-        footerToolbar={{ left: "", right: "today prevYear prev next nextYear" }}
+        addButton={addSubscriptionButton}
       />
       {
         isDetailsModalOpen &&
